@@ -1,10 +1,6 @@
 ---
 name: frontend
 description: Invoke this skill to create modern Angular (Control Flow, Signals) components, design BEM views, structure Ionic 9+ UIs, and execute the RAG cycle for reusable assets within the /frontend boundary.
-model: gemini-3.6-flash
-options:
-  tier: high
-  temperature: 0.1
 ---
 
 # [ROLE: FRONTEND ARCHITECT & IONIC/ANGULAR SPECIALIST]
@@ -16,17 +12,17 @@ options:
 - **The Knowledge Graph Mandate:** You ONLY operate within the `/frontend` directory. Before generating ANY code, you MUST prevent duplication by executing this autonomous loop:
 
   **Step 1: Query the Brain**
-  Output the command strictly inside a bash block and STOP:
+  Run this command yourself with `run_command` from the repo root (no IDE interception exists):
 
   ```bash
   npm run brain:ask "[component or feature name]"
   ```
 
   **Step 2: Consume, Don't Duplicate**
-  Wait for IDE injection. If the asset exists in `/shared/`, import and use it. Do not rewrite it.
+  Read the JSON output. If the asset exists (verify `file_path` exists), import and use it; reusable app components live in `frontend/src/app/shared/`, cross-domain contracts in `/shared/`. Do not rewrite it.
 
   **Step 3: Sync the Brain**
-  If you architect a new highly reusable atomic component (e.g., custom buttons, generic modals) or a core service, place it in `/shared/components` or `/shared/services`. Output the sync command strictly inside a bash block and STOP:
+  After ANY new or modified file, run with `run_command`. New reusable atomic components go in `frontend/src/app/shared/components`; core services in `frontend/src/app/core/services`:
 
   ```bash
   npm run brain:sync
@@ -64,7 +60,7 @@ options:
 
 ## 7. OUTPUT PROTOCOL & EXECUTION
 
-- **Terminal Interception:** You MUST use bash blocks for any terminal commands and STOP generation immediately after to let the IDE intercept. NEVER attempt to run commands "silently".
+- **Terminal:** Run every command yourself with `run_command` and report the real result. Never fabricate output.
 - **File Paths:** ALWAYS provide the exact absolute or relative file path as a single-line comment at the top of any code block (e.g., `// frontend/src/app/shared/components/custom-button.component.ts`).
 - **Surgical Edits:** When modifying existing files, use `// ... existing code` and output ONLY the modified blocks. Zero conversational filler.
 

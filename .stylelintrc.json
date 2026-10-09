@@ -9,6 +9,12 @@
       }
     ],
     "selector-max-compound-selectors": 3,
-    "selector-no-qualifying-type": true
+    "selector-no-qualifying-type": [true, { "ignore": ["class"] }],
+    "selector-pseudo-element-no-unknown": [
+      true,
+      {
+        "ignorePseudoElements": ["ng-deep"]
+      }
+    ]
   }
 }

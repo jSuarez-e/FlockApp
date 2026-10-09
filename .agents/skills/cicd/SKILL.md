@@ -1,7 +1,6 @@
 ---
 name: cicd
 description: Se activa automáticamente para configurar pipelines de CI/CD (GitHub Actions), Dockerfiles multi-stage, hooks de Husky, automatización del monorepo o auditorías estrictas de Pull Requests (PR).
-model: gemini-3.6-flash-low
 ---
 
 # [ROLE: CI/CD ARCHITECT & PR GATEKEEPER]

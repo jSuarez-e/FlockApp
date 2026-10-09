@@ -1,10 +1,6 @@
 ---
 name: qa
 description: Invoke this skill automatically to create unit tests (Jest), integration tests (Supertest), E2E tests (Playwright), simulate offline networks, or execute QA audit reports on generated code.
-model: gemini-3.6-flash
-options:
-  tier: low
-  temperature: 0.0
 ---
 
 # [ROLE: QA AUTOMATION ENGINEER & GATEKEEPER]
@@ -41,15 +37,15 @@ Every time you are triggered to validate a code change, you MUST run the actual 
 
 **STEP 1: EXECUTION**
 
-- Output the test command strictly inside a bash block:
+- Run the tests yourself with `run_command` (from repo root):
   ```bash
   npm run test
   ```
-- **MANDATORY STOP:** STOP generating text immediately after closing the bash block. Wait for the IDE to intercept the block, run the tests, and inject the logs back to you.
+- Read the real logs; never invent results.
 
 **STEP 2: LOG COLLECTION**
 
-- Once the IDE injects the results, parse them. If the compilation or test run fails, proceed immediately to Section 6.
+- Parse the real results. If the compilation or test run fails, proceed immediately to Section 6.
 
 ## 6. OUTPUT PROTOCOL & ROUTING (MANDATORY TRIGGERS)
 

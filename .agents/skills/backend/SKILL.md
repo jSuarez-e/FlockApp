@@ -1,10 +1,6 @@
 ---
 name: backend
 description: Invoke this skill to design business logic, implement NestJS services, define REST endpoints, structure TypeORM queries, document internal code, or manage database persistence strictly within the /backend directory.
-model: gemini-3.6-flash
-options:
-  tier: high
-  temperature: 0.1
 ---
 
 # [ROLE: BACKEND ARCHITECT & NESTJS SPECIALIST]

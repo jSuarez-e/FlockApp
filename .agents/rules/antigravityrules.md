@@ -56,7 +56,7 @@ trigger: always_on
 ## 6. TOKEN EFFICIENCY & ANTI-HALLUCINATION (MAXIMUM PRIORITY)
 
 - **Zero Hallucination:** If you lack context, do not understand the requirement, or do not know the exact answer, DO NOT guess or invent code/libraries. STOP and explicitly ask the user for clarification.
-- **Output Protocol:** NO conversational filler ("Here is the code", "Sure"). NO pleasantries. Output ONLY the requested artifacts.
+- **Output Protocol:** NO conversational filler ("Here is the code", "Sure"). NO pleasantries. At task end, ALWAYS give a concise factual report (files changed, commands run with their result, gates passed/failed). Never claim completion without having run the Quality Gates (§9).
 - **Surgical Code Modifications:** When modifying existing files, DO NOT output the entire file. You are STRICTLY FORBIDDEN from outputting unchanged code lines. Use `// ... existing code` and output ONLY the modified blocks wrapped in clearly commented target locations.
 - **Terminal Execution Protocol:** You have full authorization to execute CLI commands autonomously using your internal `run_command` tool when scaffolding, installing dependencies, or performing system actions. Si encuentras errores de permisos (`PSSecurityException`), notifica al usuario o intenta solucionarlo mediante scripts absolutos.
 - **Output Chunking Constraint:** If a code implementation exceeds 150 lines or risks hitting the token limit, you MUST split the output into progressive modular sub-tasks. No bloated monoliths.
@@ -79,41 +79,38 @@ trigger: always_on
 ## 8. AUTONOMOUS RAG LIFECYCLE (CRITICAL IDE EXECUTION)
 
 **ABSOLUTE DIRECTIVE:**
-Whenever you receive a task to create, modify, analyze code, or resolve an issue, you are MANDATED to execute this 3-step lifecycle flawlessly and autonomously. Do not wait for explicit permission to query the Brain.
+Whenever you receive a task to create, modify, analyze code, or resolve an issue, you MUST execute this 3-step lifecycle autonomously with your `run_command` tool. Never wait for permission to query the Brain. There is NO IDE interception of bash blocks: a command only runs if YOU run it with `run_command`.
 
 **STEP 1: CONTEXT RETRIEVAL (PRE-HOOK)**
 
-- Output the terminal command to query the Semantic Brain strictly inside a bash block:
-  ```bash
-  npm run brain:ask "[task keywords]"
-  ```
-- **MANDATORY STOP (STOP & WAIT):** Immediately after closing the backticks of the bash block, YOU MUST HALT YOUR TEXT GENERATION. Do not assume the response. Wait for the IDE to intercept the block, execute it, and inject the results.
+- BEFORE reading or writing code, run from the repo root:
+  `npm run brain:ask "[task keywords]"` (use 1-3 specific keywords, e.g. component/service name).
+- Read the JSON result. If an asset exists, REUSE it; never duplicate. Verify its `file_path` exists before trusting it.
+- If `status` is `empty_project` or `not_found`, you are free to create it.
 
 **STEP 2: EXECUTION (CODING)**
 
-- Once context is retrieved via IDE injection, apply your specific `SKILL.md` (Cartridge), follow all SDD constraints, and generate the code.
+- Apply your specific `SKILL.md` (Cartridge) and all SDD constraints. Every NEW file MUST start with the `@sdd` header.
 
 **STEP 3: SYNCHRONIZATION (POST-HOOK)**
 
-- Output the synchronization command strictly inside a bash block to persist the new architecture:
-  ```bash
-  npm run brain:sync
-  ```
-- **RESTRICTION:** Do not explain this process. Output the block and stop.
+- After creating or modifying files, run `npm run brain:sync` with `run_command`. Confirm it finished with `✅`.
+- Do not skip this step, even for small changes.
 
 ## 9. CI/CD & QUALITY GATES (POST-DEVELOPMENT MANDATE)
 
 **ABSOLUTE DIRECTIVE:**
-Immediately after finishing a development task, fixing a bug, or accepting a requirement, you MUST autonomously execute the following Quality Gate sequence using your `run_command` tool. Do not wait for the user to ask you to test your code.
+Immediately after finishing a development task or fixing a bug, you MUST autonomously run the following gates with `run_command`. A gate that fails MUST be fixed before reporting completion.
 
 **STEP 1: LINTING & VALIDATION**
-- Execute the global linter to ensure strict code quality.
-  `npm run audit:all`
+
+- `npm run audit:all` (fails with non-zero exit code on any ESLint/Stylelint error).
+- `npm run audit:rules` (fails on `any`, `*ngIf/*ngFor`, inline `style=""`, `.ts` files without `@sdd`).
 
 **STEP 2: UNIT TESTING**
-- Execute or update the unit tests for the affected domain.
-  `npm run test` (in the respective backend/frontend directory)
 
-**STEP 3: AUTOMATIC VERSIONING & CHANGELOG**
-- Once linting and tests pass, automatically execute the semantic versioning script to bump the version and generate the CHANGELOG.md.
-  `npm run release`
+- `npm run test` from the repo root (runs backend and frontend suites).
+
+**STEP 3: VERSIONING (ONLY ON EXPLICIT USER REQUEST)**
+
+- `npm run release` MUST NOT run automatically. Run it ONLY when the user asks to cut a release.

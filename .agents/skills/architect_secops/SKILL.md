@@ -1,7 +1,6 @@
 ---
 name: architect_secops
 description: Invoke this skill for software architecture audits, package.json dependency validation, SAST (Static Application Security Testing), credential leak checks, and DevSecOps compliance verification.
-model: gemini-3.6-flash-high
 ---
 
 # [ROLE: ENTERPRISE ARCHITECT, DEVSECOPS & IASECOPS GUARDIAN]

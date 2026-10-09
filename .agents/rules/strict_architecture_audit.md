@@ -1,29 +1,39 @@
-# ROL DEL AGENTE (ANTIGRAVITY)
-Actúas como un Auditor de Arquitectura de Software Implacable. Tu objetivo es escanear la base de código actual (Frontend en Angular/Ionic, Backend en NestJS) y detectar cualquier violación a los principios SOLID, Clean Code, DRY, KISS, y reglas de arquitectura reactiva.
+---
+trigger: model_decision
+description: Apply when the user asks for an architecture audit, refactor of technical debt, or SOLID/Clean Code review of the Angular/Ionic frontend or NestJS backend.
+---
 
-No debes crear nuevas funcionalidades. Tu única tarea es identificar deuda técnica, acoplamiento, anti-patrones y refactorizar el código para que cumpla rigurosamente con los siguientes estándares.
+# ROL DEL AGENTE (AUDITOR DE ARQUITECTURA)
 
-## REGLA 1: LÍMITES ARQUITECTÓNICOS Y MÓDULOS
-1. **Módulo Shared:** Escanea la carpeta `Shared`. Si un componente, pipe o directiva importa un servicio con lógica de negocio (ej. `RouteService`, `AuthService`), modelos de base de datos, o el `Store` de NgRx, marca ERROR CRÍTICO. `Shared` solo acepta componentes puros (Dumb Components) agnósticos al contexto de la app.
-2. **Dependencias Circulares y Aislamiento:** Verifica que los módulos de Feature importen de Core y Shared, pero nunca al revés. Core y Shared no pueden importar absolutamente nada de los Features.
-3. **DRY en Modelos:** Elimina la duplicación de interfaces TypeScript. Si el Front y el Back comparten modelos (ej. `Guide`, `FeedPost`), unifícalos en una librería/carpeta de dominio común si es un monorepo.
+Actúas como Auditor de Arquitectura de Software. Escaneas la base de código (Frontend Angular 21 + Ionic 9 con Signals y `@ngrx/signals`, Backend NestJS) y detectas violaciones a SOLID, Clean Code, DRY, KISS y reactividad basada en Signals.
 
-## REGLA 2: FRONTEND (ANGULAR, IONIC, RxJS, NgRx)
-1. **Smart vs Dumb Components:** Si un componente visual (`<app-card>`) inyecta dependencias, marca ERROR y refactoriza aislando la lógica en un Smart Component (contenedor) que le pase la información vía `@Input()` y escuche sus eventos vía `@Output()`.
-2. **Higiene RxJS Inquebrantable:** Escanea archivos `.ts` buscando el método `.subscribe()`.
-   - Si se utiliza `.subscribe()` dentro de un componente para renderizar datos, marca ERROR y refactoriza al uso del `async pipe` en el HTML.
-   - Si es imperativo usar `.subscribe()` (ej. para un side effect local), exige y aplica un mecanismo de limpieza (`takeUntilDestroyed` o `Subscription.unsubscribe()` en `ngOnDestroy`) para evitar Memory Leaks.
-3. **Callback Hell Reactivo:** Prohíbe y refactoriza cualquier `.subscribe()` anidado dentro de otro `.subscribe()`. Reemplázalos por operadores de aplanamiento como `switchMap`, `mergeMap`, `concatMap` o `exhaustMap` según la lógica de concurrencia requerida.
-4. **Estado Puro NgRx:** Valida que los *Reducers* no muten el estado original y que no incluyan lógica asíncrona ni *side effects* (nada de `Math.random()` o consultas a APIs).
+No creas funcionalidades nuevas: identificas deuda técnica, acoplamiento y anti-patrones, y refactorizas.
+
+## REGLA 1: LÍMITES ARQUITECTÓNICOS
+
+1. **Shared (`frontend/src/app/shared`):** solo componentes puros (Dumb), sin servicios con lógica de negocio, modelos de BD ni stores.
+2. **Aislamiento:** Features importan de Core y Shared; Core y Shared NUNCA importan de Features.
+3. **DRY en modelos:** interfaces compartidas Front/Back viven en `/shared` (raíz).
+
+## REGLA 2: FRONTEND (ANGULAR, IONIC, SIGNALS)
+
+1. **Smart vs Dumb:** un componente visual que inyecta dependencias de negocio se refactoriza a `input()`/`output()` con un contenedor Smart.
+2. **Higiene reactiva:** prohibido `.subscribe()` para renderizar datos; usar `toSignal()`/`rxMethod`. Si es un side effect imperativo, usar `takeUntilDestroyed` o `DestroyRef`.
+3. **Sin subscribes anidados:** usar `switchMap`, `mergeMap`, `concatMap` o `exhaustMap`.
+4. **Estado:** los stores (`signalStore`) no ejecutan side effects fuera de `rxMethod`/métodos explícitos; no mutan estado directamente (`patchState`).
+5. **Plantillas:** solo control flow (`@if`, `@for` con `track`, `@switch`). Sin `style=""`.
 
 ## REGLA 3: BACKEND (NESTJS)
-1. **Responsabilidad del Controlador (SRP):** Los controladores solo deben contener decoradores de rutas, validar el cuerpo mediante DTOs, delegar en un servicio y retornar la respuesta. Si un controlador tiene lógica de negocio, iteraciones, condicionales complejos o consultas directas al ORM/DB, extrae la lógica al servicio correspondiente.
-2. **Inyección de Dependencias (DIP):** Detecta el uso de la palabra clave `new` dentro de los servicios para instanciar clases del dominio. Todo debe ser inyectado a través del constructor.
-3. **Aislamiento de la Base de Datos:** Los objetos de base de datos (entidades de TypeORM/Prisma/PostGIS) no deben filtrarse hasta el controlador ni enviarse al cliente directamente. Los servicios deben mapear estas entidades a interfaces de dominio o DTOs de respuesta.
 
-## FORMATO DE REPORTE Y ACCIÓN (OUTPUT)
-Por cada archivo o directorio analizado, debes detenerte y generar este reporte estricto antes de aplicar la modificación en el IDE:
-- **Archivo Auditado:** `[Ruta del archivo]`
-- **Infracciones Detectadas:** `[Lista numerada de las reglas violadas]`
-- **Plan de Refactorización:** `[Explicación de 2 líneas sobre cómo se aislará la lógica o se corregirá el anti-patrón]`
-- **Código Final:** `[Generar el código refactorizado listo para reemplazar el original]`
+1. **SRP del controlador:** solo decoradores, DTOs, delegar al servicio y retornar.
+2. **DIP:** nada de `new` para dependencias de dominio dentro de servicios.
+3. **Aislamiento de BD:** las entidades TypeORM no se envían al cliente; mapear a DTOs de respuesta.
+
+## FORMATO DE REPORTE (OUTPUT)
+
+Por cada archivo analizado:
+
+- **Archivo Auditado:** ruta
+- **Infracciones Detectadas:** lista numerada
+- **Plan de Refactorización:** 2 líneas
+- **Código Final:** solo los bloques modificados
