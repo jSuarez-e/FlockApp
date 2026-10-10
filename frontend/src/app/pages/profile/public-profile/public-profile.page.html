@@ -1,0 +1,175 @@
+<!--
+  @sdd
+  [Objetivo]: Plantilla visual para el perfil público del usuario en modo informativo (presentación idéntica a Sitios de Aviturismo).
+  [I/O - Reusabilidad]: Consume componentes oficiales de Ionic 9, Angular Control Flow (@if, @for), y clases BEM.
+  [Edge Cases - UI]: Soporte para ausencia de foto de portada, perfiles sin estadísticas o sin redes sociales y estado de carga.
+-->
+
+<ion-header class="ion-no-border flock-modal-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home/dashboard"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ user() ? (user()!.firstName + ' ' + user()!.lastName) : 'Perfil de Pajarero' }}</ion-title>
+    <ion-buttons slot="end">
+      <button type="button" (click)="closeModal()" class="flock-header-pill-btn" aria-label="Cerrar modal">
+        <ion-icon name="close-outline"></ion-icon>
+        <span>Cerrar</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="public-profile-content">
+  @if (isLoading()) {
+    <div class="loading-state ion-text-center ion-padding">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p class="loading-state__text">Cargando información del pajarero...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error-state ion-text-center ion-padding">
+      <ion-icon name="shield-checkmark-outline" class="error-state__icon"></ion-icon>
+      <h3 class="error-state__title">Información no disponible</h3>
+      <p class="error-state__desc">{{ errorMessage() }}</p>
+      <ion-button (click)="closeModal()" expand="block" shape="round" color="primary" class="ion-margin-top">
+        Cerrar
+      </ion-button>
+    </div>
+  } @else if (user()) {
+    <div class="public-profile-shell">
+      <!-- HERO: PORTADA Y AVATAR -->
+      <div class="hero-image">
+        @if (user()?.coverUrl) {
+          <img
+            [src]="getImageUrl(user()?.coverUrl)"
+            class="hero-image__img"
+            alt="Foto de portada"
+            (error)="onImageError($event)"
+          />
+        } @else {
+          <div class="hero-image__fallback-banner"></div>
+        }
+
+        <div class="hero-image__avatar-circle">
+          <img
+            [src]="getImageUrl(user()?.avatarUrl) || ('https://ui-avatars.com/api/?name=' + (user()?.firstName || 'Pajarero') + '+' + (user()?.lastName || '') + '&background=4C6793&color=fff')"
+            alt="Avatar del pajarero"
+            class="hero-image__avatar-img"
+            (error)="onImageError($event)"
+          />
+        </div>
+      </div>
+
+      <!-- CUERPO PRINCIPAL -->
+      <div class="content-wrapper ion-padding">
+        <h2 class="title">{{ user()?.firstName }} {{ user()?.lastName }}</h2>
+        <p class="text-muted location-info">
+          <ion-icon name="location-outline"></ion-icon>
+          <span>{{ (user()?.department || 'Colombia') }}{{ user()?.municipality ? ' - ' + user()?.municipality : '' }}</span>
+        </p>
+
+        <!-- CHIPS DE ROL Y ANTIGÜEDAD -->
+        <div class="profile-chips ion-margin-bottom">
+          <ion-chip color="primary" outline="true">
+            <ion-icon [name]="user()?.role === 'PROVEEDOR' ? 'business-outline' : 'binoculars-outline'"></ion-icon>
+            <ion-label>{{ getRoleLabel(user()?.role) }}</ion-label>
+          </ion-chip>
+          @if (user()?.stats?.daysInApp) {
+            <ion-chip color="medium" outline="true">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <ion-label>{{ user()?.stats?.daysInApp }} días en FlockApp</ion-label>
+            </ion-chip>
+          }
+        </div>
+
+        <!-- INDICADOR DE REPUTACIÓN COMUNITARIA -->
+        <div class="site-detail__rating ion-margin-bottom">
+          <ion-icon name="star" color="warning" class="site-detail__rating-icon"></ion-icon>
+          <span class="site-detail__rating-score">5.0</span>
+          <span class="site-detail__rating-badge">Pajarero Activo</span>
+        </div>
+
+        <!-- BIOGRAFÍA -->
+        <div class="description-box">
+          <p>{{ user()?.bio || 'Bienvenido a mi perfil de aviturismo y observación de aves en Colombia.' }}</p>
+        </div>
+
+        <!-- ESTADÍSTICAS DE OBSERVACIÓN -->
+        @if (user()?.stats) {
+          <div class="section-block ion-margin-bottom">
+            <h3>Estadísticas de Observación</h3>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-card__icon stat-card__icon--species">
+                  <ion-icon name="paw-outline"></ion-icon>
+                </div>
+                <div class="stat-card__info">
+                  <span class="stat-card__value">{{ user()?.stats?.speciesCount || 0 }}</span>
+                  <span class="stat-card__label">Especies</span>
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-card__icon stat-card__icon--sightings">
+                  <ion-icon name="eye-outline"></ion-icon>
+                </div>
+                <div class="stat-card__info">
+                  <span class="stat-card__value">{{ user()?.stats?.sightingsCount || 0 }}</span>
+                  <span class="stat-card__label">Avistamientos</span>
+                </div>
+              </div>
+
+              <div
+                class="stat-card stat-card--interactive"
+                (click)="openMedalsModal()"
+                role="button"
+                tabindex="0"
+                (keyup.enter)="openMedalsModal()"
+              >
+                <div class="stat-card__icon stat-card__icon--medals">
+                  <ion-icon name="trophy-outline"></ion-icon>
+                </div>
+                <div class="stat-card__info">
+                  <span class="stat-card__value">{{ user()?.stats?.medalsCount || 0 }}</span>
+                  <span class="stat-card__label">Medallas</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- CONTACTO Y REDES SOCIALES -->
+        @if (user()?.instagram || user()?.email) {
+          <div class="section-block ion-margin-bottom">
+            <h3>Contacto y Redes Sociales</h3>
+            <div class="contact-bar">
+              @if (user()?.instagram) {
+                <ion-button
+                  size="small"
+                  color="tertiary"
+                  fill="outline"
+                  [href]="getInstagramUrl(user()?.instagram)"
+                  target="_blank"
+                >
+                  <ion-icon slot="start" name="logo-instagram"></ion-icon>
+                  Instagram
+                </ion-button>
+              }
+              @if (user()?.email) {
+                <ion-button
+                  size="small"
+                  color="primary"
+                  fill="outline"
+                  [href]="getEmailUrl(user()?.email)"
+                >
+                  <ion-icon slot="start" name="mail-outline"></ion-icon>
+                  Correo Electrónico
+                </ion-button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</ion-content>

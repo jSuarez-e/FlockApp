@@ -1,0 +1,485 @@
+<ion-header class="ion-no-border flock-header-seamless">
+  <ion-toolbar class="business-header-toolbar">
+    <div class="flock-header-content">
+      <ion-buttons slot="start" class="header-menu-buttons">
+        <ion-back-button defaultHref="/home/dashboard" class="header-menu-btn"></ion-back-button>
+      </ion-buttons>
+
+      <div class="flock-header-titles">
+        <h1 class="flock-header-title">Perfil de Negocio</h1>
+        <p class="flock-header-subtitle">Gestión y servicios de anfitrión de aviturismo</p>
+      </div>
+
+      <div class="profile-header-actions">
+        @if (store.activeTab() === 'profile') {
+          <button
+            class="flock-header-pill-btn"
+            (click)="onSaveProfile()"
+            [disabled]="isPristine()"
+            aria-label="Guardar perfil"
+          >
+            <ion-icon name="checkmark-outline"></ion-icon>
+            <span>Guardar</span>
+          </button>
+        }
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="business-profile-content">
+  <!-- HERO: PORTADA Y AVATAR UNIFICADO -->
+  <div class="hero-image">
+    @if (store.coverUrl()) {
+      <img
+        [src]="getImageUrl(store.coverUrl())"
+        class="hero-image__img"
+        alt="Foto de portada"
+      />
+    } @else {
+      <div class="hero-image__fallback-banner"></div>
+    }
+
+    <ion-button
+      fill="clear"
+      class="btn-edit-cover"
+      (click)="changePhoto('COVER')"
+      aria-label="Cambiar foto de portada"
+    >
+      <ion-icon slot="start" name="camera-outline"></ion-icon>
+      <span>Cambiar portada</span>
+    </ion-button>
+
+    <div class="hero-image__avatar-circle">
+      <img
+        [src]="getImageUrl(store.photoUrl()) || getAvatarFallback()"
+        (error)="onAvatarError($event)"
+        alt="Foto del perfil de negocio"
+        class="hero-image__avatar-img"
+      />
+      <ion-button
+        fill="clear"
+        class="btn-edit-avatar-circular"
+        (click)="changePhoto('AVATAR')"
+        aria-label="Cargar foto de perfil"
+      >
+        <ion-icon slot="icon-only" name="camera-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Inputs ocultos para subida de imágenes en navegador Web y PWA -->
+    <input
+      #coverFileInput
+      type="file"
+      accept="image/*"
+      class="hidden-file-input"
+      (change)="onFileInputChange($event, 'COVER')"
+    />
+    <input
+      #avatarFileInput
+      type="file"
+      accept="image/*"
+      class="hidden-file-input"
+      (change)="onFileInputChange($event, 'AVATAR')"
+    />
+  </div>
+
+  <!-- CONTENEDOR PRINCIPAL: CARDS Y SUBCARDS -->
+  <div class="flock-cards-wrapper">
+    <div class="flock-outer-card business-card">
+      <div class="content-wrapper ion-padding">
+        <h2 class="title">{{ store.username() || 'Mi Perfil de Guía' }}</h2>
+        <div class="profile-chips ion-margin-bottom">
+          <ion-chip color="primary" outline="true">
+            <ion-icon name="business-outline"></ion-icon>
+            <ion-label>Guía Profesional de Aves</ion-label>
+          </ion-chip>
+        </div>
+
+    <!-- Segment Selector -->
+    <div class="provider-segment-container ion-margin-bottom">
+      <ion-segment
+        [value]="store.activeTab()"
+        (ionChange)="onTabChange($event)"
+        class="provider-segment"
+      >
+        <ion-segment-button value="profile">
+          <ion-icon name="business-outline"></ion-icon>
+          <ion-label>Datos</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="calendar">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <ion-label>Agenda</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="bookings">
+          <ion-icon name="document-text-outline"></ion-icon>
+          <ion-label>Solicitudes</ion-label>
+          @if (store.incomingBookings().length > 0) {
+            <ion-badge color="danger" class="tab-badge">
+              {{ store.incomingBookings().length }}
+            </ion-badge>
+          }
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <div class="card-body">
+        @if (!store.isLoading()) {
+          <!-- TAB 1: DATOS DE PERFIL Y REGISTRO -->
+          @if (store.activeTab() === 'profile') {
+            <form (ngSubmit)="onSaveProfile()" class="auth-form-profile">
+              <!-- Switch de Publicación en el Directorio -->
+              <div class="directory-status-card ion-margin-bottom">
+                <div class="directory-status-info">
+                  <ion-icon name="eye-outline" color="primary"></ion-icon>
+                  <div>
+                    <h4 class="directory-status-title">Visible en Directorio</h4>
+                    <p class="directory-status-sub">
+                      Aparece reconocible para pajareros de todo el país
+                    </p>
+                  </div>
+                </div>
+                <ion-toggle
+                  [checked]="store.isPublished()"
+                  (ionChange)="store.updateField('isPublished', $event.detail.checked)"
+                  color="success"
+                ></ion-toggle>
+              </div>
+
+              <app-auth-input
+                label="Nombre Comercial / Público *"
+                icon="business-outline"
+                [value]="store.username()"
+                (valueChange)="store.updateField('username', $event)"
+              ></app-auth-input>
+
+              <div class="contact-number-group ion-margin-top">
+                <app-auth-input
+                  label="Número Celular de Contacto *"
+                  icon="call-outline"
+                  [value]="store.phone()"
+                  (valueChange)="store.updateField('phone', $event)"
+                ></app-auth-input>
+
+                <div class="whatsapp-toggle-row">
+                  <ion-icon class="whatsapp-toggle-row__icon" name="logo-whatsapp" color="success"></ion-icon>
+                  <ion-label>¿Este número cuenta con WhatsApp?</ion-label>
+                  <ion-toggle
+                    [checked]="store.hasWhatsapp()"
+                    (ionChange)="store.updateField('hasWhatsapp', $event.detail.checked)"
+                    color="success"
+                  ></ion-toggle>
+                </div>
+              </div>
+
+              <app-auth-input
+                label="Correo Electrónico de Contacto"
+                icon="mail-outline"
+                [value]="store.email()"
+                (valueChange)="store.updateField('email', $event)"
+              ></app-auth-input>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <app-auth-input
+                    label="Instagram (@usuario o URL)"
+                    icon="logo-instagram"
+                    [value]="store.instagram()"
+                    (valueChange)="store.updateField('instagram', $event)"
+                  ></app-auth-input>
+                </div>
+                <div class="form-field">
+                  <app-auth-input
+                    label="Página Web"
+                    icon="globe-outline"
+                    [value]="store.website()"
+                    (valueChange)="store.updateField('website', $event)"
+                  ></app-auth-input>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <app-auth-input
+                    label="Idiomas que maneja"
+                    icon="chatbubble-ellipses-outline"
+                    [value]="store.languages()"
+                    (valueChange)="store.updateField('languages', $event)"
+                  ></app-auth-input>
+                </div>
+                <div class="form-field">
+                  <app-auth-input
+                    label="Registro Nacional Turismo (RNT)"
+                    icon="document-text-outline"
+                    [value]="store.rnt()"
+                    (valueChange)="store.updateField('rnt', $event)"
+                  ></app-auth-input>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field">
+                  <label class="field-label">Departamento *</label>
+                  <div class="input-wrapper select-box">
+                    <ion-select
+                      class="native-input"
+                      [value]="store.department()"
+                      interface="popover"
+                      (ionChange)="onDepartmentChange($event)"
+                    >
+                      @for (dept of store.departmentsList(); track dept.id) {
+                        <ion-select-option [value]="dept.name">
+                          {{ dept.name }}
+                        </ion-select-option>
+                      }
+                    </ion-select>
+                  </div>
+                </div>
+                <div class="form-field">
+                  <label class="field-label">Municipio *</label>
+                  <div class="input-wrapper select-box">
+                    <ion-select
+                      class="native-input"
+                      [value]="store.municipality()"
+                      interface="popover"
+                      (ionChange)="store.updateField('municipality', $event.detail.value)"
+                    >
+                      @for (muni of store.municipalitiesList(); track muni.id) {
+                        <ion-select-option [value]="muni.name">
+                          {{ muni.name }}
+                        </ion-select-option>
+                      }
+                    </ion-select>
+                  </div>
+                </div>
+              </div>
+
+              <app-auth-input
+                label="Especialidad (Ej: Aves Endémicas, Fotografía, Senderismo)"
+                icon="star-outline"
+                [value]="store.specialties()"
+                (valueChange)="store.updateField('specialties', $event)"
+              ></app-auth-input>
+
+              <div class="form-field ion-margin-top">
+                <label class="field-label">Detalles del Servicio y Biografía *</label>
+                <div class="input-wrapper textarea-box">
+                  <ion-icon name="list-outline"></ion-icon>
+                  <textarea
+                    [ngModel]="store.bio()"
+                    (ngModelChange)="store.updateField('bio', $event)"
+                    name="details"
+                    class="native-input"
+                    rows="4"
+                    placeholder="Describe tu experiencia, zonas de avistamiento que cubres, equipos disponibles..."
+                  ></textarea>
+                </div>
+              </div>
+
+              <ion-button
+                expand="block"
+                type="submit"
+                class="primary-btn ion-margin-top"
+                [disabled]="isPristine()"
+              >
+                Actualizar Perfil de Proveedor
+              </ion-button>
+            </form>
+          }
+
+          <!-- TAB 2: MI CALENDARIO DE DÍAS OCUPADOS -->
+          @if (store.activeTab() === 'calendar') {
+            <div class="calendar-panel">
+              <div class="calendar-header-nav">
+                <ion-button fill="clear" (click)="prevMonth()" aria-label="Mes anterior">
+                  <ion-icon name="chevron-back-outline"></ion-icon>
+                </ion-button>
+                <h3 class="calendar-month-title">{{ currentMonthLabel() }}</h3>
+                <ion-button fill="clear" (click)="nextMonth()" aria-label="Mes siguiente">
+                  <ion-icon name="chevron-forward-outline"></ion-icon>
+                </ion-button>
+              </div>
+
+              <div class="calendar-instructions ion-margin-bottom">
+                <ion-icon name="time-outline" color="primary"></ion-icon>
+                <p>Toca cualquier fecha para marcarla como <strong>Día Ocupado</strong> o <strong>Día Libre</strong>.</p>
+              </div>
+
+              <div class="calendar-grid">
+                @for (day of calendarDays(); track day.dateString) {
+                  <button
+                    type="button"
+                    class="calendar-day-cell"
+                    [class.calendar-day-cell--blocked]="day.isBlocked"
+                    [class.calendar-day-cell--past]="day.isPast"
+                    [class.calendar-day-cell--today]="day.isToday"
+                    [disabled]="day.isPast"
+                    (click)="toggleCalendarDay(day)"
+                  >
+                    <span class="day-number">{{ day.dayNumber }}</span>
+                    @if (day.isBlocked) {
+                      <span class="day-status-pill day-status-pill--blocked">Ocupado</span>
+                    } @else if (!day.isPast) {
+                      <span class="day-status-pill day-status-pill--free">Libre</span>
+                    }
+                  </button>
+                }
+              </div>
+
+              <div class="calendar-legend ion-margin-top">
+                <div class="legend-item">
+                  <span class="legend-dot legend-dot--free"></span>
+                  <span>Disponible</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-dot legend-dot--blocked"></span>
+                  <span>Ocupado / Bloqueado</span>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- TAB 3: SOLICITUDES DE CONTACTO Y RESERVA -->
+          @if (store.activeTab() === 'bookings') {
+            <div class="bookings-panel">
+              <div class="bookings-panel-header">
+                <h3 class="panel-title">Solicitudes y Contactos</h3>
+                <span class="panel-count">{{ store.incomingBookings().length }} registradas</span>
+              </div>
+
+              @if (store.isLoadingBookings()) {
+                <div class="ion-text-center ion-padding">
+                  <ion-spinner name="crescent"></ion-spinner>
+                  <p>Cargando solicitudes...</p>
+                </div>
+              } @else if (store.incomingBookings().length === 0) {
+                <div class="empty-bookings-box ion-text-center ion-padding">
+                  <ion-icon name="document-text-outline" class="empty-icon"></ion-icon>
+                  <h4>Sin solicitudes pendientes</h4>
+                  <p>Cuando un pajarero solicite tus servicios desde el directorio, aparecerá aquí para establecer negocio.</p>
+                </div>
+              } @else {
+                <div class="bookings-list">
+                  @for (booking of store.incomingBookings(); track booking.id) {
+                    <ion-card class="booking-card">
+                      <ion-card-header>
+                        <div class="booking-card-top">
+                          <div class="birder-profile-mini">
+                            <img
+                              [src]="booking.birderPhotoUrl || 'assets/imgs/commons/general-error.png'"
+                              (error)="$event.target.src = 'assets/imgs/commons/general-error.png'"
+                              alt="Foto del pajarero"
+                              class="birder-mini-avatar"
+                            />
+                            <div>
+                              <ion-card-title class="birder-name">
+                                {{ booking.birderName || 'Pajarero Interesado' }}
+                              </ion-card-title>
+                              <ion-card-subtitle class="booking-activity">
+                                {{ booking.activityType }}
+                              </ion-card-subtitle>
+                            </div>
+                          </div>
+
+                          <ion-badge
+                            [color]="
+                              booking.status === 'CONFIRMED'
+                                ? 'success'
+                                : booking.status === 'PENDING'
+                                ? 'warning'
+                                : booking.status === 'COMPLETED'
+                                ? 'tertiary'
+                                : 'medium'
+                            "
+                          >
+                            {{ booking.status }}
+                          </ion-badge>
+                        </div>
+                      </ion-card-header>
+
+                      <ion-card-content>
+                        <div class="booking-details-grid">
+                          <div class="detail-row">
+                            <ion-icon name="calendar-outline" color="primary"></ion-icon>
+                            <span>Fecha agendada: <strong>{{ booking.bookingDate }}</strong></span>
+                          </div>
+                          @if (booking.contactPhone) {
+                            <div class="detail-row">
+                              <ion-icon name="call-outline" color="primary"></ion-icon>
+                              <span>{{ booking.contactPhone }}</span>
+                              <ion-button
+                                fill="clear"
+                                size="small"
+                                class="btn-whatsapp-chat"
+                                (click)="openWhatsAppChat(booking.contactPhone)"
+                              >
+                                <ion-icon name="logo-whatsapp" slot="icon-only" color="success"></ion-icon>
+                              </ion-button>
+                            </div>
+                          }
+                          @if (booking.message) {
+                            <p class="booking-user-message">
+                              "{{ booking.message }}"
+                            </p>
+                          }
+                          @if (booking.rating) {
+                            <div class="rating-display ion-margin-top">
+                              <span class="rating-label">Calificación recibida:</span>
+                              <span class="rating-stars">⭐ {{ booking.rating }} / 5</span>
+                              @if (booking.review) {
+                                <p class="rating-review">"{{ booking.review }}"</p>
+                              }
+                            </div>
+                          }
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="booking-actions ion-margin-top">
+                          @if (booking.status === 'PENDING') {
+                            <ion-button
+                              expand="block"
+                              color="success"
+                              (click)="onUpdateStatus(booking.id, 'CONFIRMED')"
+                            >
+                              <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+                              Aceptar Reserva
+                            </ion-button>
+                            <ion-button
+                              expand="block"
+                              fill="outline"
+                              color="danger"
+                              (click)="onUpdateStatus(booking.id, 'REJECTED')"
+                            >
+                              <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+                              Rechazar
+                            </ion-button>
+                          }
+                          @if (booking.status === 'CONFIRMED') {
+                            <ion-button
+                              expand="block"
+                              color="tertiary"
+                              (click)="onUpdateStatus(booking.id, 'COMPLETED')"
+                            >
+                              <ion-icon name="checkmark-done-outline" slot="start"></ion-icon>
+                              Marcar Servicio Finalizado
+                            </ion-button>
+                          }
+                        </div>
+                      </ion-card-content>
+                    </ion-card>
+                  }
+                </div>
+              }
+            </div>
+          }
+        } @else {
+          <div class="ion-text-center ion-padding">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Cargando datos de negocio...</p>
+          </div>
+        }
+    </div>
+  </div>
+  </div>
+  </div>
+</ion-content>

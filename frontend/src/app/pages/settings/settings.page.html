@@ -1,0 +1,277 @@
+<!--
+  @sdd
+  [Objetivo]: Vista principal de Configuración para auditar y gestionar permisos de Android (Cámara, GPS, Multimedia) y políticas de Google Play.
+  [I/O - Reusabilidad]: Interactúa con signals de permissionsService y emite solicitudes de permiso con diálogo de revelación.
+  [Edge Cases - UI]: Visualización clara con chips de estado semánticos (verde, rojo, naranja) y adaptación móvil responsiva.
+-->
+<ion-header class="ion-no-border flock-header-seamless">
+  <ion-toolbar class="settings-header-toolbar">
+    <div class="settings-header-content">
+      <ion-buttons slot="start" class="header-menu-buttons">
+        <ion-menu-button class="header-menu-btn"></ion-menu-button>
+      </ion-buttons>
+
+      <div class="settings-header-titles">
+        <h1 class="settings-header-title">Configuración</h1>
+        <p class="settings-header-subtitle">Permisos y preferencias de la aplicación</p>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="settings-content" [fullscreen]="true">
+  <div class="settings-container">
+
+    <!-- Sección de Cabecera Informativa -->
+    <section class="settings-banner">
+      <div class="settings-banner__icon-box">
+        <ion-icon name="shield-checkmark-outline" class="settings-banner__icon"></ion-icon>
+      </div>
+      <div class="settings-banner__info">
+        <h1 class="settings-banner__title">Permisos y Privacidad</h1>
+        <p class="settings-banner__subtitle">
+          Controla los permisos de hardware solicitados en tu dispositivo Android para garantizar el funcionamiento de la app.
+        </p>
+      </div>
+    </section>
+
+    <!-- Lista de Permisos Sensibles -->
+    <section class="settings-section">
+      <h2 class="settings-section__heading">
+        <ion-icon name="phone-portraitOutline" class="settings-section__heading-icon"></ion-icon>
+        Permisos de la Aplicación en Android
+      </h2>
+      <p class="settings-section__subheading">
+        Conforme a las directrices de Google Play Store, cada permiso se activa bajo tu consentimiento explícito.
+      </p>
+
+      <div class="permission-card-list">
+
+        <!-- Tarjeta: Cámara -->
+        <div class="permission-card">
+          <div class="permission-card__main">
+            <div class="permission-card__icon-box permission-card__icon-box--camera">
+              <ion-icon name="camera-outline" class="permission-card__icon"></ion-icon>
+            </div>
+            <div class="permission-card__details">
+              <div class="permission-card__header-row">
+                <h3 class="permission-card__title">Cámara</h3>
+                <ion-chip
+                  class="permission-chip"
+                  [class.permission-chip--granted]="permissionsService.cameraStatus() === 'granted'"
+                  [class.permission-chip--denied]="permissionsService.cameraStatus() === 'denied'"
+                  [class.permission-chip--prompt]="permissionsService.cameraStatus() === 'prompt'"
+                >
+                  @if (permissionsService.cameraStatus() === 'granted') {
+                    <ion-icon name="checkmark-circle"></ion-icon>
+                  } @else if (permissionsService.cameraStatus() === 'denied') {
+                    <ion-icon name="close-circle"></ion-icon>
+                  } @else {
+                    <ion-icon name="warning-outline"></ion-icon>
+                  }
+                  {{ getStatusLabel(permissionsService.cameraStatus()) }}
+                </ion-chip>
+              </div>
+              <p class="permission-card__desc">
+                Permite capturar fotografías de aves observadas en campo y actualizar tu foto de perfil o avatar de guía.
+              </p>
+            </div>
+          </div>
+          <div class="permission-card__action">
+            @if (permissionsService.cameraStatus() !== 'granted') {
+              <ion-button
+                size="small"
+                class="permission-card__btn-request"
+                (click)="requestCamera()"
+              >
+                Solicitar Permiso
+              </ion-button>
+            } @else {
+              <ion-button
+                size="small"
+                fill="outline"
+                class="permission-card__btn-active"
+                disabled="true"
+              >
+                Permiso Activo
+              </ion-button>
+            }
+          </div>
+        </div>
+
+        <!-- Tarjeta: Ubicación GPS -->
+        <div class="permission-card">
+          <div class="permission-card__main">
+            <div class="permission-card__icon-box permission-card__icon-box--location">
+              <ion-icon name="location-outline" class="permission-card__icon"></ion-icon>
+            </div>
+            <div class="permission-card__details">
+              <div class="permission-card__header-row">
+                <h3 class="permission-card__title">Ubicación en Tiempo Real (GPS)</h3>
+                <ion-chip
+                  class="permission-chip"
+                  [class.permission-chip--granted]="permissionsService.locationStatus() === 'granted'"
+                  [class.permission-chip--denied]="permissionsService.locationStatus() === 'denied'"
+                  [class.permission-chip--prompt]="permissionsService.locationStatus() === 'prompt'"
+                >
+                  @if (permissionsService.locationStatus() === 'granted') {
+                    <ion-icon name="checkmark-circle"></ion-icon>
+                  } @else if (permissionsService.locationStatus() === 'denied') {
+                    <ion-icon name="close-circle"></ion-icon>
+                  } @else {
+                    <ion-icon name="warning-outline"></ion-icon>
+                  }
+                  {{ getStatusLabel(permissionsService.locationStatus()) }}
+                </ion-chip>
+              </div>
+              <p class="permission-card__desc">
+                Permite trazar rutas pajareras en vivo en el mapa y geolocalizar con precisión tus avistamientos.
+              </p>
+            </div>
+          </div>
+          <div class="permission-card__action">
+            @if (permissionsService.locationStatus() !== 'granted') {
+              <ion-button
+                size="small"
+                class="permission-card__btn-request"
+                (click)="requestLocation()"
+              >
+                Solicitar Permiso
+              </ion-button>
+            } @else {
+              <ion-button
+                size="small"
+                fill="outline"
+                class="permission-card__btn-active"
+                disabled="true"
+              >
+                Permiso Activo
+              </ion-button>
+            }
+          </div>
+        </div>
+
+        <!-- Tarjeta: Galería Multimedia -->
+        <div class="permission-card">
+          <div class="permission-card__main">
+            <div class="permission-card__icon-box permission-card__icon-box--photos">
+              <ion-icon name="images-outline" class="permission-card__icon"></ion-icon>
+            </div>
+            <div class="permission-card__details">
+              <div class="permission-card__header-row">
+                <h3 class="permission-card__title">Galería Multimedia</h3>
+                <ion-chip
+                  class="permission-chip"
+                  [class.permission-chip--granted]="permissionsService.photosStatus() === 'granted'"
+                  [class.permission-chip--denied]="permissionsService.photosStatus() === 'denied'"
+                  [class.permission-chip--prompt]="permissionsService.photosStatus() === 'prompt'"
+                >
+                  @if (permissionsService.photosStatus() === 'granted') {
+                    <ion-icon name="checkmark-circle"></ion-icon>
+                  } @else if (permissionsService.photosStatus() === 'denied') {
+                    <ion-icon name="close-circle"></ion-icon>
+                  } @else {
+                    <ion-icon name="warning-outline"></ion-icon>
+                  }
+                  {{ getStatusLabel(permissionsService.photosStatus()) }}
+                </ion-chip>
+              </div>
+              <p class="permission-card__desc">
+                Permite adjuntar fotos de aves ya capturadas en tu galería a las fichas de avistamiento o publicaciones.
+              </p>
+            </div>
+          </div>
+          <div class="permission-card__action">
+            @if (permissionsService.photosStatus() !== 'granted') {
+              <ion-button
+                size="small"
+                class="permission-card__btn-request"
+                (click)="requestPhotos()"
+              >
+                Solicitar Permiso
+              </ion-button>
+            } @else {
+              <ion-button
+                size="small"
+                fill="outline"
+                class="permission-card__btn-active"
+                disabled="true"
+              >
+                Permiso Activo
+              </ion-button>
+            }
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Tarjeta Guía de Ajustes de Android -->
+    <section class="settings-section">
+      <div class="settings-guide-card">
+        <div class="settings-guide-card__body">
+          <div class="settings-guide-card__icon-wrap">
+            <ion-icon name="settings-outline" class="settings-guide-card__icon"></ion-icon>
+          </div>
+          <div class="settings-guide-card__content">
+            <h3 class="settings-guide-card__title">¿Cómo modificar permisos denegados?</h3>
+            <p class="settings-guide-card__desc">
+              Si denegaste un permiso con la opción "No volver a preguntar", el sistema Android requiere que lo habilites manualmente desde los Ajustes del sistema.
+            </p>
+          </div>
+        </div>
+        <div class="settings-guide-card__footer">
+          <ion-button
+            expand="block"
+            fill="outline"
+            class="settings-guide-card__btn"
+            (click)="openSystemGuide()"
+          >
+            <ion-icon slot="start" name="open-outline"></ion-icon>
+            Ver Pasos para Ajustes de Android
+          </ion-button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transparencia y Políticas Google Play Store -->
+    <section class="settings-section">
+      <div class="settings-policy-card">
+        <div class="settings-policy-card__header">
+          <ion-icon name="lock-closed-outline" class="settings-policy-card__icon"></ion-icon>
+          <h3 class="settings-policy-card__title">Compromiso de Privacidad y Google Play</h3>
+        </div>
+        <p class="settings-policy-card__text">
+          FlockApp: Plumas y Cantos de Colombia está construida bajo los estándares de privacidad más rigurosos. Tus coordenadas de GPS solo se consultan cuando estás en una sesión activa de rastreo y no se transmiten a servidores de publicidad.
+        </p>
+        <ul class="settings-policy-card__list">
+          <li class="settings-policy-card__item">✓ Cero venta de datos personales o geográficos a terceros.</li>
+          <li class="settings-policy-card__item">✓ Almacenamiento local seguro de rutas en SQLite en tu teléfono.</li>
+          <li class="settings-policy-card__item">✓ Revocación de permisos en cualquier momento sin penalizaciones.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Información de la Aplicación -->
+    <section class="settings-section">
+      <div class="app-info-card">
+        <div class="app-info-card__row">
+          <span class="app-info-card__label">Aplicación:</span>
+          <span class="app-info-card__value">FlockApp: Plumas y Cantos de Colombia</span>
+        </div>
+        <div class="app-info-card__row">
+          <span class="app-info-card__label">Versión:</span>
+          <span class="app-info-card__value">0.2.2 (Build 2026 Production)</span>
+        </div>
+        <div class="app-info-card__row">
+          <span class="app-info-card__label">Estado de Red:</span>
+          <span class="app-info-card__value">
+            <ion-icon name="wifi-outline"></ion-icon>
+            {{ networkService.isOnline() ? 'En Línea (Conectado)' : 'Modo Fuera de Línea (Offline)' }}
+          </span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</ion-content>

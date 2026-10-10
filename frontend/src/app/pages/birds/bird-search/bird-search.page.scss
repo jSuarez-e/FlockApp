@@ -1,0 +1,291 @@
+/**
+ * @file bird-search.page.scss
+ * @description Estilos optimizados de la vista de búsqueda.
+ * Aplica scroll hacia los lados en filtros y añade márgenes de respiro para las familias sticky.
+ */
+
+:host {
+  --flock-header-height: 160px;
+}
+
+.bird-header-toolbar {
+  --background: transparent;
+
+  background: transparent;
+
+  --color: var(--flock-primary-foreground, #fff);
+
+  padding: 10px 16px 8px;
+
+  .bird-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .header-menu-buttons,
+  [slot="start"] {
+    margin-inline: -6px 4px;
+  }
+
+  .header-menu-btn {
+    --color: var(--flock-primary-foreground, #fff);
+    --padding-start: 4px;
+    --padding-end: 4px;
+
+    margin: 0;
+    width: 40px;
+    height: 40px;
+  }
+
+  .bird-header-titles {
+    flex: 1;
+    min-width: 0;
+
+    .bird-header-title {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--flock-primary-foreground, #fff);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .bird-header-subtitle {
+      margin: 4px 0 0;
+      font-size: 0.8rem;
+      color: #a7f3d0;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+  }
+
+  .bird-header-status {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.filters-row {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  padding: 8px 16px 10px;
+  gap: 8px;
+
+  .filter-trigger-btn {
+    flex-shrink: 0;
+  }
+
+  .horizontal-tabs {
+    display: flex;
+    overflow-x: auto;
+    flex: 1;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+    align-items: center;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Ajuste de Botones: Previene que se aprieten y fuerza el scroll lateral */
+    ion-chip {
+      flex-shrink: 0;
+
+      --background: rgb(255 255 255 / 18%);
+      --color: #fff;
+
+      border: 1px solid rgb(255 255 255 / 25%);
+      margin: 0;
+      font-weight: 600;
+      padding: 6px 14px;
+      backdrop-filter: blur(6px);
+      transition: all var(--flock-transition-fast, 0.15s ease);
+    }
+  }
+}
+
+.active-chips-scroll {
+  background: transparent;
+  padding: 0 16px 8px;
+
+  .chips-wrapper {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    ion-chip {
+      flex-shrink: 0;
+      margin: 0;
+
+      --background: rgb(255 255 255 / 28%);
+      --color: #fff;
+
+      border: 1px solid rgb(255 255 255 / 35%);
+      font-size: 0.78rem;
+      font-weight: 600;
+
+      ion-icon {
+        color: #fff;
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+.search-bar-container {
+  background: transparent;
+  padding: 0 16px 12px;
+
+  ion-searchbar {
+    --border-radius: var(--flock-radius-input, 14px);
+    --background: #fff;
+    --color: #0f172a;
+    --placeholder-color: #64748b;
+    --box-shadow: 0 4px 14px rgb(0 0 0 / 14%);
+
+    padding: 0;
+  }
+}
+
+.results-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--ion-color-light);
+  border-bottom: 1px solid var(--flock-border, #e0e0e0);
+  padding: 10px;
+
+  ion-label {
+    font-size: 0.9rem;
+    color: var(--ion-color-medium);
+
+    strong {
+      color: var(--ion-color-dark);
+      margin-left: 4px;
+    }
+  }
+}
+
+/* --- ENTORNO DEL SCROLL VIRTUAL Y ESPACIADO GEOMÉTRICO PROTECTOR --- */
+.viewport-wrapper-relative {
+  position: relative;
+  height: calc(100% - 16px);
+  width: 100%;
+  margin-top: 10px; /* Margen de respiro para que la primera familia no se vea pegada arriba */
+}
+
+.bird-viewport {
+  height: 100%;
+  width: 100%;
+}
+
+/* Estilo del Sticky Overlay flotante superior */
+.sticky-family-overlay-header {
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: var(--ion-color-step-100, #f1f5f9);
+  color: var(--ion-color-primary);
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--ion-color-primary);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 5%);
+}
+
+/* Marcador de posición del encabezado dentro de las filas del scroll virtual */
+.group-header-card-placeholder {
+  height: 45px;
+  background: #fafbfd;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  border-bottom: 1px dashed #cbd5e1;
+
+  .family-badge {
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: #94a3b8;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+
+  h2 {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: var(--ion-color-primary);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+}
+
+.loading-text {
+  font-size: 0.9rem;
+  color: var(--ion-color-medium);
+  margin-top: 6px;
+}
+
+/* Centrado del contenedor de Estado Vacío fuera del flujo del Scroll */
+.centered-empty-container {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--ion-color-medium);
+  z-index: 10;
+
+  .icon-shape-badge {
+    background: #f1f5f9;
+    border-radius: 50%;
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    ion-icon {
+      font-size: 34px;
+      color: #94a3b8;
+    }
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #334155;
+    margin: 0 0 6px;
+  }
+
+  p {
+    font-size: 0.88rem;
+    line-height: 1.45;
+    margin: 0 0 18px;
+    color: #64748b;
+  }
+}

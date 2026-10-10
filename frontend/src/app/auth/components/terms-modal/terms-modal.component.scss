@@ -1,0 +1,74 @@
+.modal-toolbar {
+  --background: var(--avitour-primary);
+  --color: var(--avitour-primary-foreground);
+
+  ion-title {
+    font-weight: 800;
+    font-size: 1.15rem;
+  }
+}
+
+.close-modal-btn {
+  font-weight: 800;
+  font-size: 0.9rem;
+
+  --color: var(--avitour-primary-foreground);
+}
+
+.modal-content {
+  --background: var(--avitour-background);
+
+  .modal-body {
+    padding: 10px 5px 30px;
+
+    h3 {
+      color: var(--avitour-primary);
+      font-weight: 900;
+      font-size: 1.6rem;
+      margin-top: 10px;
+      margin-bottom: 15px;
+      letter-spacing: -0.5px;
+    }
+
+    p {
+      color: var(--avitour-foreground) !important;
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .policy-list {
+      background: #fff;
+      border: 1px solid var(--avitour-border);
+      border-radius: 20px;
+      padding: 25px 25px 25px 45px;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 20px rgb(0 0 0 / 3%);
+
+      li {
+        color: var(--avitour-muted-foreground);
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 15px;
+
+        strong {
+          color: var(--avitour-primary);
+          font-weight: 900;
+          display: inline-block;
+          margin-bottom: 3px;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .footer-text {
+      font-size: 0.9rem;
+      color: var(--avitour-muted-foreground) !important;
+      text-align: center;
+      font-style: italic;
+    }
+  }
+}

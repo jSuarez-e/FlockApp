@@ -1,0 +1,90 @@
+:host {
+  display: block;
+  height: 100%;
+  overflow: hidden;
+}
+
+.logger-container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+
+  .search-section {
+    width: 100%;
+
+    .flock-input-field {
+      margin-bottom: 0;
+    }
+  }
+
+  .quick-actions {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+
+    .log-btn {
+      margin: 0;
+      width: 100%;
+      height: 50px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+
+      --box-shadow: 0 4px 12px rgb(var(--ion-color-primary-rgb), 0.3);
+    }
+  }
+
+  .stats-container {
+    display: flex;
+    gap: 12px;
+    
+    .stat-box {
+      flex: 1;
+      background: rgb(var(--ion-color-primary-rgb), 0.05);
+      border: 1px solid rgb(var(--ion-color-primary-rgb), 0.1);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      
+      h3 {
+        margin: 0 0 4px;
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--ion-color-primary);
+      }
+      
+      p {
+        margin: 0;
+        font-size: 11px;
+        color: var(--ion-color-medium);
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .logged-list {
+    flex: 1;
+    overflow-y: auto;
+    border-radius: 12px;
+    background: transparent;
+    
+    ion-item {
+      --background: transparent;
+      --padding-start: 0;
+      --inner-padding-end: 0;
+      
+      h2 {
+        font-weight: 600;
+        color: var(--ion-color-dark);
+      }
+      
+      /* stylelint-disable-next-line no-descending-specificity */
+      p {
+        font-size: 13px;
+        color: var(--ion-color-medium);
+      }
+    }
+  }
+}

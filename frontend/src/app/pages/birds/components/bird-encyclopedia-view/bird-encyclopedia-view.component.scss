@@ -1,0 +1,399 @@
+/**
+ * @sdd
+ * - [Objetivo]: Estilos de la ficha técnica de aves según especificación visual y capturas de referencia.
+ * - [I/O - Reusabilidad]: Clases BEM aisladas para layout de dos columnas, badges UICN y visor de mapa.
+ * - [Edge Cases - UI]: Breakpoint móvil, visualización responsiva de mapa y truncado de textos largos.
+ */
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.detail-toolbar {
+  --background: var(--ion-color-primary, #4caf50);
+  --color: #fff;
+}
+
+.detail-title {
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.encyclopedia-segments {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  width: 100%;
+
+  ion-segment-button {
+    --color: #64748b;
+    --color-checked: var(--ion-color-primary, #2563eb);
+    --indicator-color: var(--ion-color-primary, #2563eb);
+
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+    min-height: 44px;
+    min-width: auto;
+    padding: 0 16px;
+    flex-shrink: 0;
+
+    ion-label {
+      white-space: nowrap;
+      text-overflow: unset;
+      overflow: visible;
+    }
+  }
+}
+
+.detail-content {
+  --background: #f8fafc;
+}
+
+/* ==========================================================================
+   PESTAÑA 1: INFORMACIÓN BÁSICA
+   ========================================================================== */
+.tab-basic {
+  background: #fff;
+  padding-bottom: 32px;
+}
+
+.hero-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 230px;
+  background: #1e293b;
+  overflow: hidden;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+}
+
+.hero-placeholder-img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+}
+
+.hero-copyright {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgb(0 0 0 / 65%);
+  padding: 6px 14px;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.species-header {
+  &__top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__scientific {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.01em;
+  }
+
+  &__english {
+    margin: 4px 0 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-style: italic;
+    color: #64748b;
+  }
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+
+  &--lc {
+    background-color: #22c55e;
+  }
+
+  &--nt {
+    background-color: #84cc16;
+  }
+
+  &--vu {
+    background-color: #eab308;
+  }
+
+  &--en {
+    background-color: #f97316;
+  }
+
+  &--cr {
+    background-color: #ef4444;
+  }
+
+  &--default {
+    background-color: #64748b;
+  }
+}
+
+.specs-divider {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 16px 16px 0;
+}
+
+.specs-grid {
+  margin: 0 16px;
+}
+
+.specs-row {
+  display: flex;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 12px 0;
+
+  &--single {
+    border-bottom: 1px solid #f1f5f9;
+  }
+}
+
+.specs-cell {
+  flex: 1;
+  min-width: 0;
+  padding-right: 8px;
+
+  &:last-child {
+    border-left: 1px solid #f1f5f9;
+    padding-left: 14px;
+    padding-right: 0;
+  }
+
+  &--full {
+    border-left: none !important;
+    padding-left: 0 !important;
+  }
+
+  &__label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 4px;
+  }
+
+  &__value {
+    display: block;
+    font-size: 0.85rem;
+    color: #475569;
+    font-weight: 500;
+  }
+
+  &__description {
+    margin: 4px 0 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #475569;
+  }
+}
+
+.specs-cell__eyes {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+
+  ion-icon {
+    font-size: 1.15rem;
+    color: #cbd5e1;
+
+    &.filled {
+      color: #0f172a;
+    }
+  }
+}
+
+/* ==========================================================================
+   PESTAÑA 2: REGISTROS (MAPA)
+   ========================================================================== */
+.tab-records {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.records-toggle-wrapper {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.records-mode-segment {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.records-subtitle {
+  margin: 8px 0 0;
+  font-size: 0.78rem;
+  color: #64748b;
+  text-align: center;
+}
+
+.records-map-container {
+  flex: 1;
+  min-height: 380px;
+  position: relative;
+  background: #e2e8f0;
+
+  app-search-map {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+  }
+}
+
+.records-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 300px;
+  color: #64748b;
+
+  p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+  }
+}
+
+.records-empty-notice {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgb(15 23 42 / 85%);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  z-index: 500;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+
+  ion-icon {
+    font-size: 1rem;
+    color: #f59e0b;
+  }
+}
+
+/* ==========================================================================
+   PESTAÑA 3: MORFOLOGÍA
+   ========================================================================== */
+.morph-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.morph-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 4%);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    ion-icon {
+      font-size: 1.2rem;
+      color: var(--ion-color-primary, #4caf50);
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: #475569;
+    line-height: 1.45;
+  }
+}
+
+/* ==========================================================================
+   PESTAÑA 4: ENLACES
+   ========================================================================== */
+.links-list {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.link-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f1f5f9;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &__label {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  &__value {
+    font-size: 0.88rem;
+    color: #64748b;
+  }
+
+  &__action {
+    color: #2563eb;
+    font-weight: 600;
+    font-size: 0.88rem;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

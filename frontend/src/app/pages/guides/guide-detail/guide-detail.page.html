@@ -1,0 +1,423 @@
+<ion-header class="ion-no-border flock-header-seamless">
+  <ion-toolbar class="guide-detail-toolbar">
+    <div class="flock-header-content">
+      <ion-buttons slot="start" class="header-menu-buttons">
+        <ion-back-button defaultHref="/home/guides" text="" class="header-menu-btn"></ion-back-button>
+      </ion-buttons>
+      <div class="flock-header-titles">
+        <h1 class="flock-header-title">{{ guide()?.fullName || 'Perfil del Guía' }}</h1>
+        <p class="flock-header-subtitle">{{ guide()?.specialty || 'Guía Profesional de Aves' }}</p>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="guide-detail-content">
+  @if (isLoading()) {
+    <div class="ion-text-center ion-padding detail-loader">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p>Cargando información del guía...</p>
+    </div>
+  } @else if (guide(); as g) {
+    <!-- HERO: PORTADA Y AVATAR UNIFICADO -->
+    <div class="hero-image">
+      @if (g.coverUrl) {
+        <img
+          [src]="getImageUrl(g.coverUrl)"
+          class="hero-image__img"
+          alt="Portada de {{ g.fullName }}"
+        />
+      } @else {
+        <div class="hero-image__fallback-banner"></div>
+      }
+
+      <div class="hero-image__avatar-circle">
+        <img
+          [src]="getImageUrl(g.photoUrl) || getAvatarFallback()"
+          (error)="onAvatarError($event)"
+          alt="Foto de {{ g.fullName }}"
+          class="hero-image__avatar-img"
+        />
+        @if (g.isPublished) {
+          <span class="avatar-verified-dot" title="Guía Verificado">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+          </span>
+        }
+      </div>
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL: CARDS Y SUBCARDS -->
+    <div class="flock-cards-wrapper">
+      <div class="flock-outer-card guide-card">
+        <div class="content-wrapper ion-padding">
+          <h2 class="title">{{ g.fullName }}</h2>
+          <p class="text-muted location-info">
+            <ion-icon name="location-outline"></ion-icon>
+            <span>{{ g.location || 'Colombia' }}</span>
+          </p>
+
+          <div class="profile-chips ion-margin-bottom">
+            <ion-chip color="primary" outline="true">
+              <ion-icon name="ribbon-outline"></ion-icon>
+              <ion-label>{{ g.specialty || 'Guía Profesional de Aves' }}</ion-label>
+            </ion-chip>
+            @if (g.isPublished) {
+              <ion-chip color="success" outline="true">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <ion-label>Verificado</ion-label>
+              </ion-chip>
+            }
+          </div>
+
+          <div class="site-detail__rating ion-margin-bottom">
+            <ion-icon name="star" color="warning" class="site-detail__rating-icon"></ion-icon>
+            <span class="site-detail__rating-score">{{ (g.rating || 5) | number:'1.1-1' }}</span>
+            <span class="site-detail__rating-badge">Guía Profesional</span>
+          </div>
+
+          <!-- SUBCARDS INTERNAS DE INFORMACIÓN -->
+          <!-- Subcard 1: Información Profesional -->
+          <div class="flock-subcard guide-info-subcard ion-margin-top">
+            <h3 class="subcard-title">
+              <ion-icon name="briefcase-outline"></ion-icon>
+              <span>Información Profesional</span>
+            </h3>
+            <div class="info-grid">
+              <div class="info-row">
+                <ion-icon name="language-outline" color="primary"></ion-icon>
+                <div>
+                  <span class="info-label">Idiomas</span>
+                  <p class="info-value">{{ g.languages || 'Español' }}</p>
+                </div>
+              </div>
+
+              @if (g.rnt) {
+                <div class="info-row">
+                  <ion-icon name="id-card-outline" color="primary"></ion-icon>
+                  <div>
+                    <span class="info-label">Registro Nacional de Turismo</span>
+                    <p class="info-value">RNT #{{ g.rnt }}</p>
+                  </div>
+                </div>
+              }
+
+              @if (g.email) {
+                <div class="info-row">
+                  <ion-icon name="mail-outline" color="primary"></ion-icon>
+                  <div>
+                    <span class="info-label">Correo Electrónico</span>
+                    <p class="info-value">{{ g.email }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+
+            @if (g.details || g.bio) {
+              <div class="bio-block ion-margin-top">
+                <span class="info-label">Experiencia y Servicios</span>
+                <p class="bio-text">{{ g.details || g.bio }}</p>
+              </div>
+            }
+
+            <!-- Quick Contact Actions -->
+            <div class="quick-contact-row ion-margin-top">
+              @if (g.phone && g.hasWhatsapp) {
+                <ion-button
+                  color="success"
+                  expand="block"
+                  class="btn-wp-direct"
+                  (click)="openWhatsApp(g.phone)"
+                >
+                  <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
+                  Contactar por WhatsApp
+                </ion-button>
+              }
+              @if (g.instagram) {
+                <ion-button
+                  fill="outline"
+                  color="secondary"
+                  size="small"
+                  [href]="g.instagram.startsWith('http') ? g.instagram : 'https://instagram.com/' + g.instagram.replace('@', '')"
+                  target="_blank"
+                >
+                  <ion-icon name="logo-instagram" slot="start"></ion-icon>
+                  Instagram
+                </ion-button>
+              }
+              @if (g.website) {
+                <ion-button
+                  fill="outline"
+                  color="primary"
+                  size="small"
+                  [href]="g.website.startsWith('http') ? g.website : 'https://' + g.website"
+                  target="_blank"
+                >
+                  <ion-icon name="globe-outline" slot="start"></ion-icon>
+                  Sitio Web
+                </ion-button>
+              }
+            </div>
+          </div>
+
+          <!-- Subcard 2: Calendario de Disponibilidad -->
+          <div class="flock-subcard guide-calendar-subcard ion-margin-top">
+            <h3 class="subcard-title">
+              <ion-icon name="calendar-outline"></ion-icon>
+              <span>Calendario de Disponibilidad</span>
+            </h3>
+            <p class="subcard-subtitle">Consulta los días libres para reservar tu salida</p>
+
+            <div class="calendar-navigation ion-margin-top">
+              <ion-button fill="clear" size="small" (click)="prevMonth()" aria-label="Mes anterior">
+                <ion-icon name="chevron-back-outline"></ion-icon>
+              </ion-button>
+              <h4 class="calendar-month-name">{{ currentMonthLabel() }}</h4>
+              <ion-button fill="clear" size="small" (click)="nextMonth()" aria-label="Mes siguiente">
+                <ion-icon name="chevron-forward-outline"></ion-icon>
+              </ion-button>
+            </div>
+
+            <div class="calendar-days-grid ion-margin-top">
+              @for (day of calendarDays(); track day.dateString) {
+                <button
+                  type="button"
+                  class="day-btn"
+                  [class.day-btn--selected]="day.isSelected"
+                  [class.day-btn--blocked]="day.isBlocked"
+                  [class.day-btn--past]="day.isPast"
+                  [disabled]="day.isBlocked || day.isPast"
+                  (click)="selectDate(day)"
+                >
+                  <span class="day-num">{{ day.dayNumber }}</span>
+                  @if (day.isBlocked) {
+                    <span class="day-tag day-tag--busy">Ocupado</span>
+                  } @else if (!day.isPast) {
+                    <span class="day-tag day-tag--free">Libre</span>
+                  }
+                </button>
+              }
+            </div>
+
+            <div class="calendar-legend-bar ion-margin-top">
+              <div class="legend-chip">
+                <span class="chip-color chip-color--free"></span>
+                <span>Día Disponible</span>
+              </div>
+              <div class="legend-chip">
+                <span class="chip-color chip-color--busy"></span>
+                <span>Día Ocupado</span>
+              </div>
+              <div class="legend-chip">
+                <span class="chip-color chip-color--selected"></span>
+                <span>Seleccionado</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subcard 3: Formulario de Reserva -->
+          <div class="flock-subcard guide-booking-subcard ion-margin-top">
+            <h3 class="subcard-title">
+              <ion-icon name="paper-plane-outline"></ion-icon>
+              <span>Reservar y Contactar por la App</span>
+            </h3>
+            <p class="subcard-subtitle">Establece contacto formal y asegura la fecha de tu salida</p>
+
+            @if (selectedDate()) {
+              <div class="selected-date-banner ion-margin-top ion-margin-bottom">
+                <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
+                <div>
+                  <span class="banner-label">Fecha Seleccionada:</span>
+                  <strong class="banner-date">{{ selectedDate() }}</strong>
+                </div>
+              </div>
+            } @else {
+              <div class="unselected-date-tip ion-margin-top ion-margin-bottom">
+                <ion-icon name="calendar-outline" color="primary"></ion-icon>
+                <span>Por favor toca un día <strong>Libre</strong> en el calendario de arriba.</span>
+              </div>
+            }
+
+            <div class="form-field ion-margin-bottom">
+              <label class="field-title">Tipo de Actividad</label>
+              <div class="input-select-box">
+                <ion-select
+                  [value]="activityType()"
+                  (ionChange)="activityType.set($event.detail.value)"
+                  interface="popover"
+                >
+                  <ion-select-option value="Aviturismo General">Aviturismo General</ion-select-option>
+                  <ion-select-option value="Fotografía de Aves">Fotografía de Aves Especializada</ion-select-option>
+                  <ion-select-option value="Búsqueda de Aves Endémicas">Búsqueda de Aves Endémicas</ion-select-option>
+                  <ion-select-option value="Senderismo de Observación">Senderismo de Observación</ion-select-option>
+                  <ion-select-option value="Tour Privado Personalizado">Tour Privado Personalizado</ion-select-option>
+                </ion-select>
+              </div>
+            </div>
+
+            <div class="form-field ion-margin-bottom">
+              <label class="field-title">Tu Teléfono de Contacto *</label>
+              <div class="input-text-box">
+                <ion-icon name="call-outline"></ion-icon>
+                <input
+                  type="tel"
+                  placeholder="Ej: +57 300 123 4567"
+                  [value]="contactPhone()"
+                  (input)="onPhoneInput($event)"
+                  class="form-native-input"
+                />
+              </div>
+            </div>
+
+            <div class="form-field ion-margin-bottom">
+              <label class="field-title">Mensaje o Requerimientos Específicos</label>
+              <div class="input-textarea-box">
+                <textarea
+                  rows="3"
+                  placeholder="Describe cuántas personas viajan, si tienes especies objetivo, equipos..."
+                  [value]="message()"
+                  (input)="onMessageInput($event)"
+                  class="form-native-input"
+                ></textarea>
+              </div>
+            </div>
+
+            <ion-button
+              expand="block"
+              color="primary"
+              class="btn-submit-booking"
+              [disabled]="!selectedDate() || !contactPhone() || isSubmitting()"
+              (click)="onSubmitBooking()"
+            >
+              <ion-icon name="send-outline" slot="start"></ion-icon>
+              Enviar Solicitud de Reserva
+            </ion-button>
+          </div>
+
+          <!-- Subcard 4: Mis Solicitudes con este Guía -->
+          @if (myBookings().length > 0) {
+            <div class="flock-subcard guide-history-subcard ion-margin-top">
+              <h3 class="subcard-title">
+                <ion-icon name="time-outline"></ion-icon>
+                <span>Mis Solicitudes con este Guía</span>
+              </h3>
+
+              @for (booking of myBookings(); track booking.id) {
+                <div class="user-booking-item ion-margin-bottom">
+                  <div class="user-booking-header">
+                    <div>
+                      <span class="booking-date-text">📅 {{ booking.bookingDate }}</span>
+                      <h5 class="booking-type-text">{{ booking.activityType }}</h5>
+                    </div>
+                    <ion-badge
+                      [color]="
+                        booking.status === 'CONFIRMED'
+                          ? 'success'
+                          : booking.status === 'PENDING'
+                          ? 'warning'
+                          : booking.status === 'COMPLETED'
+                          ? 'tertiary'
+                          : 'medium'
+                      "
+                    >
+                      {{ booking.status }}
+                    </ion-badge>
+                  </div>
+
+                  @if (booking.status === 'CONFIRMED' || booking.status === 'COMPLETED') {
+                    <div class="booking-completed-action ion-margin-top">
+                      @if (booking.rating) {
+                        <div class="rated-summary">
+                          <span>Tu Calificación: </span>
+                          <strong>⭐ {{ booking.rating }} / 5</strong>
+                          @if (booking.review) {
+                            <p class="rated-review">"{{ booking.review }}"</p>
+                          }
+                        </div>
+                      } @else {
+                        <ion-button
+                          size="small"
+                          color="tertiary"
+                          expand="block"
+                          (click)="openRatingModal(booking)"
+                        >
+                          <ion-icon name="star" slot="start"></ion-icon>
+                          Calificar Servicio Finalizado
+                        </ion-button>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Rating Modal -->
+  <ion-modal
+    [isOpen]="ratingModalBooking() !== null"
+    (didDismiss)="ratingModalBooking.set(null)"
+    [initialBreakpoint]="0.7"
+    [breakpoints]="[0, 0.7, 0.95]"
+  >
+    <ng-template>
+      <ion-header class="ion-no-border flock-modal-header">
+        <ion-toolbar>
+          <ion-title>Calificar Servicio</ion-title>
+          <ion-buttons slot="end">
+            <button type="button" (click)="ratingModalBooking.set(null)" class="flock-header-pill-btn" aria-label="Cerrar modal">
+              <ion-icon name="close-outline"></ion-icon>
+              <span>Cerrar</span>
+            </button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding rating-modal-content">
+        <div class="modal-rating-box ion-text-center">
+          <p class="modal-sub">
+            ¿Cómo fue tu experiencia con {{ guide()?.fullName || 'el guía' }}?
+          </p>
+
+          <div class="star-rating-selector ion-margin-top">
+            @for (s of [1, 2, 3, 4, 5]; track s) {
+              <button
+                type="button"
+                class="star-button"
+                (click)="selectedRating.set(s)"
+              >
+                <ion-icon
+                  [name]="s <= selectedRating() ? 'star' : 'star-outline'"
+                  class="star-icon"
+                  [class.star-icon--active]="s <= selectedRating()"
+                ></ion-icon>
+              </button>
+            }
+          </div>
+
+          <div class="review-input-box ion-margin-top">
+            <label class="field-title">Escribe tu reseña u opinión (opcional):</label>
+            <textarea
+              rows="4"
+              placeholder="Puntualidad, conocimiento de aves, amabilidad..."
+              [value]="ratingReview()"
+              (input)="onReviewInput($event)"
+              class="form-native-input modal-textarea"
+            ></textarea>
+          </div>
+
+          <ion-button
+            expand="block"
+            color="primary"
+            class="btn-send-rating ion-margin-top"
+            (click)="submitRating()"
+          >
+            <ion-icon name="checkmark-done-outline" slot="start"></ion-icon>
+            Enviar Calificación
+          </ion-button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

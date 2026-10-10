@@ -1,0 +1,318 @@
+<!-- <ion-content class="auth-content">
+  <div class="auth-shell">
+    <app-brand-header></app-brand-header>
+
+    <div class="ibirds-card">
+      <div class="card-header-solid ion-text-center">
+        <h2 class="card-title">¡Crea tu Cuenta!</h2>
+        <p class="card-subtitle">
+          Accede a un nuevo mundo y conoce acerca del Aviturismo en Colombia
+        </p>
+      </div>
+
+      <div class="card-body ion-padding">
+        <form
+          [formGroup]="registerForm"
+          (ngSubmit)="onRegister()"
+          class="auth-form"
+          novalidate
+        >
+          <div class="form-field">
+            <label>Tipo de Usuario</label>
+            <div class="input-wrapper">
+              <ion-select
+                formControlName="role"
+                (ionChange)="onRoleChange($event)"
+                interface="popover"
+              >
+                <ion-select-option value="PAJARERO"
+                  >Pajarero / Observador</ion-select-option
+                >
+                <ion-select-option value="PROVEEDOR"
+                  >Proveedor de Servicios</ion-select-option
+                >
+                <ion-select-option value="BOTH">Ambos</ion-select-option>
+              </ion-select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label>Nombre</label>
+              <div
+                class="input-wrapper"
+                [class.invalid]="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched"
+              >
+                <input
+                  class="native-input"
+                  formControlName="firstName"
+                  type="text"
+                  placeholder="Ej. Juan"
+                />
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Apellido</label>
+              <div
+                class="input-wrapper"
+                [class.invalid]="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched"
+              >
+                <input
+                  class="native-input"
+                  formControlName="lastName"
+                  type="text"
+                  placeholder="Ej. Pérez"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Nombre de Usuario</label>
+            <div
+              class="input-wrapper"
+              [class.invalid]="registerForm.get('username')?.invalid && registerForm.get('username')?.touched"
+            >
+              <ion-icon name="person-outline"></ion-icon>
+              <input
+                class="native-input"
+                formControlName="username"
+                type="text"
+                placeholder="juanperez99"
+              />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Correo Electrónico</label>
+            <div
+              class="input-wrapper"
+              [class.invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+            >
+              <ion-icon name="mail-outline"></ion-icon>
+              <input
+                class="native-input"
+                formControlName="email"
+                type="email"
+                placeholder="juan@correo.com"
+              />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Contraseña</label>
+            <div
+              class="input-wrapper"
+              [class.invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+            >
+              <ion-icon name="lock-closed-outline"></ion-icon>
+              <input
+                class="native-input"
+                formControlName="password"
+                [type]="showPassword() ? 'text' : 'password'"
+                placeholder="Mínimo 8 caracteres"
+              />
+              <ion-button
+                slot="end"
+                fill="clear"
+                (click)="togglePassword()"
+                color="medium"
+              >
+                <ion-icon
+                  [name]="showPassword() ? 'eye-off-outline' : 'eye-outline'"
+                ></ion-icon>
+              </ion-button>
+            </div>
+            <app-password-meter
+              [password]="registerForm.get('password')?.value || ''"
+            ></app-password-meter>
+          </div>
+
+          @if (selectedRole() === 'PROVEEDOR' || selectedRole() === 'BOTH') {
+          <div class="provider-section">
+            <div class="section-badge">Datos de Negocio</div>
+            <div class="form-field">
+              <label>Nombre del Negocio</label>
+              <div
+                class="input-wrapper"
+                [class.invalid]="registerForm.get('businessName')?.invalid && registerForm.get('businessName')?.touched"
+              >
+                <ion-icon name="briefcase-outline"></ion-icon>
+                <input
+                  class="native-input"
+                  formControlName="businessName"
+                  type="text"
+                  placeholder="Ej. EcoTours"
+                />
+              </div>
+            </div>
+            <div class="form-field">
+              <label>RNT</label>
+              <div
+                class="input-wrapper"
+                [class.invalid]="registerForm.get('rnt')?.invalid && registerForm.get('rnt')?.touched"
+              >
+                <ion-icon name="document-text-outline"></ion-icon>
+                <input
+                  class="native-input"
+                  formControlName="rnt"
+                  type="text"
+                  placeholder="Ej. 123456"
+                />
+              </div>
+            </div>
+          </div>
+          }
+
+          <div class="legal-note">
+            Al registrarte, aceptas nuestros
+            <a (click)="openTerms()">Términos y Políticas</a>.
+          </div>
+
+          <ion-button
+            expand="block"
+            type="submit"
+            class="primary-btn"
+            [disabled]="registerForm.invalid"
+          >
+            Registrarme ahora
+          </ion-button>
+        </form>
+      </div>
+    </div>
+
+    <div class="registration-footer ion-text-center ion-margin-top">
+      <p class="footer-question">¿Ya tienes cuenta?</p>
+      <a routerLink="/auth/login" class="footer-link">Inicia sesión</a>
+    </div>
+  </div>
+</ion-content> -->
+
+<ion-content class="auth-content">
+  <div class="auth-shell">
+    <app-brand-header></app-brand-header>
+
+    <div class="ibirds-card">
+      <app-auth-card-header
+        title="¡Crea tu Cuenta!"
+        subtitle="Accede a un nuevo mundo y conoce acerca del Aviturismo en Colombia"
+      >
+      </app-auth-card-header>
+
+      <div class="card-body ion-padding">
+        <form
+          (ngSubmit)="onRegister()"
+          class="auth-form"
+          novalidate
+        >
+          <div class="form-field">
+            <label>Tipo de Usuario</label>
+            <div class="input-wrapper">
+              <ion-select
+                [(ngModel)]="selectedRole"
+                name="role"
+                (ionChange)="onRoleChange($event)"
+                interface="popover"
+              >
+                <ion-select-option value="PAJARERO"
+                  >Pajarero / Observador</ion-select-option
+                >
+                <ion-select-option value="PROVEEDOR"
+                  >Proveedor de Servicios</ion-select-option
+                >
+                <ion-select-option value="BOTH">Ambos</ion-select-option>
+              </ion-select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <app-auth-input
+              label="Nombre"
+              placeholder="Ej. Juan"
+              [(value)]="firstName"
+              [isInvalid]="isFormSubmitted() && !isFirstNameValid()"
+            >
+            </app-auth-input>
+
+            <app-auth-input
+              label="Apellido"
+              placeholder="Ej. Pérez"
+              [(value)]="lastName"
+              [isInvalid]="isFormSubmitted() && !isLastNameValid()"
+            >
+            </app-auth-input>
+          </div>
+
+          <app-auth-input
+            label="Nombre de Usuario"
+            icon="person-outline"
+            placeholder="juanperez99"
+            [(value)]="username"
+            [isInvalid]="isFormSubmitted() && !isUsernameValid()"
+          >
+          </app-auth-input>
+
+          <app-auth-input
+            label="Correo Electrónico"
+            icon="mail-outline"
+            type="email"
+            placeholder="juan@correo.com"
+            [(value)]="email"
+            [isInvalid]="isFormSubmitted() && !isEmailValid()"
+          >
+          </app-auth-input>
+
+          <app-password-input
+            label="Contraseña"
+            [showMeter]="true"
+            [(value)]="password"
+            [isInvalid]="isFormSubmitted() && !isPasswordValid()"
+          >
+          </app-password-input>
+
+          @if (selectedRole() === 'PROVEEDOR' || selectedRole() === 'BOTH') {
+          <div class="provider-section">
+            <div class="section-badge">Datos de Negocio</div>
+            <app-auth-input
+              label="Nombre del Negocio"
+              icon="briefcase-outline"
+              placeholder="Ej. EcoTours"
+              [(value)]="businessName"
+              [isInvalid]="isFormSubmitted() && !isBusinessNameValid()"
+            >
+            </app-auth-input>
+
+            <app-auth-input
+              label="RNT"
+              icon="document-text-outline"
+              placeholder="Ej. 123456"
+              [(value)]="rnt"
+              [isInvalid]="isFormSubmitted() && !isRntValid()"
+            >
+            </app-auth-input>
+          </div>
+          }
+
+          <div class="legal-note">
+            Al registrarte, aceptas nuestros
+            <a (click)="openTerms()">Términos y Políticas</a>.
+          </div>
+
+          <ion-button
+            expand="block"
+            type="submit"
+            class="primary-btn"
+            [disabled]="isFormSubmitted() && !isFormValid()"
+          >
+            Registrarme ahora
+          </ion-button>
+        </form>
+      </div>
+    </div>
+
+    <div class="registration-footer ion-text-center ion-margin-top">
+      <p class="footer-question">¿Ya tienes cuenta?</p>
+      <a routerLink="/auth/login" class="footer-link">Inicia sesión</a>
+    </div>
+  </div>
+</ion-content>

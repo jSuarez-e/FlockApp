@@ -1,0 +1,70 @@
+<app-section-header
+  title="Sitios de Aviturismo"
+  subtitle="Hotspots y reservas naturales"
+  [showMenuButton]="true"
+  [showSearch]="true"
+  [searchTerm]="searchSiteName()"
+  searchPlaceholder="Buscar sitio por nombre..."
+  (searchChange)="searchSiteName.set($event)"
+>
+  <div slot="header-actions">
+    @if (syncStore.isSyncing()) {
+      <ion-spinner name="dots" color="light"></ion-spinner>
+    }
+  </div>
+
+  <div slot="header-filters" class="site-header-filters">
+    <div class="dept-select-chip">
+      <ion-icon name="location-outline"></ion-icon>
+      <ion-select
+        [value]="searchDepartment()"
+        (ionChange)="searchDepartment.set($event.detail.value)"
+        interface="action-sheet"
+        placeholder="Todo Colombia"
+        class="custom-dept-select"
+      >
+        <ion-select-option value="all">Todo Colombia</ion-select-option>
+        @for (dept of departments(); track dept) {
+          <ion-select-option [value]="dept">{{ dept }}</ion-select-option>
+        }
+      </ion-select>
+    </div>
+  </div>
+</app-section-header>
+
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (siteStore.isLoading() && siteStore.allSites().length === 0) {
+    <div class="ion-text-center ion-padding state-container">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p class="state-text">Explorando sitios de aviturismo en Colombia...</p>
+    </div>
+  } @else if (filteredSitesMapMarkers().length === 0) {
+    <div class="ion-padding ion-text-center state-container">
+      <div class="state-icon-circle">
+        <ion-icon name="information-circle-outline"></ion-icon>
+      </div>
+      <h3 class="state-title">
+        {{ siteStore.allSites().length === 0 ? 'No encontramos sitios de aviturismo' : 'No encontramos sitios con esos criterios' }}
+      </h3>
+      <p class="state-text">
+        {{ siteStore.allSites().length === 0 ? 'Desliza hacia abajo para actualizar los sitios disponibles.' : 'Intenta ajustar tu búsqueda o selecciona otro departamento.' }}
+      </p>
+      @if (searchSiteName() || searchDepartment() !== 'all') {
+        <button type="button" class="btn-reset-filters" (click)="resetFilters()">
+          Restablecer filtros
+        </button>
+      }
+    </div>
+  } @else {
+    <div class="map-container-full">
+      <app-search-map 
+        [sightings]="filteredSitesMapMarkers()" 
+        (markerClick)="openSiteDetail($event)">
+      </app-search-map>
+    </div>
+  }
+</ion-content>

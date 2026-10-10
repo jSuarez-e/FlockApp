@@ -1,0 +1,343 @@
+<!--
+@sdd
+- [Objetivo]: Ficha técnica integral de ave estructurada en 4 pestañas: Básica, Registros (Mapa), Morfología y Enlaces.
+- [I/O - Reusabilidad]: Consume el objeto ave vía setter/signal. Emite acciones de cierre de modal e interacción de mapa.
+- [Edge Cases - UI]: Manejo de imágenes faltantes, ausencia de coordenadas en mapa, enlaces externos nulos.
+-->
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary" class="detail-toolbar">
+    <ion-buttons slot="start">
+      <ion-button (click)="dismissModal()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="detail-title">Detalle Del Ave</ion-title>
+  </ion-toolbar>
+
+  <ion-segment
+    [value]="activeTab()"
+    (ionChange)="onTabChange($event)"
+    [scrollable]="true"
+    mode="md"
+    class="encyclopedia-segments"
+  >
+    <ion-segment-button value="basic">
+      <ion-label>BASICA</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="records">
+      <ion-label>REGISTROS</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="morphology">
+      <ion-label>MORFOLOGIA</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="links">
+      <ion-label>ENLACES</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+</ion-header>
+
+<ion-content class="detail-content">
+  @if (birdData(); as b) {
+    @switch (activeTab()) {
+      <!-- PESTAÑA 1: INFORMACIÓN BÁSICA -->
+      @case ('basic') {
+        <div class="tab-basic">
+          <!-- Hero Image con marca de agua de copyright -->
+          <div class="hero-image-wrapper">
+            @if (hasValidImage() && !imageError()) {
+              <img
+                class="hero-image"
+                [src]="b.base_image"
+                (error)="handleImageError()"
+                [alt]="b.scientific_name"
+                loading="eager"
+              />
+            } @else {
+              <div class="hero-placeholder">
+                <img
+                  class="hero-placeholder-img"
+                  src="/assets/imgs/commons/no-image.png"
+                  alt="Ave sin imagen"
+                />
+              </div>
+            }
+
+            <div class="hero-copyright">
+              <span>&copy; {{ b.image_copyright || 'Félix Uribe' }}</span>
+            </div>
+          </div>
+
+          <!-- Cabecera de Especie -->
+          <div class="species-header ion-padding-horizontal ion-padding-top">
+            <div class="species-header__top-row">
+              <h2 class="species-header__scientific">{{ b.scientific_name }}</h2>
+              @if (b.conservation_convention) {
+                <span
+                  [class]="
+                    'status-badge status-badge--' +
+                    (b.conservation_convention.toLowerCase() || 'default')
+                  "
+                >
+                  {{ b.conservation_convention }}
+                </span>
+              }
+            </div>
+            <p class="species-header__english">
+              {{ b.english_name || b.common_name }}
+            </p>
+          </div>
+
+          <div class="specs-divider"></div>
+
+          <!-- Rejilla Técnica de 2 Columnas -->
+          <div class="specs-grid">
+            <!-- Fila 1: Dificultad | Altura -->
+            <div class="specs-row">
+              <div class="specs-cell">
+                <span class="specs-cell__label">Dificultad de ver</span>
+                <div class="specs-cell__eyes">
+                  @for (eyeIdx of [1, 2, 3, 4]; track eyeIdx) {
+                    <ion-icon
+                      [name]="eyeIdx <= (b.viewing_difficulty || 1) ? 'eye' : 'eye-outline'"
+                      [class.filled]="eyeIdx <= (b.viewing_difficulty || 1)"
+                    ></ion-icon>
+                  }
+                </div>
+              </div>
+              <div class="specs-cell">
+                <span class="specs-cell__label">Altura</span>
+                <span class="specs-cell__value"
+                  >{{ b.min_altitude || 0 }} - {{ b.max_altitude || 0 }} m.s.n.m</span
+                >
+              </div>
+            </div>
+
+            <!-- Fila 2: Orden | Familia -->
+            <div class="specs-row">
+              <div class="specs-cell">
+                <span class="specs-cell__label">Orden</span>
+                <span class="specs-cell__value">{{ b.order_name || 'Accipitriformes' }}</span>
+              </div>
+              <div class="specs-cell">
+                <span class="specs-cell__label">Familia</span>
+                <span class="specs-cell__value">{{ b.family_description || 'Accipitridae' }}</span>
+              </div>
+            </div>
+
+            <!-- Fila 3: Alimentación | Tamaño -->
+            <div class="specs-row">
+              <div class="specs-cell">
+                <span class="specs-cell__label">Alimentación</span>
+                <span class="specs-cell__value">{{ b.feeding_description || 'No especificado' }}</span>
+              </div>
+              <div class="specs-cell">
+                <span class="specs-cell__label">Tamaño</span>
+                <span class="specs-cell__value">{{ b.size ? b.size + ' cm' : 'No especificado' }}</span>
+              </div>
+            </div>
+
+            <!-- Fila 4: Hábitat | Residencia -->
+            <div class="specs-row">
+              <div class="specs-cell">
+                <span class="specs-cell__label">Hábitat</span>
+                <span class="specs-cell__value">{{ b.habitat_description || 'Modificado' }}</span>
+              </div>
+              <div class="specs-cell">
+                <span class="specs-cell__label">Residencia</span>
+                <span class="specs-cell__value">{{ b.residency_description || 'Residente' }}</span>
+              </div>
+            </div>
+
+            <!-- Fila 5: Estado | Comportamiento -->
+            <div class="specs-row">
+              <div class="specs-cell">
+                <span class="specs-cell__label">Estado</span>
+                <span class="specs-cell__value">{{ b.conservation_status_description || 'Preocupación Menor' }}</span>
+              </div>
+              <div class="specs-cell">
+                <span class="specs-cell__label">Comportamiento</span>
+                <span class="specs-cell__value">{{ b.behavior || '-' }}</span>
+              </div>
+            </div>
+
+            <!-- Fila 6: Colores -->
+            <div class="specs-row specs-row--single">
+              <div class="specs-cell specs-cell--full">
+                <span class="specs-cell__label">Colores</span>
+                <span class="specs-cell__value">{{ b.colors || '-' }}</span>
+              </div>
+            </div>
+
+            <!-- Fila 7: Entorno -->
+            <div class="specs-row specs-row--single">
+              <div class="specs-cell specs-cell--full">
+                <span class="specs-cell__label">Entorno</span>
+                <p class="specs-cell__description">
+                  {{ b.environment || 'Es común encontrarlos en terreno abierto y seco con árboles dispersos.' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- PESTAÑA 2: REGISTROS (MAPA INTERACTIVO) -->
+      @case ('records') {
+        <div class="tab-records">
+          <div class="records-toggle-wrapper ion-padding">
+            <ion-segment
+              [value]="recordsMode()"
+              (ionChange)="onRecordsModeChange($event)"
+              mode="ios"
+              class="records-mode-segment"
+            >
+              <ion-segment-button value="mine">
+                <ion-label>Mis Registros</ion-label>
+              </ion-segment-button>
+              <ion-segment-button value="national">
+                <ion-label>Nivel Nacional (100)</ion-label>
+              </ion-segment-button>
+            </ion-segment>
+            <p class="records-subtitle">
+              @if (recordsMode() === 'mine') {
+                Avistamientos registrados por ti para esta especie.
+              } @else {
+                Últimos 100 registros a nivel nacional (configurado por defecto).
+              }
+            </p>
+          </div>
+
+          <div class="records-map-container">
+            @if (isLoadingSightings()) {
+              <div class="records-loading">
+                <ion-spinner name="crescent" color="primary"></ion-spinner>
+                <p>Cargando puntos de avistamiento...</p>
+              </div>
+            } @else {
+              <app-search-map
+                [sightings]="displayedSightings()"
+                (markerClick)="onMarkerSelected($event)"
+              ></app-search-map>
+
+              @if (displayedSightings().length === 0) {
+                <div class="records-empty-notice">
+                  <ion-icon name="map-outline"></ion-icon>
+                  <p>No hay registros disponibles en esta selección.</p>
+                </div>
+              }
+            }
+          </div>
+        </div>
+      }
+
+      <!-- PESTAÑA 3: MORFOLOGÍA -->
+      @case ('morphology') {
+        <div class="tab-morphology ion-padding">
+          <div class="morph-cards-grid">
+            <div class="morph-card">
+              <div class="morph-card__header">
+                <ion-icon name="fitness-outline"></ion-icon>
+                <h3>Pico</h3>
+              </div>
+              <p>{{ b.beak_morphology_description || 'Morfología estándar adaptada a su alimentación.' }}</p>
+            </div>
+
+            <div class="morph-card">
+              <div class="morph-card__header">
+                <ion-icon name="layers-outline"></ion-icon>
+                <h3>Alas</h3>
+              </div>
+              <p>{{ b.wing_morphology_description || 'Estructura alar optimizada para su tipo de vuelo y hábitat.' }}</p>
+            </div>
+
+            <div class="morph-card">
+              <div class="morph-card__header">
+                <ion-icon name="compass-outline"></ion-icon>
+                <h3>Cola</h3>
+              </div>
+              <p>{{ b.tail_morphology_description || 'Geometría timonera acorde a sus maniobras de desplazamiento.' }}</p>
+            </div>
+
+            <div class="morph-card">
+              <div class="morph-card__header">
+                <ion-icon name="leaf-outline"></ion-icon>
+                <h3>Patas</h3>
+              </div>
+              <p>{{ b.leg_morphology_description || 'Estructura podal adaptada a su substrato y hábitos.' }}</p>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- PESTAÑA 4: ENLACES -->
+      @case ('links') {
+        <div class="tab-links ion-padding">
+          <div class="links-list">
+            <!-- Autoridad -->
+            <div class="link-item">
+              <span class="link-item__label">Autoridad</span>
+              <span class="link-item__value">{{ b.authority || '-' }}</span>
+            </div>
+
+            <!-- Recurso GBIF -->
+            <div class="link-item">
+              <span class="link-item__label">Recurso GBIF</span>
+              @if (b.gbif_link && b.gbif_link !== '-') {
+                <a
+                  class="link-item__action"
+                  [href]="b.gbif_link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Abrir enlace
+                </a>
+              } @else {
+                <span class="link-item__value">-</span>
+              }
+            </div>
+
+            <!-- Recurso WikiAves -->
+            <div class="link-item">
+              <span class="link-item__label">Recurso WikiAves</span>
+              @if (b.wikiaves_link && b.wikiaves_link !== '-') {
+                <a
+                  class="link-item__action"
+                  [href]="b.wikiaves_link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Abrir enlace
+                </a>
+              } @else {
+                <span class="link-item__value">-</span>
+              }
+            </div>
+
+            <!-- Recurso eBird -->
+            <div class="link-item">
+              <span class="link-item__label">Recurso eBird</span>
+              @if (b.ebird_link && b.ebird_link !== '-') {
+                <a
+                  class="link-item__action"
+                  [href]="b.ebird_link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Abrir enlace
+                </a>
+              } @else {
+                <span class="link-item__value">-</span>
+              }
+            </div>
+
+            <!-- Otras Fuentes -->
+            <div class="link-item">
+              <span class="link-item__label">Otras Fuentes</span>
+              <span class="link-item__value">{{ b.other_sources || '-' }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    }
+  }
+</ion-content>

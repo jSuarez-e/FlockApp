@@ -1,0 +1,213 @@
+/**
+ * @file bird-card.component.scss
+ * @description Arquitectura visual "Elevated Card" con interacciones fluidas. (BEM)
+ */
+
+:host {
+  display: block;
+  height: 140px;
+  box-sizing: border-box;
+  padding: 6px 16px;
+  contain: content;
+}
+
+.ripple-parent {
+  position: relative;
+  overflow: hidden;
+}
+
+.bird-card {
+  display: flex;
+  height: 128px;
+  background: var(--flock-card, #fff);
+  border-radius: var(--flock-radius-card, 18px);
+  padding: 10px 12px;
+  gap: 14px;
+  box-shadow: var(--flock-shadow-card);
+  border: 1px solid var(--flock-border-subtle, #e2e8f0);
+  box-sizing: border-box;
+  transition: transform var(--flock-transition-fast), box-shadow var(--flock-transition-fast);
+  will-change: transform;
+
+  &:active {
+    transform: scale(0.985);
+  }
+
+  &__image-container {
+    position: relative;
+    width: 108px;
+    height: 108px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    box-sizing: border-box;
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+
+    &--placeholder {
+      object-fit: contain;
+      padding: 6px;
+      background: #fafaf9;
+    }
+  }
+
+  &__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fafaf9;
+  }
+
+  &__difficulty-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgb(15 23 42 / 78%);
+    padding: 3px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+
+    ion-icon {
+      font-size: 0.78rem;
+      color: #f59e0b;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  &__header {
+    margin-bottom: 6px;
+  }
+
+  &__scientific-name {
+    margin: 0 0 2px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    font-style: italic;
+    color: #0f172a;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__english-name {
+    margin: 0;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  &__badge {
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+
+    &--residency {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #e2e8f0;
+    }
+
+    &--status {
+      color: #fff;
+      background-color: #64748b;
+
+      &-lc {
+        background-color: #16a34a;
+      }
+
+      &-nt {
+        background-color: #65a30d;
+      }
+
+      &-vu {
+        background-color: #ca8a04;
+      }
+
+      &-en {
+        background-color: #ea580c;
+      }
+
+      &-cr {
+        background-color: #dc2626;
+      }
+
+      &-ew {
+        background-color: #7f1d1d;
+      }
+
+      &-ex {
+        background-color: #18181b;
+      }
+
+      &-dd {
+        background-color: #94a3b8;
+      }
+
+      &-ne {
+        background-color: #cbd5e1;
+        color: #334155;
+      }
+    }
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+  }
+
+  &__altitude {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #ecfdf5;
+    border: 1px solid #d1fae5;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #047857;
+
+    ion-icon {
+      font-size: 0.85rem;
+      color: #059669;
+    }
+  }
+}

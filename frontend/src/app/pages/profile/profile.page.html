@@ -1,0 +1,215 @@
+<!--
+  @sdd
+  [Objetivo]: Vista principal de gestión de perfil de usuario (Mi Perfil) unificada con el diseño panorámico de FlockApp.
+  [I/O - Reusabilidad]: Consume Signals de ProfileStore/UserService, componentes StatWidget y AuthInput.
+  [Edge Cases - UI]: Portada fallback con degradado, botón de cambio de portada/avatar en modo propio y botón guardar al final del formulario.
+-->
+<ion-header class="ion-no-border flock-header-seamless">
+  <ion-toolbar class="settings-header-toolbar">
+    <div class="settings-header-content">
+      <ion-buttons slot="start" class="header-menu-buttons">
+        <ion-menu-button class="header-menu-btn"></ion-menu-button>
+      </ion-buttons>
+
+      <div class="settings-header-titles">
+        <h1 class="settings-header-title">Mi Perfil</h1>
+        <p class="settings-header-subtitle">Información personal y credenciales</p>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="public-profile-content">
+  @if (isLoading()) {
+    <app-loading message="Cargando información del perfil..." [fullHeight]="true"></app-loading>
+  } @else {
+    <!-- HERO: PORTADA Y AVATAR UNIFICADOS A TODO ANCHO (FULL-BLEED) -->
+    <div class="hero-image">
+    @if (viewedUser()?.coverUrl) {
+      <img
+        [src]="getImageUrl(viewedUser()?.coverUrl)"
+        class="hero-image__img"
+        alt="Foto de portada"
+      />
+    } @else {
+      <div class="hero-image__fallback-banner"></div>
+    }
+
+    @if (isOwnProfile()) {
+      <ion-button
+        fill="clear"
+        class="btn-edit-cover"
+        (click)="changePhoto('COVER')"
+        aria-label="Cambiar foto de portada"
+      >
+        <ion-icon slot="start" name="camera-outline"></ion-icon>
+        <span>Cambiar portada</span>
+      </ion-button>
+    }
+
+    <div class="hero-image__avatar-circle">
+      <img
+        [src]="getImageUrl(viewedUser()?.avatarUrl) || ('https://ui-avatars.com/api/?name=' + (viewedUser()?.firstName || 'Pajarero') + '+' + (viewedUser()?.lastName || '') + '&background=047857&color=fff')"
+        alt="Avatar del usuario"
+        class="hero-image__avatar-img"
+      />
+      @if (isOwnProfile()) {
+        <ion-button
+          fill="clear"
+          class="btn-edit-avatar-circular"
+          (click)="changePhoto('AVATAR')"
+          aria-label="Opciones de foto de perfil"
+        >
+          <ion-icon slot="icon-only" name="camera-outline"></ion-icon>
+        </ion-button>
+      }
+    </div>
+  </div>
+
+  <!-- CONTENEDOR PRINCIPAL: CARDS Y SUBCARDS -->
+  <div class="flock-cards-wrapper profile-cards-wrapper">
+    <div class="flock-outer-card profile-card">
+      <div class="content-wrapper ion-padding">
+      <div class="profile-header-meta">
+        <h2 class="title">{{ viewedUser()?.firstName }} {{ viewedUser()?.lastName }}</h2>
+        <p class="text-muted location-info">
+          <ion-icon name="location-outline"></ion-icon>
+          <span>{{ (viewedUser()?.department || 'Colombia') }}{{ viewedUser()?.municipality ? ' - ' + viewedUser()?.municipality : '' }}</span>
+        </p>
+
+        <!-- CHIPS DE ROL -->
+        <div class="profile-chips ion-margin-bottom">
+          <ion-chip color="primary" outline="true">
+            <ion-icon [name]="viewedUser()?.role === 'PROVEEDOR' ? 'business-outline' : 'binoculars-outline'"></ion-icon>
+            <ion-label>{{ getRoleLabel(viewedUser()?.role) }}</ion-label>
+          </ion-chip>
+        </div>
+      </div>
+
+      <!-- SUBCARD 1: MÉTRICAS Y LOGROS -->
+      <div class="flock-subcard stat-subcard">
+        <h3 class="subcard-title">
+          <ion-icon name="trophy-outline"></ion-icon>
+          <span>Métricas de Aviturismo</span>
+        </h3>
+        <div class="widgets-container">
+          <app-stat-widget
+            icon="paw-outline"
+            [value]="stats().speciesCount"
+            label="Especies"
+            colorClass="species"
+          >
+          </app-stat-widget>
+
+          <app-stat-widget
+            icon="eye-outline"
+            [value]="stats().sightingsCount"
+            label="Aves"
+            colorClass="sightings"
+          >
+          </app-stat-widget>
+
+          <app-stat-widget
+            icon="trophy-outline"
+            [value]="stats().medalsCount"
+            label="Medallas"
+            colorClass="medals"
+            (click)="openMedalsModal()"
+            class="clickable"
+            role="button"
+            tabindex="0"
+            (keyup.enter)="openMedalsModal()"
+          >
+          </app-stat-widget>
+        </div>
+      </div>
+
+      <!-- FORMULARIO DE EDICIÓN -->
+      @if (isOwnProfile()) {
+        <form (ngSubmit)="onUpdateProfile()" class="auth-form-profile">
+            <!-- SUBCARD 2: INFORMACIÓN PERSONAL -->
+            <div class="flock-subcard form-subcard">
+              <h3 class="subcard-title">
+                <ion-icon name="book-outline"></ion-icon>
+                <span>Información Personal</span>
+              </h3>
+
+              <app-auth-input
+                label="Nombre de Usuario"
+                icon="at-outline"
+                [readonly]="true"
+                [(value)]="username"
+              >
+              </app-auth-input>
+
+              <app-auth-input
+                label="Nombre"
+                [(value)]="firstName"
+                (valueChange)="onFieldChange()"
+              ></app-auth-input>
+
+              <app-auth-input
+                label="Apellido"
+                [(value)]="lastName"
+                (valueChange)="onFieldChange()"
+              ></app-auth-input>
+
+              <app-geo-selector
+                [(department)]="department"
+                [(municipality)]="municipality"
+                layout="stacked"
+                (locationChange)="onLocationChange($event)"
+              ></app-geo-selector>
+
+              <app-auth-input
+                label="Instagram URL"
+                icon="logo-instagram"
+                [(value)]="instagram"
+                (valueChange)="onFieldChange()"
+              ></app-auth-input>
+
+              <div class="flock-input-field ion-margin-top">
+                <span class="flock-input-label">Biografía</span>
+                <div class="flock-input-trigger flock-input-trigger--textarea">
+                  <ion-icon name="book-outline" class="flock-input-icon flock-input-icon--top"></ion-icon>
+                  <textarea
+                    [ngModel]="bio()"
+                    (ngModelChange)="bio.set($event); onFieldChange()"
+                    name="bio"
+                    class="flock-input-textarea flock-input-native"
+                    placeholder="Cuéntanos sobre tu pasión por las aves..."
+                    rows="3"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- SUBCARD 3: SEGURIDAD Y ACCESO -->
+            <div class="flock-subcard security-subcard" (click)="goToSecurity()" role="button" tabindex="0">
+              <div class="panel-left">
+                <div class="security-icon-circle">
+                  <ion-icon name="lock-closed-outline"></ion-icon>
+                </div>
+                <div class="security-text-content">
+                  <span class="security-title">Seguridad y Contraseña</span>
+                  <span class="security-subtitle">Actualizar contraseña de acceso</span>
+                </div>
+              </div>
+              <ion-icon name="chevron-forward-outline" class="security-arrow"></ion-icon>
+            </div>
+
+            <ion-button
+              expand="block"
+              type="submit"
+              class="primary-btn ion-margin-top"
+              [disabled]="isPristine()"
+            >
+              Actualizar Datos
+            </ion-button>
+          </form>
+        }
+      </div>
+    </div>
+  </div>
+}
+</ion-content>

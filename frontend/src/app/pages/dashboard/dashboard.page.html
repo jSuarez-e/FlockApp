@@ -1,0 +1,56 @@
+<ion-header class="ion-no-border flock-header-seamless">
+  <ion-toolbar class="dashboard-header-toolbar">
+    <div class="dashboard-header-content">
+      <ion-buttons slot="start" class="header-menu-buttons">
+        <ion-menu-button class="header-menu-btn"></ion-menu-button>
+      </ion-buttons>
+
+      <div class="dashboard-header-titles">
+        <h1 class="dashboard-header-title">FlockApp</h1>
+        <p class="dashboard-header-subtitle">Plumas y Cantos de Colombia</p>
+      </div>
+
+      <div class="dashboard-header-actions">
+        @if (navState.activeViewMode() === null) {
+          <button (click)="logout()" title="Cerrar Sesión" class="flock-header-pill-btn" aria-label="Cerrar Sesión">
+            <ion-icon name="log-out-outline"></ion-icon>
+            <span>Cerrar Sesión</span>
+          </button>
+        } @else {
+          <!-- <button (click)="downloadDatabase()" title="Descargar BD Offline (DEV)" class="flock-header-pill-btn" aria-label="Descargar BD Offline (DEV)">
+            <ion-icon name="download-outline"></ion-icon>
+            <span>BD Offline</span>
+          </button> -->
+        }
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="dashboard-wrapper">
+    @if (user()) {
+      @switch (navState.activeViewMode()) {
+        @case (null) {
+          <app-role-selector
+            (roleSelected)="handleRoleSelection($event)"
+          ></app-role-selector>
+        }
+        @case ('PAJARERO') {
+          <app-feed-pajarero></app-feed-pajarero>
+        }
+        @case ('PROVEEDOR') {
+          <div class="placeholder-view">
+            <ion-icon name="business-outline"></ion-icon>
+            <h2>Panel de Anfitrión</h2>
+            <p>Gestionando servicios de: {{ user()?.businessName }}</p>
+          </div>
+        }
+      }
+    } @else {
+      <div class="loading-container">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+    }
+  </div>
+</ion-content>

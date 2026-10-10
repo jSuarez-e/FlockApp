@@ -1,0 +1,145 @@
+<ion-header class="ion-no-border flock-header-seamless">
+  <ion-toolbar class="bird-header-toolbar">
+    <div class="bird-header-content">
+      <ion-buttons slot="start" class="header-menu-buttons">
+        <ion-menu-button class="header-menu-btn"></ion-menu-button>
+      </ion-buttons>
+
+      <div class="bird-header-titles">
+        <h1 class="bird-header-title">Buscador de Aves</h1>
+        <p class="bird-header-subtitle">Catálogo de aves de Colombia</p>
+      </div>
+
+      <ion-buttons slot="end" class="bird-header-status">
+        <ion-chip
+          [color]="network.isOnline() ? 'success' : 'danger'"
+          class="network-status-chip"
+        >
+          <ion-icon
+            [name]="network.isOnline() ? 'globe-outline' : 'cloud-offline-outline'"
+          ></ion-icon>
+          <ion-label>{{ network.isOnline() ? 'On' : 'Off' }}</ion-label>
+        </ion-chip>
+      </ion-buttons>
+    </div>
+  </ion-toolbar>
+
+  <div class="filters-row ion-padding-horizontal">
+    <button class="flock-header-pill-btn filter-trigger-btn" (click)="openGeneralFilter()" aria-label="Abrir filtros">
+      <ion-icon name="options-outline"></ion-icon>
+      <span>Filtros</span>
+    </button>
+    <div class="horizontal-tabs">
+      <ion-chip (click)="openModal('family')"
+        ><ion-label>Familia</ion-label></ion-chip
+      >
+      <ion-chip (click)="openModal('habitat')"
+        ><ion-label>Hábitats</ion-label></ion-chip
+      >
+      <ion-chip (click)="openModal('residency')"
+        ><ion-label>Residencia</ion-label></ion-chip
+      >
+      <ion-chip (click)="openModal('departments')"
+        ><ion-label>Departamentos</ion-label></ion-chip
+      >
+    </div>
+  </div>
+
+  @if (searchStore.activeFilterLabels().length > 0) {
+    <div class="active-chips-scroll">
+      <div class="chips-wrapper">
+        @for (f of searchStore.activeFilterLabels(); track f.key) {
+          <ion-chip
+            (click)="removeFilter(f.key)"
+            mode="ios"
+          >
+            <ion-label>{{ f.label }}</ion-label>
+            <ion-icon name="close-circle"></ion-icon>
+          </ion-chip>
+        }
+      </div>
+    </div>
+  }
+
+  <div class="search-bar-container">
+    <ion-searchbar
+      placeholder="Nombre científico o inglés"
+      (ionInput)="onSearch($event)"
+      debounce="300"
+    ></ion-searchbar>
+  </div>
+</ion-header>
+
+<ion-content>
+  <div class="results-info">
+    <ion-label>
+      Aves encontradas: <strong>{{ searchStore.totalFound() }}</strong>
+    </ion-label>
+    <ion-button
+      fill="clear"
+      size="small"
+      color="danger"
+      (click)="searchStore.clearFilters()"
+    >
+      LIMPIAR FILTROS
+    </ion-button>
+  </div>
+
+  @if (searchStore.isLoading()) {
+  <div class="ion-text-center ion-padding">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p class="loading-text">Cargando catálogo...</p>
+  </div>
+  } @else {
+  <div class="viewport-wrapper-relative">
+    @if (currentHeader && searchStore.totalFound() > 0) {
+      <div class="sticky-family-overlay-header">
+        {{ currentHeader }}
+      </div>
+    }
+
+    <cdk-virtual-scroll-viewport
+      itemSize="140"
+      class="bird-viewport"
+      (scrolledIndexChange)="onScrollIndexChange($event)"
+    >
+      <ng-container
+        *cdkVirtualFor="let item of searchStore.flatList(); trackBy: trackByItem"
+      >
+        @if (item.type === 'HEADER') {
+        <div class="group-header-card-placeholder">
+          <!-- <span class="family-badge">FAMILIA</span> -->
+          <h2>{{ item.label }}</h2>
+        </div>
+        } @else {
+        <app-bird-card
+          [bird]="item.data"
+          (click)="openBirdDetail(item.data)"
+        ></app-bird-card>
+        }
+      </ng-container>
+    </cdk-virtual-scroll-viewport>
+  </div>
+
+  @if (searchStore.flatList().length === 0) {
+  <div class="centered-empty-container">
+    <div class="icon-shape-badge">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+    </div>
+    <h3>Sin registros</h3>
+    <p>
+      No se encontraron registros. Verifica tus criterios de filtro o la base de
+      datos local.
+    </p>
+    <ion-button
+      fill="outline"
+      color="primary"
+      shape="round"
+      size="small"
+      (click)="searchStore.clearFilters()"
+    >
+      RESETEAR BUSCADOR
+    </ion-button>
+  </div>
+  } }
+</ion-content>

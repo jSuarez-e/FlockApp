@@ -1,0 +1,67 @@
+<!--
+  @sdd
+  [Objetivo]: Vista modal interactiva para la revelación obligatoria de permisos Google Play (Ubicación, Cámara, Multimedia).
+  [I/O - Reusabilidad]: Emite eventos de confirmación o cancelación para el ciclo de vida de ModalController.
+  [Edge Cases - UI]: Soporte de desplazamiento en pantallas pequeñas y contraste alto para legibilidad.
+-->
+<ion-header class="ion-no-border rationale-header">
+  <ion-toolbar class="rationale-header__toolbar">
+    <ion-title class="rationale-header__title">Permiso Requerido</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()" class="rationale-header__close-btn" aria-label="Cerrar aviso">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="rationale-content" [fullscreen]="true">
+  <div class="rationale-card">
+    <div class="rationale-card__icon-wrapper">
+      <ion-icon [name]="config.icon" class="rationale-card__icon"></ion-icon>
+      <div class="rationale-card__badge">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+      </div>
+    </div>
+
+    <div class="rationale-card__tag">POLÍTICA DE PRIVACIDAD</div>
+
+    <h2 class="rationale-card__title">{{ config.title }}</h2>
+    <h3 class="rationale-card__subtitle">{{ config.feature }}</h3>
+
+    <p class="rationale-card__description">
+      {{ config.description }}
+    </p>
+
+    <div class="rationale-guarantees">
+      <h4 class="rationale-guarantees__heading">Compromiso de Privacidad FlockApp:</h4>
+      <ul class="rationale-guarantees__list">
+        @for (point of config.points; track point) {
+          <li class="rationale-guarantees__item">
+            <ion-icon name="checkmark-circle-outline" class="rationale-guarantees__check"></ion-icon>
+            <span class="rationale-guarantees__text">{{ point }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+
+    <div class="rationale-actions">
+      <ion-button
+        expand="block"
+        class="rationale-actions__btn-confirm"
+        (click)="confirm()"
+      >
+        Entendido y Permitir
+      </ion-button>
+
+      <ion-button
+        expand="block"
+        fill="clear"
+        class="rationale-actions__btn-cancel"
+        (click)="cancel()"
+      >
+        Ahora No
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

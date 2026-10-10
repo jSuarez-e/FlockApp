@@ -1,0 +1,317 @@
+<ion-header class="ion-no-border guide-header-seamless">
+  <ion-toolbar class="guide-header-toolbar">
+    <div class="guide-header-content">
+      <ion-buttons slot="start" class="header-menu-buttons">
+        <ion-menu-button class="header-menu-btn"></ion-menu-button>
+      </ion-buttons>
+
+      <div class="guide-header-titles">
+        <h1 class="guide-header-title">Guías</h1>
+        <p class="guide-header-subtitle">Expertos locales certificados</p>
+      </div>
+      <div class="guide-header-actions">
+        <button
+          type="button"
+          class="btn-bookings-pill"
+          (click)="openMyBookings()"
+          aria-label="Ver mis reservas con guías"
+        >
+          <ion-icon name="calendar-number-outline"></ion-icon>
+          <span>Reservas</span>
+          @if (myBookings().length > 0) {
+            <span class="bookings-count-badge">{{ myBookings().length }}</span>
+          }
+        </button>
+      </div>
+    </div>
+  </ion-toolbar>
+
+  <!-- Panel de Búsqueda y Filtros Rápidos -->
+  <div class="guide-search-panel">
+    <div class="searchbar-wrapper">
+      <ion-searchbar
+        [value]="searchTerm()"
+        (ionInput)="searchTerm.set($event.detail.value || '')"
+        placeholder="Buscar por guía, región o especialidad..."
+        [debounce]="200"
+        class="custom-guide-searchbar"
+      ></ion-searchbar>
+    </div>
+
+    <div class="quick-filter-scroll">
+      @for (f of filters; track f.id) {
+        <button
+          type="button"
+          class="filter-chip"
+          [class.filter-chip--active]="selectedFilter() === f.id"
+          (click)="selectedFilter.set(f.id)"
+        >
+          {{ f.label }}
+        </button>
+      }
+    </div>
+  </div>
+</ion-header>
+
+<ion-content class="guide-list-content">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (guideStore.isLoading() && guideStore.allGuides().length === 0) {
+    <div class="ion-text-center ion-padding state-container">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p class="state-text">Explorando guías certificados en Colombia...</p>
+    </div>
+  } @else if (filteredGuides().length === 0) {
+    <div class="ion-padding ion-text-center state-container">
+      <div class="state-icon-circle">
+        <ion-icon name="information-circle-outline"></ion-icon>
+      </div>
+      <h3 class="state-title">No encontramos guías con esos criterios</h3>
+      <p class="state-text">Intenta ajustar tu búsqueda o selecciona otro filtro de especialidad.</p>
+      @if (searchTerm() || selectedFilter() !== 'all') {
+        <button type="button" class="btn-reset-filters" (click)="resetFilters()">
+          Restablecer filtros
+        </button>
+      }
+    </div>
+  } @else {
+    <!-- Barra de Metadatos y Conteo -->
+    <div class="guides-meta-bar">
+      <span class="guides-count-tag">
+        <ion-icon name="sparkles-outline"></ion-icon>
+        {{ filteredGuides().length }} {{ filteredGuides().length === 1 ? 'guía disponible' : 'guías disponibles' }}
+      </span>
+    </div>
+
+    <div class="guides-cards-container">
+      @for (guide of filteredGuides(); track trackById($index, guide)) {
+        <div class="guide-card-premium">
+          <div class="guide-card-premium__body">
+            <!-- Header de la Tarjeta con Avatar y Datos Principales -->
+            <div class="guide-card-premium__header" (click)="goToGuideDetail(guide.id)">
+              <div class="avatar-wrapper">
+                <img
+                  [src]="getGuideAvatarUrl(guide.photoUrl, guide.fullName)"
+                  (error)="onAvatarError($event, guide.fullName)"
+                  alt="Foto de {{ guide.fullName }}"
+                  class="avatar-img"
+                />
+                @if (guide.isPublished) {
+                  <span class="avatar-verified-dot" title="Guía Verificado">
+                    <ion-icon name="checkmark-done-outline"></ion-icon>
+                  </span>
+                }
+              </div>
+
+              <div class="guide-info">
+                <div class="guide-name-row">
+                  <h2 class="guide-name">{{ guide.fullName }}</h2>
+                  @if (guide.isPublished) {
+                    <span class="badge-verified">
+                      <ion-icon name="ribbon-outline"></ion-icon>
+                      <span>Verificado</span>
+                    </span>
+                  }
+                </div>
+
+                <p class="guide-specialty">
+                  {{ guide.specialty || 'Guía Profesional de Aves' }}
+                </p>
+
+                <div class="guide-meta-row">
+                  <span class="guide-location">
+                    <ion-icon name="location-outline"></ion-icon>
+                    <span>{{ guide.location || 'Colombia' }}</span>
+                  </span>
+
+                  <span class="guide-rating-pill">
+                    <ion-icon name="star"></ion-icon>
+                    <span>{{ (guide.rating || 5) | number:'1.1-1' }}</span>
+                  </span>
+
+                  @if (guide.languages) {
+                    <span class="guide-lang-tag">
+                      <ion-icon name="language-outline"></ion-icon>
+                      <span>{{ guide.languages }}</span>
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+
+            <!-- Acciones Integradas -->
+            <div class="guide-card-premium__actions">
+              <button
+                type="button"
+                class="btn-primary-reserve"
+                (click)="goToGuideDetail(guide.id)"
+              >
+                <ion-icon name="calendar-outline"></ion-icon>
+                <span>Contactar / Reservar</span>
+              </button>
+
+              @if (guide.phone && guide.hasWhatsapp) {
+                <button
+                  type="button"
+                  class="btn-whatsapp"
+                  (click)="openWhatsApp(guide.phone)"
+                  aria-label="Abrir WhatsApp con {{ guide.fullName }}"
+                >
+                  <ion-icon name="logo-whatsapp"></ion-icon>
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Modal Mis Reservas Realizadas -->
+  <ion-modal
+    [isOpen]="isBookingsModalOpen()"
+    (didDismiss)="isBookingsModalOpen.set(false)"
+    [initialBreakpoint]="0.85"
+    [breakpoints]="[0, 0.85, 1]"
+  >
+    <ng-template>
+      <ion-header class="ion-no-border flock-modal-header">
+        <ion-toolbar>
+          <ion-title>Mis Reservas con Guías</ion-title>
+          <ion-buttons slot="end">
+            <button type="button" (click)="isBookingsModalOpen.set(false)" class="flock-header-pill-btn" aria-label="Cerrar modal">
+              <ion-icon name="close-outline"></ion-icon>
+              <span>Cerrar</span>
+            </button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding">
+        @if (isLoadingBookings()) {
+          <div class="ion-text-center ion-padding">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Cargando tus solicitudes...</p>
+          </div>
+        } @else if (myBookings().length === 0) {
+          <div class="ion-text-center ion-padding empty-bookings-state">
+            <ion-icon name="calendar-outline" class="empty-icon"></ion-icon>
+            <h4>Aún no has solicitado reservas</h4>
+            <p>Explora el directorio de guías y contacta a tu experto preferido para salir a pajarear.</p>
+          </div>
+        } @else {
+          <ion-list lines="none">
+            @for (booking of myBookings(); track booking.id) {
+              <div class="my-booking-card ion-margin-bottom">
+                <div class="my-booking-top">
+                  <div>
+                    <h4 class="guide-booking-name">{{ booking.guideName || 'Guía Local' }}</h4>
+                    <span class="booking-activity-tag">{{ booking.activityType }}</span>
+                  </div>
+                  <ion-badge
+                    [color]="
+                      booking.status === 'CONFIRMED'
+                        ? 'success'
+                        : booking.status === 'PENDING'
+                        ? 'warning'
+                        : booking.status === 'COMPLETED'
+                        ? 'tertiary'
+                        : 'medium'
+                    "
+                  >
+                    {{ booking.status }}
+                  </ion-badge>
+                </div>
+
+                <div class="my-booking-info ion-margin-top">
+                  <p>📅 Fecha agendada: <strong>{{ booking.bookingDate }}</strong></p>
+                  @if (booking.message) {
+                    <p class="booking-snippet">"{{ booking.message }}"</p>
+                  }
+                </div>
+
+                @if (booking.status === 'CONFIRMED' || booking.status === 'COMPLETED') {
+                  <div class="my-booking-footer ion-margin-top">
+                    @if (booking.rating) {
+                      <div class="rating-badge-summary">
+                        <span>Calificación: </span>
+                        <strong>⭐ {{ booking.rating }} / 5</strong>
+                        @if (booking.review) {
+                          <p class="review-snippet">"{{ booking.review }}"</p>
+                        }
+                      </div>
+                    } @else {
+                      <ion-button
+                        size="small"
+                        color="tertiary"
+                        expand="block"
+                        (click)="openRating(booking)"
+                      >
+                        <ion-icon name="star" slot="start"></ion-icon>
+                        Calificar Servicio Finalizado
+                      </ion-button>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          </ion-list>
+        }
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Modal Calificación -->
+  <ion-modal
+    [isOpen]="ratingBooking() !== null"
+    (didDismiss)="ratingBooking.set(null)"
+    [initialBreakpoint]="0.65"
+    [breakpoints]="[0, 0.65, 0.9]"
+  >
+    <ng-template>
+      <ion-header class="ion-no-border flock-modal-header">
+        <ion-toolbar>
+          <ion-title>Calificar Servicio</ion-title>
+          <ion-buttons slot="end">
+            <button type="button" (click)="ratingBooking.set(null)" class="flock-header-pill-btn" aria-label="Cerrar modal">
+              <ion-icon name="close-outline"></ion-icon>
+              <span>Cerrar</span>
+            </button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <div class="ion-text-center">
+          <p>¿Qué tal fue tu experiencia con {{ ratingBooking()?.guideName || 'el guía' }}?</p>
+
+          <div class="star-row ion-margin-top ion-margin-bottom">
+            @for (s of [1, 2, 3, 4, 5]; track s) {
+              <button
+                type="button"
+                class="star-btn"
+                (click)="ratingScore.set(s)"
+              >
+                <ion-icon
+                  [name]="s <= ratingScore() ? 'star' : 'star-outline'"
+                  class="star-icon"
+                  [class.star-icon--active]="s <= ratingScore()"
+                ></ion-icon>
+              </button>
+            }
+          </div>
+
+          <ion-button
+            expand="block"
+            color="primary"
+            (click)="submitRating()"
+          >
+            <ion-icon name="checkmark-done-outline" slot="start"></ion-icon>
+            Guardar Calificación
+          </ion-button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

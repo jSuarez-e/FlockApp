@@ -1,0 +1,244 @@
+<ion-header class="ion-no-border flock-header-seamless">
+  <ion-toolbar class="sightings-header-toolbar">
+    <div class="sightings-header-content">
+      <ion-buttons slot="start" class="header-menu-buttons">
+        <ion-menu-button class="header-menu-btn"></ion-menu-button>
+      </ion-buttons>
+      <div class="sightings-header-title-box">
+        <h1 class="sightings-header-title">Mapa de Avistamientos</h1>
+        <p class="sightings-header-subtitle">Registros geolocalizados de aves en Colombia</p>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Panel Superior de Búsqueda y Filtros -->
+  <div class="sightings-search-panel">
+    <div class="sightings-search-panel__grid">
+      <!-- Selector de Ave -->
+      <div class="sightings-search-panel__field" (click)="isBirdModalOpen.set(true)">
+        <span class="sightings-search-panel__label">Especie de Ave</span>
+        <div class="sightings-search-panel__trigger">
+          <ion-icon name="search-outline" class="sightings-search-panel__icon"></ion-icon>
+          <span class="sightings-search-panel__value" [class.placeholder]="!searchBirdName()">
+            {{ searchBirdName() || 'Todas las especies...' }}
+          </span>
+          @if (searchBirdName()) {
+            <ion-icon
+              name="close-circle-outline"
+              class="sightings-search-panel__clear"
+              (click)="clearBirdFilter($event)">
+            </ion-icon>
+          } @else {
+            <ion-icon name="chevron-down-outline" class="sightings-search-panel__chevron"></ion-icon>
+          }
+        </div>
+      </div>
+
+      <!-- Selector de Departamento -->
+      <div class="sightings-search-panel__field">
+        <span class="sightings-search-panel__label">Departamento</span>
+        <div class="sightings-search-panel__trigger sightings-search-panel__trigger--select">
+          <ion-icon name="location-outline" class="sightings-search-panel__icon"></ion-icon>
+          <ion-select
+            [value]="searchDepartment()"
+            (ionChange)="searchDepartment.set($event.detail.value)"
+            interface="action-sheet"
+            placeholder="Todo Colombia"
+            class="sightings-search-panel__select">
+            <ion-select-option value="all">Todo Colombia</ion-select-option>
+            @for (dept of departments(); track dept.id) {
+              <ion-select-option [value]="dept.id">{{ dept.name }}</ion-select-option>
+            }
+          </ion-select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón de Búsqueda -->
+    <ion-button
+      expand="block"
+      class="sightings-search-panel__btn"
+      (click)="triggerMapSearch()"
+      [disabled]="sightingsMapStore.isLoading()">
+      @if (sightingsMapStore.isLoading()) {
+        <ion-spinner name="crescent" slot="start"></ion-spinner>
+        <span>Buscando avistamientos...</span>
+      } @else {
+        <ion-icon slot="start" name="sparkles-outline"></ion-icon>
+        <span>Explorar Avistamientos</span>
+      }
+    </ion-button>
+  </div>
+
+  <!-- Contenedor del Mapa Leaflet -->
+  <div class="map-container-full">
+    <!-- Chip flotante con contador de avistamientos -->
+    @if (sightingsSignal().length > 0) {
+      <div class="map-stats-chip">
+        <ion-icon name="compass-outline"></ion-icon>
+        <span>{{ sightingsSignal().length }} avistamientos reportados</span>
+      </div>
+    }
+
+    <app-search-map
+      [sightings]="sightingsSignal()"
+      (markerClick)="openSightingModal($event)">
+    </app-search-map>
+  </div>
+
+  <!-- Modal Detallado de Avistamiento -->
+  <ion-modal
+    [isOpen]="selectedSighting() !== null"
+    (didDismiss)="closeSightingModal()"
+    [initialBreakpoint]="0.65"
+    [breakpoints]="[0, 0.65, 0.9]"
+    [handle]="true">
+    <ng-template>
+      <ion-content class="sighting-modal-content ion-padding">
+        @if (selectedSighting(); as s) {
+          <div class="sighting-details">
+            <!-- Badge de Validación -->
+            <div class="sighting-details__badge-row">
+              <ion-badge class="sighting-details__badge">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <span>Avistamiento Registrado</span>
+              </ion-badge>
+            </div>
+
+            <!-- Taxonomía del Ave -->
+            <div class="sighting-details__bird-info">
+              <h2 class="sighting-details__scientific-name">
+                <i>{{ s.scientificName || s.birdName }}</i>
+              </h2>
+
+              <div class="sighting-details__names-row">
+                @if (s.englishName) {
+                  <span class="sighting-details__english-name">{{ s.englishName }}</span>
+                }
+                @if (s.commonName && s.commonName !== s.englishName) {
+                  <span class="sighting-details__common-name">• {{ s.commonName }}</span>
+                }
+              </div>
+            </div>
+
+            <!-- Card de Ubicación Territorial con Geocodificación Inversa -->
+            <div class="location-card">
+              <div class="location-card__icon-wrap">
+                <ion-icon name="location-outline"></ion-icon>
+              </div>
+              <div class="location-card__content">
+                <span class="location-card__tag">Ubicación Territorial</span>
+                @if (isResolvingLocation()) {
+                  <div class="location-card__loading">
+                    <ion-spinner name="crescent" color="primary"></ion-spinner>
+                    <span>Identificando departamento y municipio...</span>
+                  </div>
+                } @else if (resolvedLocation()?.municipalityName || resolvedLocation()?.departmentName) {
+                  <h3 class="location-card__place">
+                    {{ resolvedLocation()?.municipalityName || 'Municipio' }},
+                    <strong>{{ resolvedLocation()?.departmentName || 'Colombia' }}</strong>
+                  </h3>
+                } @else {
+                  <h3 class="location-card__place">Territorio Colombiano</h3>
+                }
+                <p class="location-card__coords">
+                  Lat: {{ s.location?.coordinates?.[1] | number:'1.4-4' }}°, Lng: {{ s.location?.coordinates?.[0] | number:'1.4-4' }}°
+                </p>
+              </div>
+            </div>
+
+            <!-- Card de Usuario Observador -->
+            <div
+              class="user-card"
+              (click)="openUserProfile(s.user?.id)"
+              [class.clickable]="!!s.user?.id">
+              <div class="user-card__avatar-wrap">
+                <img
+                  [src]="getUserAvatarUrl(s.user?.photoUrl, s.user?.name)"
+                  [alt]="s.user?.name || 'Observador'"
+                  class="user-card__avatar"
+                  (error)="onAvatarError($event, s.user?.name)" />
+              </div>
+              <div class="user-card__info">
+                <span class="user-card__tag">Registrado por</span>
+                <h4 class="user-card__name">{{ s.user?.name || 'Observador de Campo' }}</h4>
+                <p class="user-card__date">
+                  <ion-icon name="calendar-outline"></ion-icon>
+                  <span>{{ formatDate(s.date, s.time) }}</span>
+                </p>
+              </div>
+              @if (s.user?.id) {
+                <ion-icon name="chevron-forward-outline" class="user-card__arrow"></ion-icon>
+              }
+            </div>
+
+            <!-- Acciones -->
+            <div class="sighting-actions">
+              <ion-button
+                expand="block"
+                class="sighting-actions__btn"
+                (click)="openGoogleMaps(s)">
+                <ion-icon slot="start" name="map"></ion-icon>
+                <span>Ver en Google Maps</span>
+              </ion-button>
+            </div>
+          </div>
+        }
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Modal del Buscador de Aves (Combo Search) -->
+  <ion-modal
+    [isOpen]="isBirdModalOpen()"
+    (didDismiss)="isBirdModalOpen.set(false)"
+    [initialBreakpoint]="0.85"
+    [breakpoints]="[0, 0.85, 1]"
+    [handle]="true">
+    <ng-template>
+      <ion-header class="ion-no-border flock-modal-header">
+        <ion-toolbar>
+          <ion-title>Buscar Especie</ion-title>
+          <ion-buttons slot="end">
+            <button type="button" (click)="isBirdModalOpen.set(false)" class="flock-header-pill-btn" aria-label="Cerrar modal">
+              <ion-icon name="close-outline"></ion-icon>
+              <span>Cerrar</span>
+            </button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-toolbar class="bird-search-toolbar">
+          <ion-searchbar
+            placeholder="Nombre común o científico..."
+            [value]="birdSearchTerm()"
+            (ionInput)="birdSearchTerm.set($event.detail.value || '')"
+            [debounce]="250">
+          </ion-searchbar>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list lines="inset" class="bird-results-list">
+          @for (bird of filteredBirds(); track bird.id) {
+            <ion-item button (click)="selectBird(bird)" detail="true" class="bird-results-item">
+              <ion-icon slot="start" name="sparkles-outline" color="primary"></ion-icon>
+              <ion-label>
+                <h2 class="bird-results-item__scientific"><i>{{ bird.scientific_name }}</i></h2>
+                <p class="bird-results-item__names">
+                  {{ bird.english_name }}
+                  @if (bird.common_name) {
+                    <span>• {{ bird.common_name }}</span>
+                  }
+                </p>
+              </ion-label>
+            </ion-item>
+          } @empty {
+            <div class="ion-padding ion-text-center bird-results-empty">
+              <p>No se encontraron especies con ese criterio.</p>
+            </div>
+          }
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

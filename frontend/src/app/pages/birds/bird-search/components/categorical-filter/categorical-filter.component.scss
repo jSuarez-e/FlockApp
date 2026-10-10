@@ -1,0 +1,215 @@
+/**
+ * @file categorical-filter.component.scss
+ * @description Estilos unificados para filtros categóricos.
+ * Desactiva la transformación a mayúsculas y mitiga la negrita en la vista de lista de departamentos.
+ */
+
+ion-content {
+  --background: #f8fafc;
+}
+
+.categorical-filter__scrollable-tabs {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 4px 16px 14px;
+  -webkit-overflow-scrolling: touch;
+  align-items: center;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.categorical-filter__chip {
+  flex-shrink: 0;
+  margin: 0;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: -0.01em;
+  backdrop-filter: blur(6px);
+  transition: all var(--flock-transition-fast, 0.15s ease);
+  cursor: pointer;
+
+  --background: rgb(255 255 255 / 18%);
+  --color: #fff;
+
+  border: 1px solid rgb(255 255 255 / 25%);
+
+  ion-label {
+    font-weight: 600;
+  }
+
+  &--active {
+    --background: #fff;
+    --color: #064e3b;
+
+    background: #fff;
+    color: #064e3b;
+    border-color: #fff;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 18%);
+
+    ion-label {
+      font-weight: 800;
+      color: #064e3b;
+    }
+  }
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 4px 2px;
+}
+
+.card-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px 12px;
+  background: #fff;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 5%),
+    0 2px 4px -1px rgb(0 0 0 / 3%);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+
+  .label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1e293b;
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+  }
+
+  &.active {
+    border-color: var(--ion-color-primary);
+    background: rgb(var(--ion-color-primary-rgb), 0.04);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgb(var(--ion-color-primary-rgb), 0.12),
+      0 4px 6px -2px rgb(var(--ion-color-primary-rgb), 0.04);
+
+    .label {
+      color: var(--ion-color-primary);
+    }
+  }
+}
+
+.img-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 64px;
+  margin-bottom: 8px;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+}
+
+/* --- AJUSTE DE DEPARTAMENTOS: Sin Uppercase, Sin Bolder (Initial Case Puro) --- */
+.list-view {
+  grid-template-columns: 1fr;
+
+  .card-item {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    padding: 14px 18px;
+    gap: 12px;
+
+    .label {
+      font-size: 0.9rem;
+      font-weight: 500; /* Elimina el bolder pesado, se usa un grosor medio/elegante */
+      text-transform: none; /* Revierte el uppercase global devolviendo el Initial Case del dato */
+    }
+  }
+}
+
+.category-group {
+  margin-bottom: 20px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 2%);
+}
+
+.group-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--ion-color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 2px;
+  margin-bottom: 10px;
+}
+
+.group-count {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748b;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  background: #f8fafc;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #334155;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 14px;
+    color: #64748b;
+    transition: color 0.2s ease;
+  }
+
+  &.active {
+    background: var(--ion-color-primary);
+    color: #fff;
+    border-color: var(--ion-color-primary);
+    box-shadow: 0 4px 6px -1px rgb(var(--ion-color-primary-rgb), 0.2);
+
+    ion-icon {
+      color: #fff;
+    }
+  }
+}
+
+ion-footer {
+  background: #fff;
+  border-top: 1px solid #e2e8f0;
+
+  ion-button {
+    --border-radius: 12px;
+
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+}

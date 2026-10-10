@@ -1,0 +1,73 @@
+<!--
+@sdd
+- [Objetivo]: Estructura de presentación visual para la tarjeta de ave en el catálogo.
+- [I/O - Reusabilidad]: Consume signals del componente (bird(), hasValidImage(), imageError()).
+- [Edge Cases - UI]: Estado placeholder de alta velocidad para aves sin fotografía o con fallos de carga.
+-->
+<div class="bird-card ion-activatable ripple-parent">
+  <ion-ripple-effect></ion-ripple-effect>
+
+  <div class="bird-card__image-container">
+    @if (hasValidImage() && !imageError()) {
+      <img
+        class="bird-card__img"
+        [src]="bird().base_image"
+        (error)="handleImageError()"
+        loading="lazy"
+        decoding="async"
+        [alt]="bird().scientific_name"
+      />
+    } @else {
+      <div class="bird-card__placeholder">
+        <img
+          class="bird-card__img bird-card__img--placeholder"
+          src="/assets/imgs/commons/no-image.png"
+          (error)="handlePlaceholderError($event)"
+          alt="Ilustración ave"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    }
+
+    <div class="bird-card__difficulty-overlay">
+      <ion-icon name="eye"></ion-icon>
+      <span>Lvl {{ bird().viewing_difficulty || 1 }}</span>
+    </div>
+  </div>
+
+  <div class="bird-card__content">
+    <div class="bird-card__header">
+      <h3 class="bird-card__scientific-name">{{ bird().scientific_name }}</h3>
+      <p class="bird-card__english-name">
+        {{ bird().english_name || bird().common_name || 'Nombre no registrado' }}
+      </p>
+    </div>
+
+    <div class="bird-card__badges">
+      @if (bird().conservation_convention) {
+        <span
+          [class]="
+            'bird-card__badge bird-card__badge--status bird-card__badge--status-' +
+            (bird().conservation_convention?.toLowerCase() || 'default')
+          "
+        >
+          {{ bird().conservation_convention }}
+        </span>
+      }
+
+      @if (bird().residency_description) {
+        <span class="bird-card__badge bird-card__badge--residency">
+          {{ bird().residency_description }}
+        </span>
+      }
+    </div>
+
+    <div class="bird-card__meta">
+      <div class="bird-card__altitude">
+        <ion-icon name="caret-up-circle"></ion-icon>
+        <span>{{ bird().min_altitude }}m - {{ bird().max_altitude }}m</span>
+      </div>
+    </div>
+  </div>
+</div>

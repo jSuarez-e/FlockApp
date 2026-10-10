@@ -1,0 +1,210 @@
+    <ion-header class="ion-no-border flock-header-seamless">
+      <ion-toolbar class="routes-header-toolbar">
+        <div class="routes-header-content">
+          <ion-buttons slot="start" class="header-menu-buttons">
+            <ion-menu-button class="header-menu-btn"></ion-menu-button>
+          </ion-buttons>
+
+          <div class="routes-header-titles">
+            <h1 class="routes-header-title">Mis Rutas</h1>
+            <p class="routes-header-subtitle">Bitácora y recorridos de observación</p>
+          </div>
+
+          <ion-buttons slot="end" class="routes-header-status">
+            <ion-chip [color]="network.isOnline() ? 'success' : 'danger'" class="network-chip">
+              <ion-icon [name]="network.isOnline() ? 'globe-outline' : 'cloud-offline-outline'"></ion-icon>
+              <ion-label>{{ network.isOnline() ? 'On' : 'Off' }}</ion-label>
+            </ion-chip>
+          </ion-buttons>
+        </div>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="routes-content">
+      <div class="flock-cards-wrapper">
+        <div class="segment-wrapper">
+          <ion-segment [(ngModel)]="currentTab" class="modern-segment">
+            <ion-segment-button value="drafts">
+              <ion-label>Borradores ({{ draftRoutes.length }})</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="sent">
+              <ion-label>Enviadas ({{ sentRoutes.length }})</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+        </div>
+
+      @if (currentTab === 'drafts') {
+        <div class="list-container ion-margin-top">
+          @if (draftRoutes.length === 0) {
+            <div class="empty-state">
+              <div class="empty-icon-circle">
+                <ion-icon name="map-outline"></ion-icon>
+              </div>
+              <h3>Sin borradores activos</h3>
+              <p>Las rutas que inicies y no finalices aparecerán aquí para continuarlas en cualquier momento.</p>
+              <ion-button fill="solid" color="primary" class="start-btn-empty" (click)="startNewRoute()">
+                <ion-icon name="add" slot="start"></ion-icon>
+                Iniciar Nueva Ruta
+              </ion-button>
+            </div>
+          }
+          
+          @for (route of draftRoutes; track route.id) {
+            <div class="route-card route-card--draft">
+              <div class="card-accent-bar draft-bar"></div>
+              
+              <div class="card-inner">
+                <div class="card-header-row">
+                  <div class="header-main">
+                    <h3 class="route-name">{{ route.name || 'Ruta sin nombre' }}</h3>
+                    <div class="route-date">
+                      <ion-icon name="calendar-outline"></ion-icon>
+                      <span>{{ route.start_time | date:'dd MMM yyyy, HH:mm' }}</span>
+                    </div>
+                  </div>
+                  <span class="status-pill status-pill--draft">
+                    <span class="status-dot"></span> Borrador
+                  </span>
+                </div>
+
+                <div class="metrics-row">
+                  <div class="metric-pill metric-pill--species">
+                    <div class="metric-icon-box">
+                      <ion-icon name="paw-outline"></ion-icon>
+                    </div>
+                    <div class="metric-content">
+                      <span class="metric-val">{{ route.species_count || 0 }}</span>
+                      <span class="metric-lbl">Especies</span>
+                    </div>
+                  </div>
+
+                  <div class="metric-pill metric-pill--birds">
+                    <div class="metric-icon-box">
+                      <ion-icon name="eye-outline"></ion-icon>
+                    </div>
+                    <div class="metric-content">
+                      <span class="metric-val">{{ route.birds_count || 0 }}</span>
+                      <span class="metric-lbl">Aves</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="specs-chips">
+                  @if (route.end_time || route.duration_mins) {
+                    <div class="spec-chip">
+                      <ion-icon name="time-outline"></ion-icon>
+                      <span>{{ route.end_time ? getDuration(route.start_time + '', route.end_time + '') : (route.duration_mins + 'm') }}</span>
+                    </div>
+                  }
+                  <div class="spec-chip">
+                    <ion-icon name="navigate-outline"></ion-icon>
+                    <span>{{ (route.total_km || 0) | number:'1.2-2' }} km</span>
+                  </div>
+                  <div class="spec-chip spec-chip--type">
+                    <span class="type-indicator"></span>
+                    <span>{{ route.route_type || 'Desplazamiento' }}</span>
+                  </div>
+                </div>
+
+                <ion-button fill="outline" class="action-btn action-btn--draft" expand="block" (click)="resumeRoute(route.id + '')">
+                  <ion-icon name="create-outline" slot="start"></ion-icon>
+                  <span>Continuar Ruta</span>
+                  <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      @if (currentTab === 'sent') {
+        <div class="list-container ion-margin-top">
+          @if (sentRoutes.length === 0) {
+            <div class="empty-state">
+              <div class="empty-icon-circle">
+                <ion-icon name="checkmark-done-outline"></ion-icon>
+              </div>
+              <h3>No has enviado rutas aún</h3>
+              <p>Completa una sesión de pajareo y guárdala para consultar su historial de avistamientos aquí.</p>
+              <ion-button fill="solid" color="primary" class="start-btn-empty" (click)="startNewRoute()">
+                <ion-icon name="add" slot="start"></ion-icon>
+                Iniciar Nueva Ruta
+              </ion-button>
+            </div>
+          }
+          
+          @for (route of sentRoutes; track route.id) {
+            <div class="route-card route-card--sent">
+              <div class="card-accent-bar sent-bar"></div>
+
+              <div class="card-inner">
+                <div class="card-header-row">
+                  <div class="header-main">
+                    <h3 class="route-name">{{ route.name || 'Ruta sin nombre' }}</h3>
+                    <div class="route-date">
+                      <ion-icon name="calendar-outline"></ion-icon>
+                      <span>{{ route.start_time | date:'dd MMM yyyy, HH:mm' }}</span>
+                    </div>
+                  </div>
+                  <span class="status-pill status-pill--sent">
+                    <span class="status-dot"></span> Enviada
+                  </span>
+                </div>
+
+                <div class="metrics-row">
+                  <div class="metric-pill metric-pill--species">
+                    <div class="metric-icon-box">
+                      <ion-icon name="paw-outline"></ion-icon>
+                    </div>
+                    <div class="metric-content">
+                      <span class="metric-val">{{ route.species_count || 0 }}</span>
+                      <span class="metric-lbl">Especies</span>
+                    </div>
+                  </div>
+
+                  <div class="metric-pill metric-pill--birds">
+                    <div class="metric-icon-box">
+                      <ion-icon name="eye-outline"></ion-icon>
+                    </div>
+                    <div class="metric-content">
+                      <span class="metric-val">{{ route.birds_count || 0 }}</span>
+                      <span class="metric-lbl">Aves</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="specs-chips">
+                  @if (route.end_time || route.duration_mins) {
+                    <div class="spec-chip">
+                      <ion-icon name="time-outline"></ion-icon>
+                      <span>{{ route.end_time ? getDuration(route.start_time + '', route.end_time + '') : (route.duration_mins + 'm') }}</span>
+                    </div>
+                  }
+                  <div class="spec-chip">
+                    <ion-icon name="navigate-outline"></ion-icon>
+                    <span>{{ (route.total_km || 0) | number:'1.2-2' }} km</span>
+                  </div>
+                  <div class="spec-chip spec-chip--type">
+                    <span class="type-indicator"></span>
+                    <span>{{ route.route_type || 'Desplazamiento' }}</span>
+                  </div>
+                </div>
+
+                <ion-button fill="solid" color="primary" class="action-btn action-btn--sent" expand="block" (click)="viewRoute(route.id + '')">
+                  <ion-icon name="eye-outline" slot="start"></ion-icon>
+                  <span>Ver Detalles</span>
+                  <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+      </div>
+
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="custom-fab">
+        <ion-fab-button (click)="startNewRoute()">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </ion-content>

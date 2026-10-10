@@ -1,0 +1,675 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos BEM para la gestión de Sitios de Aviturismo (Modo Proveedor).
+ * [I/O - Reusabilidad]: Clases modulares .provider-site-shell, .site-hero, .service-card, .bird-pill.
+ * [Edge Cases - UI]: Adaptabilidad móvil (iPhone / Android) y desktop, contraste a11y.
+ */
+
+.provider-site-content {
+  --background: var(--flock-background, #f8fafc);
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+.provider-card {
+  margin: 0;
+}
+
+.content-wrapper {
+  position: relative;
+  background: #fff;
+  border-radius: 0 0 20px 20px;
+  padding: 16px 18px 24px;
+}
+
+/* --- HERO COVER & LOGO --- */
+.site-hero {
+  position: relative;
+  margin-bottom: 50px;
+
+  &__cover {
+    height: 190px;
+    width: 100%;
+    background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #10b981 100%);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
+    &--has-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgb(0 0 0 / 20%) 0%, rgb(0 0 0 / 60%) 100%);
+    }
+  }
+
+  &__btn-cover {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+
+    --background: rgb(0 0 0 / 50%);
+    --color: #fff;
+    --border-radius: 50%;
+
+    width: 44px;
+    height: 44px;
+    backdrop-filter: blur(6px);
+    z-index: 10;
+  }
+
+  &__logo-wrapper {
+    position: absolute;
+    bottom: -16px;
+    right: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+
+  &__logo-circle {
+    width: 82px;
+    height: 82px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 14px rgb(0 0 0 / 15%);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__logo-fallback {
+    font-size: 42px;
+    color: #10b981;
+  }
+
+  &__btn-logo {
+    position: absolute;
+    bottom: -4px;
+    right: -8px;
+
+    --background: #047857;
+    --color: #fff;
+    --border-radius: 50%;
+
+    width: 32px;
+    height: 32px;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+  }
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+/* --- TITULAR Y CALIFICACIÓN --- */
+.site-identity__name {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 8px 0 4px;
+}
+
+.site-identity__location {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 12px;
+
+  .location-icon {
+    color: #047857;
+  }
+}
+
+.site-rating-box {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  padding: 8px 18px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 4%);
+  border: 1px solid #e2e8f0;
+  margin-bottom: 16px;
+}
+
+.site-rating-box__stars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 2px;
+
+  .star-icon {
+    color: #f59e0b;
+    font-size: 1.15rem;
+  }
+}
+
+.site-rating-box__score {
+  font-size: 0.95rem;
+  color: #1e293b;
+
+  strong {
+    font-weight: 700;
+    color: #047857;
+  }
+}
+
+.site-rating-box__reviews {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-left: 4px;
+}
+
+/* --- SEGMENTO DE PESTAÑAS (ALTO CONTRASTE) --- */
+.provider-segment-wrapper {
+  margin-bottom: 8px;
+}
+
+.provider-segment {
+  --background: #e2e8f0;
+
+  background: #e2e8f0;
+  border-radius: 14px;
+  padding: 4px;
+
+  ion-segment-button {
+    --indicator-color: #047857;
+    --indicator-box-shadow: 0 4px 12px rgb(4 120 87 / 35%);
+    --color: #334155;
+    --color-checked: #fff;
+
+    font-weight: 700;
+    font-size: 0.88rem;
+    min-height: 42px;
+    border-radius: 10px;
+    letter-spacing: 0.2px;
+
+    ion-label {
+      font-weight: 700;
+    }
+  }
+
+  .segment-button-checked {
+    --color: #fff;
+
+    color: #fff !important;
+    font-weight: 800;
+
+    ion-label,
+    ion-icon {
+      color: #fff !important;
+    }
+  }
+
+  .tab-badge {
+    margin-left: 6px;
+    font-size: 0.72rem;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+}
+
+/* --- FORMULARIOS Y TARJETAS (100% WIDTH EN TODOS LOS CAMPOS) --- */
+.form-card {
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 4%);
+  background: #fff;
+  margin: 0 0 16px;
+  width: 100%;
+
+  ion-card-header {
+    padding-bottom: 6px;
+  }
+
+  ion-card-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .form-title-icon {
+    color: #047857;
+    font-size: 1.2rem;
+  }
+}
+
+.form-group {
+  width: 100%;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 6px;
+
+  .form-label-icon {
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+}
+
+.custom-input,
+.custom-textarea {
+  width: 100% !important;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  background: #f8fafc;
+  color: #0f172a;
+  box-sizing: border-box;
+  outline: none;
+  display: block;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus {
+    border-color: #047857;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgb(4 120 87 / 12%);
+  }
+}
+
+.custom-select {
+  width: 100% !important;
+  display: block;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 6px 10px;
+  background: #f8fafc;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0;
+
+  .form-col {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+}
+
+/* --- MAPA Y LOCALIZACIÓN GPS --- */
+.site-map-container {
+  width: 100%;
+  height: 260px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  box-shadow: inset 0 1px 3px rgb(0 0 0 / 8%);
+  margin-bottom: 14px;
+  z-index: 1;
+}
+
+.map-hint-text {
+  font-size: 0.84rem;
+  color: #64748b;
+  margin: 0 0 12px;
+  line-height: 1.45;
+}
+
+.btn-gps-locate {
+  --border-radius: 10px;
+
+  font-weight: 600;
+  font-size: 0.9rem;
+  height: 42px;
+}
+
+.checklist-toggle-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  h3 {
+    margin: 0 0 4px;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #64748b;
+    line-height: 1.35;
+  }
+}
+
+.btn-save-main,
+.btn-save-checklist {
+  --border-radius: 10px;
+
+  font-weight: 600;
+  height: 48px;
+}
+
+/* --- TAB 2: SERVICIOS Y PRODUCTOS --- */
+.services-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+
+  .services-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  .services-subtitle {
+    margin: 2px 0 0;
+    font-size: 0.82rem;
+    color: #64748b;
+  }
+}
+
+.service-create-card {
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #10b981;
+  margin-bottom: 20px;
+}
+
+.services-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-helper-text {
+  margin: 2px 0 8px;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.service-photo-uploader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #cbd5e1;
+  border-radius: 10px;
+  padding: 16px 12px;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover,
+  &:focus-visible {
+    border-color: #10b981;
+    background: #f0fdf4;
+    outline: none;
+  }
+
+  &__icon {
+    font-size: 28px;
+    color: #047857;
+    margin-bottom: 6px;
+  }
+
+  &__label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  &__hint {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 2px;
+  }
+}
+
+.service-photo-preview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+
+  &__image-wrapper {
+    width: 76px;
+    height: 76px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #e2e8f0;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+.service-card {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 3%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &--has-photo {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 14px;
+
+    @media (width <= 420px) {
+      flex-direction: column;
+    }
+  }
+
+  &__media {
+    width: 84px;
+    height: 84px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #f1f5f9;
+
+    @media (width <= 420px) {
+      width: 100%;
+      height: 140px;
+    }
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: #ecfdf5;
+    color: #047857;
+    margin-bottom: 6px;
+
+    &--product {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+  }
+
+  &__title {
+    margin: 0 0 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  &__desc {
+    margin: 0 0 10px;
+    font-size: 0.85rem;
+    color: #475569;
+    line-height: 1.4;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px dashed #e2e8f0;
+    padding-top: 8px;
+  }
+
+  &__price {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #047857;
+  }
+}
+
+/* --- TAB 3: CHECKLIST DE AVES --- */
+.checklist-search-box {
+  margin-bottom: 14px;
+}
+
+.bird-searchbar {
+  --background: #fff;
+  --border-radius: 10px;
+  --box-shadow: 0 2px 8px rgb(0 0 0 / 5%);
+
+  padding: 0;
+}
+
+.search-results-card {
+  margin: 8px 0 0;
+  border-radius: 10px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.checklist-summary__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.checklist-summary__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.checklist-hint {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.birds-selected-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bird-pill {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 2%);
+}
+
+.bird-pill__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.bird-pill__common {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.bird-pill__scientific {
+  font-size: 0.8rem;
+  color: #047857;
+  font-style: italic;
+}
+
+.bird-pill__remove {
+  --color: #ef4444;
+}
+
+.empty-state,
+.empty-checklist {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px dashed #cbd5e1;
+  padding: 24px;
+
+  .empty-icon {
+    font-size: 42px;
+    color: #94a3b8;
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.4;
+  }
+}

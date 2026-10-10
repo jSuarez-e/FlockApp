@@ -1,0 +1,302 @@
+<ion-header class="ion-no-border flock-header-seamless">
+  <ion-toolbar class="site-detail-toolbar">
+    <div class="flock-header-content">
+      <ion-buttons slot="start" class="header-menu-buttons">
+        <ion-back-button defaultHref="/home/sites" text="" class="header-menu-btn"></ion-back-button>
+      </ion-buttons>
+      <div class="flock-header-titles">
+        <h1 class="flock-header-title">{{ site?.name || 'Detalle del Sitio' }}</h1>
+        <p class="flock-header-subtitle">{{ site?.department || 'Colombia' }}{{ site?.municipality ? ' - ' + site?.municipality : '' }}</p>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="site-detail-content">
+  @if (site) {
+    <div class="hero-image">
+      @if (site.cover_url || site.photoUrl || site.logo_url) {
+        <img
+          [src]="getImageUrl(site.cover_url || site.photoUrl || site.logo_url)"
+          class="hero-image__img"
+          alt="Foto de portada de {{ site.name }}"
+          (error)="onImageError($event)"
+        />
+      } @else {
+        <div class="hero-image__fallback-banner"></div>
+      }
+      @if (site.logo_url) {
+        <div class="hero-image__logo-circle">
+          <img
+            [src]="getImageUrl(site.logo_url)"
+            alt="Logo de {{ site.name }}"
+            class="hero-image__logo-img"
+            (error)="onImageError($event)"
+          />
+        </div>
+      }
+    </div>
+
+    <div class="flock-cards-wrapper">
+      <div class="flock-outer-card site-card">
+        <div class="content-wrapper ion-padding">
+          <h2 class="title">{{ site.name }}</h2>
+          <p class="text-muted location-info">
+            <ion-icon name="location-outline"></ion-icon>
+            <span>{{ site.department }}{{ site.municipality ? ' - ' + site.municipality : '' }}</span>
+          </p>
+
+          @if (site.location && site.location.lat && site.location.lng) {
+            <div class="site-detail__coords ion-margin-bottom">
+              <ion-chip color="medium" outline="true">
+                <ion-icon name="navigate-outline"></ion-icon>
+                <ion-label>{{ site.location.lat | number:'1.4-4' }}, {{ site.location.lng | number:'1.4-4' }}</ion-label>
+              </ion-chip>
+              <ion-button
+                size="small"
+                fill="clear"
+                [href]="'https://www.google.com/maps/search/?api=1&query=' + site.location.lat + ',' + site.location.lng"
+                target="_blank"
+              >
+                <ion-icon slot="start" name="map-outline"></ion-icon>
+                Abrir en Mapa
+              </ion-button>
+            </div>
+          }
+
+          <div class="site-detail__rating ion-margin-bottom">
+            <ion-icon name="star" color="warning" class="site-detail__rating-icon"></ion-icon>
+            <span class="site-detail__rating-score">{{ site.rating | number:'1.1-1' }}</span>
+            <ion-button size="small" fill="clear" (click)="isRatingModalOpen.set(true)">
+              Calificar Sitio
+            </ion-button>
+          </div>
+
+          <!-- SUBCARDS INTERIOR -->
+          <!-- Subcard 1: Descripción -->
+          @if (site.description) {
+            <div class="flock-subcard site-desc-subcard ion-margin-top">
+              <h3 class="subcard-title">
+                <ion-icon name="information-circle-outline"></ion-icon>
+                <span>Descripción del Sitio</span>
+              </h3>
+              <p class="desc-text">{{ site.description }}</p>
+            </div>
+          }
+
+          <!-- Subcard 2: Contacto y Redes -->
+          @if (site.contact_whatsapp || site.contact_phone || site.website || site.instagram || site.facebook) {
+            <div class="flock-subcard site-contact-subcard ion-margin-top">
+              <h3 class="subcard-title">
+                <ion-icon name="call-outline"></ion-icon>
+                <span>Contacto y Redes Sociales</span>
+              </h3>
+              <div class="site-detail__contact-bar">
+                @if (site.contact_whatsapp) {
+                  <ion-button
+                    size="small"
+                    color="success"
+                    [href]="getWhatsAppUrl(site.contact_whatsapp)"
+                    target="_blank"
+                  >
+                    <ion-icon slot="start" name="logo-whatsapp"></ion-icon>
+                    WhatsApp
+                  </ion-button>
+                }
+                @if (site.contact_phone) {
+                  <ion-button
+                    size="small"
+                    color="primary"
+                    [href]="'tel:' + site.contact_phone"
+                  >
+                    <ion-icon slot="start" name="call-outline"></ion-icon>
+                    Llamar
+                  </ion-button>
+                }
+                @if (site.website) {
+                  <ion-button
+                    size="small"
+                    fill="outline"
+                    [href]="getWebUrl(site.website)"
+                    target="_blank"
+                  >
+                    <ion-icon slot="start" name="globe-outline"></ion-icon>
+                    Web
+                  </ion-button>
+                }
+                @if (site.instagram) {
+                  <ion-button
+                    size="small"
+                    color="tertiary"
+                    fill="outline"
+                    [href]="getInstagramUrl(site.instagram)"
+                    target="_blank"
+                  >
+                    <ion-icon slot="start" name="logo-instagram"></ion-icon>
+                    Instagram
+                  </ion-button>
+                }
+                @if (site.facebook) {
+                  <ion-button
+                    size="small"
+                    color="primary"
+                    fill="outline"
+                    [href]="getFacebookUrl(site.facebook)"
+                    target="_blank"
+                  >
+                    <ion-icon slot="start" name="logo-facebook"></ion-icon>
+                    Facebook
+                  </ion-button>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Subcard 3: Servicios y Productos -->
+          <div class="flock-subcard site-services-subcard ion-margin-top">
+            <h3 class="subcard-title">
+              <ion-icon name="pricetags-outline"></ion-icon>
+              <span>Servicios y Oferta de Aviturismo</span>
+            </h3>
+            @for (s of services(); track s.id) {
+              <div class="site-detail__service-item ion-margin-bottom">
+                @if (s.photoUrl) {
+                  <img
+                    [src]="getImageUrl(s.photoUrl)"
+                    class="site-detail__service-img"
+                    alt="Foto del servicio"
+                    (error)="onImageError($event)"
+                  />
+                }
+                <div class="service-details">
+                  <div class="service-header-row">
+                    <h4 class="site-detail__service-title">{{ s.name }}</h4>
+                    <ion-chip color="secondary" outline="true">{{ s.type }}</ion-chip>
+                  </div>
+                  <p class="service-desc">{{ s.description }}</p>
+                  @if (s.price) {
+                    <p class="site-detail__service-price">Precio: ${{ s.price | number }} COP</p>
+                  }
+                </div>
+              </div>
+            } @empty {
+              <p class="text-muted">No hay servicios registrados actualmente.</p>
+            }
+          </div>
+
+          <!-- Subcard 4: Aves Esperadas -->
+          <div class="flock-subcard site-birds-subcard ion-margin-top">
+            <h3 class="subcard-title">
+              <ion-icon name="paw-outline"></ion-icon>
+              <span>Aves Esperadas y Hotspot</span>
+            </h3>
+            @if (site.has_bird_checklist) {
+              <div class="checklist-badge checklist-badge--active ion-margin-bottom">
+                <ion-icon name="checkmark-circle" color="success"></ion-icon>
+                <span>Sitio con checklist verificado de aves</span>
+              </div>
+            } @else {
+              <div class="checklist-badge checklist-badge--inactive ion-margin-bottom">
+                <ion-icon name="close-circle" color="medium"></ion-icon>
+                <span>Lista de aves en proceso de catalogación</span>
+              </div>
+            }
+            <p class="text-muted text-small">Listado de especies confirmadas en este ecosistema.</p>
+            <ion-button expand="block" color="secondary" class="primary-btn ion-margin-top" (click)="loadChecklist()">
+              <ion-icon slot="start" name="list-outline"></ion-icon>
+              Ver Checklist Interactivo
+            </ion-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="ion-padding ion-text-center">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+    </div>
+  }
+
+  <!-- Modal del Checklist -->
+  <ion-modal [isOpen]="isChecklistOpen()" (didDismiss)="isChecklistOpen.set(false)" [initialBreakpoint]="0.8" [breakpoints]="[0, 0.8, 1]">
+    <ng-template>
+      <ion-header class="ion-no-border flock-modal-header">
+        <ion-toolbar>
+          <ion-title>Checklist: {{ site?.name }}</ion-title>
+          <ion-buttons slot="end">
+            <button type="button" (click)="isChecklistOpen.set(false)" class="flock-header-pill-btn" aria-label="Cerrar modal">
+              <ion-icon name="close-outline"></ion-icon>
+              <span>Cerrar</span>
+            </button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          @for (bird of checklist(); track bird.id) {
+            <ion-item button detail="true">
+              <ion-thumbnail slot="start">
+                <img
+                  [src]="bird.base_image && bird.base_image !== '-' ? bird.base_image : '/assets/imgs/commons/no-image.png'"
+                  alt="Foto del ave"
+                />
+              </ion-thumbnail>
+              <ion-label class="ion-text-wrap">
+                <h2><i>{{ bird.scientific_name }}</i></h2>
+                <p>{{ bird.common_name || bird.english_name }}</p>
+              </ion-label>
+              <ion-checkbox slot="end" color="success"></ion-checkbox>
+            </ion-item>
+          } @empty {
+            <div class="ion-padding ion-text-center">
+              <p>No hay aves registradas para este sitio en la base de datos local.</p>
+            </div>
+          }
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Modal de Calificación -->
+  <ion-modal [isOpen]="isRatingModalOpen()" (didDismiss)="isRatingModalOpen.set(false)" [initialBreakpoint]="0.5" [breakpoints]="[0, 0.5, 0.8]">
+    <ng-template>
+      <ion-header class="ion-no-border flock-modal-header">
+        <ion-toolbar>
+          <ion-title>Calificar Sitio</ion-title>
+          <ion-buttons slot="end">
+            <button type="button" (click)="isRatingModalOpen.set(false)" class="flock-header-pill-btn" aria-label="Cerrar modal">
+              <ion-icon name="close-outline"></ion-icon>
+              <span>Cerrar</span>
+            </button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding ion-text-center">
+        <h2>¿Qué te pareció este lugar?</h2>
+        
+        <div class="site-detail__stars-container ion-margin-top ion-margin-bottom">
+          @for (i of [1,2,3,4,5]; track i) {
+            <ion-icon 
+              [name]="userRating() >= i ? 'star' : 'star-outline'" 
+              [color]="userRating() >= i ? 'warning' : 'medium'"
+              (click)="setRating(i)"
+              class="site-detail__star-icon">
+            </ion-icon>
+          }
+        </div>
+
+        <ion-textarea 
+          [(ngModel)]="userComment" 
+          placeholder="Déjanos un comentario (opcional)"
+          fill="outline" 
+          rows="3"
+          class="ion-margin-bottom">
+        </ion-textarea>
+
+        <ion-button expand="block" color="primary" [disabled]="userRating() === 0" (click)="submitRating()">
+          Enviar Calificación
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

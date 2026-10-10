@@ -1,0 +1,91 @@
+    <ion-card class="feed-card shadow-sm">
+      <div class="card-header-wrapper">
+        <ion-item lines="none" class="feed-header">
+          <ion-avatar slot="start" class="avatar-styled avatar-clickable" (click)="viewAuthorProfile($event)" role="button" tabindex="0">
+            <img [src]="authorAvatarUrl()" (error)="handleAvatarError($event)" alt="Avatar de {{ post().authorName }}">
+          </ion-avatar>
+          <ion-label (click)="viewAuthorProfile($event)" class="author-label-clickable" role="button" tabindex="0">
+            <div class="author-header-line">
+              <h2 class="author-name">{{ post().authorName }}</h2>
+              @if (post().authorType === 'SITIO') {
+                <span class="author-badge author-badge--sitio">Sitio</span>
+              } @else if (post().authorType === 'GUIA') {
+                <span class="author-badge author-badge--guia">Guía</span>
+              }
+            </div>
+            <p class="post-meta">
+              {{ post().createdAt | date:'dd MMM yyyy, h:mm a' }}
+            </p>
+          </ion-label>
+        </ion-item>
+      </div>
+
+      @if (post().needsIdentification) {
+        <div class="identification-banner sleek-gradient">
+          <div class="pulse-ring"></div>
+          <ion-icon [icon]="icons.helpBuoyOutline"></ion-icon>
+          <span>¡Necesita ayuda de identificación!</span>
+        </div>
+      }
+      
+      @if (post().imageUrl) {
+        <div class="image-wrapper">
+          <img [src]="resolveUrl(post().imageUrl)" loading="lazy" class="feed-image" alt="Ave registrada" (error)="handleImageError($event)" />
+        </div>
+      }
+
+      @if (post().location) {
+        <div class="map-preview-container">
+          <a [href]="getGoogleMapsLink(post().location!)" target="_blank" class="map-link">
+            <div class="map-overlay">
+              <ion-button fill="solid" color="light" size="small" class="open-map-btn">
+                <ion-icon [icon]="icons.locationOutline" slot="start" color="primary"></ion-icon>
+                Ver en el mapa
+              </ion-button>
+            </div>
+            <iframe 
+              width="100%" 
+              height="150" 
+              frameborder="0" 
+              scrolling="no" 
+              marginheight="0" 
+              marginwidth="0" 
+              [src]="getMapIframeUrl(post().location!)"
+              class="location-map__iframe"
+            ></iframe>
+          </a>
+          <div class="location-coords">
+            <ion-icon [icon]="icons.locationOutline"></ion-icon>
+            <span>Lat: {{ post().location!.lat | number:'1.4-4' }}, Lng: {{ post().location!.lng | number:'1.4-4' }}</span>
+          </div>
+        </div>
+      }
+
+      <ion-card-content class="content-styled">
+        @if (post().title && post().title !== 'Actualización en Comunidad') {
+          <h3 class="post-title">{{ post().title }}</h3>
+        }
+        <p class="post-description">{{ post().description }}</p>
+        
+        @if (post().routeId) {
+          <ion-button fill="outline" expand="block" (click)="viewRoute(post().routeId!)" class="ion-margin-bottom">
+            <ion-icon [icon]="icons.mapOutline" slot="start"></ion-icon> Ver Resumen de Ruta
+          </ion-button>
+        }
+        
+        <div class="metrics">
+          <ion-button fill="clear" size="small" class="metric-btn" (click)="toggleFavorite()" [color]="isSavedByMe() ? 'danger' : 'medium'">
+            <ion-icon [icon]="isSavedByMe() ? icons.heart : icons.heartOutline" slot="start"></ion-icon>
+            {{ savesCount }}
+          </ion-button>
+          <ion-button fill="clear" size="small" class="metric-btn" (click)="openReplies()">
+            <ion-icon [icon]="icons.chatbubbleOutline" slot="start"></ion-icon>
+            {{ post().repliesCount }}
+          </ion-button>
+          <ion-button fill="clear" size="small" class="metric-btn metric-btn--share" (click)="sharePost()">
+            <ion-icon [icon]="icons.shareOutline" slot="start"></ion-icon>
+            Compartir
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>

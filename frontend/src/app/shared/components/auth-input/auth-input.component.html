@@ -1,0 +1,23 @@
+<div class="auth-input">
+  @if (label()) {
+    <label class="auth-input__label">{{ label() }}</label>
+  }
+  <div
+    class="auth-input__wrapper"
+    [class.auth-input__wrapper--invalid]="isTouched() && isInvalid()"
+    [class.auth-input__wrapper--readonly]="readonly()"
+  >
+    @if (icon()) {
+      <ion-icon class="auth-input__icon" [name]="icon()"></ion-icon>
+    }
+    <input
+      [(ngModel)]="value"
+      (blur)="isTouched.set(true)"
+      [type]="type()"
+      [placeholder]="placeholder()"
+      [readOnly]="readonly()"
+      autocomplete="off"
+      class="auth-input__control"
+    />
+  </div>
+</div>

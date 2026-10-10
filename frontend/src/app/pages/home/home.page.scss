@@ -1,0 +1,38 @@
+/* Títulos grandes para la pantalla de bienvenida/selector */
+.brand-section {
+  text-align: center;
+  margin-bottom: 10px;
+
+  .brand-title {
+    margin: 0;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--avitour-primary);
+    line-height: 1;
+    margin-top: 20px;
+  }
+
+  .intro {
+    margin: 10px 0;
+    color: var(--avitour-muted-foreground);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+}
+
+/* Ajuste sutil para los badges del modo activo en el dashboard */
+.mode-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  background: var(--avitour-border);
+  color: var(--avitour-muted-foreground);
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 0.8rem;
+  margin-bottom: 20px;
+
+  &.pajarero {
+    background: rgb(16 131 70 / 10%);
+    color: var(--avitour-primary);
+  }
+}

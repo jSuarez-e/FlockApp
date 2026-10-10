@@ -1,0 +1,136 @@
+<!--
+  @sdd
+  [Objetivo]: Plantilla semántica del selector compartido de Departamento y Municipio con modal de búsqueda interactivo.
+  [I/O - Reusabilidad]: Utiliza el sistema de tarjetas .flock-input-field y expone modelos reactivos para nombres e identificadores territoriales.
+  [Edge Cases - UI]: Filtro instantáneo sin resultados, navegación por teclado, modal bottom-sheet y modos de disposición grid y stacked.
+-->
+<div class="geo-selector" [class.geo-selector--grid]="layout() === 'grid'">
+  <!-- Selector de Departamento -->
+  <div class="flock-input-field geo-selector__field" [class.flock-input-field--disabled]="disabled()">
+    <span class="flock-input-label">Departamento</span>
+    <button
+      type="button"
+      class="flock-input-trigger geo-selector__trigger"
+      (click)="openPicker('department')"
+      [disabled]="disabled()"
+      aria-haspopup="dialog"
+      aria-label="Seleccionar Departamento de Colombia"
+    >
+      <ion-icon name="location-outline" class="flock-input-icon geo-selector__icon"></ion-icon>
+      <span class="geo-selector__value" [class.geo-selector__value--placeholder]="!selectedDeptDisplay()">
+        {{ selectedDeptDisplay() || 'Selecciona departamento' }}
+      </span>
+      <ion-icon name="chevron-down-outline" class="flock-input-chevron"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Selector de Municipio -->
+  <div
+    class="flock-input-field geo-selector__field"
+    [class.flock-input-field--disabled]="disabled() || !activeDepartmentId()"
+  >
+    <span class="flock-input-label">Municipio</span>
+    <button
+      type="button"
+      class="flock-input-trigger geo-selector__trigger"
+      (click)="openPicker('municipality')"
+      [disabled]="disabled() || !activeDepartmentId()"
+      aria-haspopup="dialog"
+      aria-label="Seleccionar Municipio"
+    >
+      <ion-icon name="map-outline" class="flock-input-icon geo-selector__icon"></ion-icon>
+      <span class="geo-selector__value" [class.geo-selector__value--placeholder]="!selectedMuniDisplay()">
+        {{ selectedMuniDisplay() || (activeDepartmentId() ? 'Selecciona municipio' : 'Primero elige departamento') }}
+      </span>
+      <ion-icon name="chevron-down-outline" class="flock-input-chevron"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Modal de Búsqueda y Filtrado -->
+  <ion-modal
+    [isOpen]="isModalOpen()"
+    (didDismiss)="closePicker()"
+    [breakpoints]="[0, 0.7, 0.95]"
+    [initialBreakpoint]="0.7"
+    class="geo-picker-modal"
+  >
+    <ng-template>
+      <div class="geo-picker">
+        <header class="geo-picker__header">
+          <div class="geo-picker__title-row">
+            <div class="geo-picker__title-box">
+              <ion-icon
+                [name]="modalType() === 'department' ? 'location-outline' : 'map-outline'"
+                class="geo-picker__title-icon"
+              ></ion-icon>
+              <h3 class="geo-picker__title">
+                {{ modalType() === 'department' ? 'Seleccionar Departamento' : 'Seleccionar Municipio' }}
+              </h3>
+            </div>
+            <button
+              type="button"
+              class="geo-picker__close-btn"
+              (click)="closePicker()"
+              aria-label="Cerrar ventana de selección"
+            >
+              <ion-icon name="close-outline"></ion-icon>
+            </button>
+          </div>
+
+          <div class="geo-picker__search-box">
+            <ion-icon name="search-outline" class="geo-picker__search-icon"></ion-icon>
+            <input
+              type="text"
+              class="geo-picker__search-input"
+              [placeholder]="modalType() === 'department' ? 'Buscar departamento...' : 'Buscar municipio...'"
+              [value]="searchTerm()"
+              (input)="onSearchInput($event)"
+            />
+            @if (searchTerm()) {
+              <button
+                type="button"
+                class="geo-picker__search-clear"
+                (click)="clearSearch()"
+                aria-label="Limpiar búsqueda"
+              >
+                <ion-icon name="close-circle-outline"></ion-icon>
+              </button>
+            }
+          </div>
+        </header>
+
+        <div class="geo-picker__body">
+          @if (filteredItems().length > 0) {
+            <ul class="geo-picker__list" role="listbox">
+              @for (item of filteredItems(); track item.id) {
+                <li
+                  class="geo-picker__item"
+                  [class.geo-picker__item--selected]="isItemSelected(item)"
+                  (click)="selectItem(item)"
+                  (keydown.enter)="selectItem(item)"
+                  (keydown.space)="selectItem(item)"
+                  role="option"
+                  tabindex="0"
+                  [attr.aria-selected]="isItemSelected(item)"
+                >
+                  <span class="geo-picker__item-name">{{ item.name }}</span>
+                  @if (isItemSelected(item)) {
+                    <ion-icon name="checkmark-circle" class="geo-picker__item-check"></ion-icon>
+                  }
+                </li>
+              }
+            </ul>
+          } @else {
+            <div class="geo-picker__empty">
+              <ion-icon name="search-outline" class="geo-picker__empty-icon"></ion-icon>
+              <p class="geo-picker__empty-title">Sin coincidencias</p>
+              <p class="geo-picker__empty-desc">
+                No se encontraron resultados para "{{ searchTerm() }}".
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+</div>

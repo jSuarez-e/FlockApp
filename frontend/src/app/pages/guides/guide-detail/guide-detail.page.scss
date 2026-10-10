@@ -1,0 +1,511 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos modernos para la vista de Detalle del Guía, Calendario interactivo de disponibilidad y formulario de reserva.
+ * [I/O - Reusabilidad]: Clases BEM (.guide-hero-card, .detail-card, .calendar-days-grid, .btn-submit-booking).
+ * [Edge Cases - UI]: Grid responsivo para calendario móvil, touch targets > 44px, estados accesible de botones deshabilitados.
+ */
+
+.guide-detail-content {
+  --background: var(--flock-background, #f8fafc);
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+.guide-card {
+  margin: 0;
+}
+
+.content-wrapper {
+  position: relative;
+  background: #fff;
+  border-radius: 0 0 20px 20px;
+  padding: 16px 18px 24px;
+}
+
+.subcard-title {
+  margin: 0 0 10px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--flock-primary, #064e3b);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  ion-icon {
+    font-size: 1.15rem;
+    color: var(--flock-primary-light, #047857);
+  }
+}
+
+.subcard-subtitle {
+  margin: -6px 0 12px;
+  font-size: 0.8rem;
+  color: var(--flock-muted-foreground, #64748b);
+}
+
+.meta-item ion-icon {
+  color: #059669;
+  font-size: 1rem;
+}
+
+.verified-badge ion-icon {
+  font-size: 0.95rem;
+}
+
+.info-row ion-icon {
+  font-size: 22px;
+  margin-top: 2px;
+  color: #059669;
+}
+
+.calendar-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .calendar-month-name {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 800;
+    text-transform: capitalize;
+    color: #0f172a;
+  }
+
+  ion-button {
+    --color: #047857;
+  }
+}
+
+.detail-loader {
+  padding: 64px 20px;
+  color: #64748b;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   1. TOOLBAR SUPERIOR
+   -------------------------------------------------------------------------- */
+.guide-detail-toolbar {
+  --background: transparent;
+  background: transparent;
+  --color: var(--flock-primary-foreground, #fff);
+  padding: 10px 16px 12px;
+}
+
+.hero-image {
+  position: relative;
+  width: 100%;
+  margin: 0;
+
+  &__avatar-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .hero-image__avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .avatar-verified-dot {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #059669;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
+      font-size: 14px;
+      z-index: 6;
+    }
+  }
+}
+
+.content-wrapper {
+  position: relative;
+  background: var(--ion-background-color, #fff);
+  border-radius: 0 0 20px 20px;
+
+  .title {
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+
+  .location-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #64748b;
+    font-size: 0.92rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+
+  .profile-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. DETAIL CARDS & INFO
+   -------------------------------------------------------------------------- */
+.guide-info-section {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+
+  .detail-card {
+    margin: 0 0 18px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px -2px rgb(15 23 42 / 5%);
+    border: 1px solid #e2e8f0;
+    background: #fff;
+
+    ion-card-header {
+      padding: 18px 20px 12px;
+    }
+
+    ion-card-content {
+      padding: 0 20px 20px;
+    }
+
+    .section-title {
+      font-size: 1.12rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.01em;
+    }
+
+    ion-card-subtitle {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .bio-block {
+      background: #f8fafc;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+
+      .info-label {
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: #059669;
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .bio-text {
+        margin: 0;
+        font-size: 0.88rem;
+        line-height: 1.55;
+        color: #334155;
+      }
+    }
+
+    .info-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+
+      .info-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+
+        .info-label {
+          font-size: 0.72rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          color: #94a3b8;
+          font-weight: 800;
+          display: block;
+        }
+
+        .info-value {
+          margin: 2px 0 0;
+          font-size: 0.92rem;
+          font-weight: 600;
+          color: #1e293b;
+        }
+      }
+    }
+
+    .quick-contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+
+      .btn-wp-direct {
+        --border-radius: 14px;
+
+        font-weight: 700;
+        height: 44px;
+        width: 100%;
+        margin-bottom: 4px;
+
+        --background: #059669;
+        --box-shadow: 0 4px 12px rgb(5 150 105 / 25%);
+      }
+
+      ion-button {
+        --border-radius: 12px;
+
+        font-weight: 700;
+        height: 38px;
+        font-size: 0.82rem;
+      }
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. CALENDARIO DE DISPONIBILIDAD
+   -------------------------------------------------------------------------- */
+.calendar-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+
+  .day-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 54px;
+    border-radius: 12px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 6px 2px;
+
+    .day-num {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .day-tag {
+      font-size: 0.62rem;
+      font-weight: 800;
+      padding: 1px 4px;
+      border-radius: 4px;
+      margin-top: 3px;
+
+      &--free {
+        background: #ecfdf5;
+        color: #047857;
+      }
+
+      &--busy {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+    }
+
+    &--selected {
+      background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+      border-color: #047857;
+      box-shadow: 0 4px 12px rgb(4 120 87 / 30%);
+
+      .day-num {
+        color: #fff;
+      }
+
+      .day-tag {
+        background: rgb(255 255 255 / 20%);
+        color: #fff;
+      }
+    }
+
+    &--blocked {
+      background: #fef2f2;
+      border-color: #fecaca;
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+
+    &--past {
+      opacity: 0.35;
+      cursor: not-allowed;
+      background: #f8fafc;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.94);
+    }
+  }
+}
+
+.calendar-legend-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 6px;
+
+  .legend-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #475569;
+
+    .chip-color {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+
+      &--free {
+        background: #10b981;
+      }
+
+      &--busy {
+        background: #ef4444;
+      }
+
+      &--selected {
+        background: #064e3b;
+      }
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. FORMULARIO DE RESERVA
+   -------------------------------------------------------------------------- */
+.selected-date-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 12px 16px;
+  border-radius: 14px;
+
+  ion-icon {
+    font-size: 1.6rem;
+    color: #059669;
+  }
+
+  .banner-label {
+    font-size: 0.75rem;
+    color: #047857;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: block;
+  }
+
+  .banner-date {
+    font-size: 0.95rem;
+    color: #064e3b;
+    font-weight: 800;
+  }
+}
+
+.unselected-date-tip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  color: #475569;
+
+  ion-icon {
+    font-size: 1.3rem;
+    color: #059669;
+  }
+}
+
+.form-field {
+  .field-title {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #334155;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .input-select-box,
+  .input-text-box,
+  .input-textarea-box {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fff;
+    transition: border-color 0.2s ease;
+
+    &:focus-within {
+      border-color: #059669;
+      box-shadow: 0 0 0 3px rgb(5 150 105 / 12%);
+    }
+  }
+
+  .input-text-box {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 8px;
+
+    ion-icon {
+      color: #059669;
+      font-size: 1.15rem;
+    }
+  }
+
+  .form-native-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 10px 0;
+    font-size: 0.88rem;
+    color: #0f172a;
+    background: transparent;
+
+    &::placeholder {
+      color: #94a3b8;
+    }
+  }
+
+  .input-textarea-box {
+    padding: 8px 12px;
+
+    textarea.form-native-input {
+      resize: vertical;
+    }
+  }
+}
+
+.btn-submit-booking {
+  --border-radius: 14px;
+  --background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+  --box-shadow: 0 4px 14px rgb(5 150 105 / 25%);
+
+  height: 46px;
+  font-weight: 800;
+  font-size: 0.92rem;
+  margin-top: 10px;
+}

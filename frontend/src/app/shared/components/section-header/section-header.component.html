@@ -1,0 +1,52 @@
+<!--
+  @sdd
+  [Objetivo]: Plantilla del encabezado modular y continuo de FlockApp con soporte para búsqueda y filtros.
+  [I/O - Reusabilidad]: Slots para [header-actions] y [header-filters], inputs declarativos.
+  [Edge Cases - UI]: Distribución flexible con flexbox, soporte para modo sin búsqueda.
+-->
+<ion-header class="ion-no-border flock-header-seamless">
+  <ion-toolbar class="section-header-toolbar">
+    <div class="section-header-content">
+      @if (showBackButton()) {
+        <ion-buttons slot="start">
+          <ion-back-button [defaultHref]="defaultBackHref()" text="" class="header-back-btn"></ion-back-button>
+        </ion-buttons>
+      } @else if (showMenuButton()) {
+        <ion-buttons slot="start" class="header-menu-buttons">
+          <ion-menu-button class="header-menu-btn"></ion-menu-button>
+        </ion-buttons>
+      }
+      <ng-content select="[header-start]"></ng-content>
+
+      <div class="section-header-titles">
+        <h1 class="section-header-title">{{ title() }}</h1>
+        @if (subtitle()) {
+          <p class="section-header-subtitle">{{ subtitle() }}</p>
+        }
+      </div>
+
+      <div class="section-header-actions">
+        <ng-content select="[header-actions]"></ng-content>
+      </div>
+    </div>
+  </ion-toolbar>
+
+  @if (showSearch()) {
+    <div class="section-header-subpanel">
+      <div class="searchbar-wrapper">
+        <ion-searchbar
+          [value]="searchTerm()"
+          (ionInput)="onSearchInput($event)"
+          [placeholder]="searchPlaceholder()"
+          [debounce]="searchDebounce()"
+          class="flock-searchbar"
+        ></ion-searchbar>
+      </div>
+      <ng-content select="[header-filters]"></ng-content>
+    </div>
+  } @else {
+    <div class="section-header-subpanel empty-search">
+      <ng-content select="[header-filters]"></ng-content>
+    </div>
+  }
+</ion-header>

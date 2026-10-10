@@ -1,0 +1,93 @@
+<ion-header class="ion-no-border flock-modal-header">
+  <ion-toolbar>
+    <ion-title>Filtros de Búsqueda</ion-title>
+    <ion-buttons slot="end">
+      <button type="button" (click)="dismiss()" class="flock-header-pill-btn" aria-label="Cerrar modal">
+        <ion-icon name="close-outline"></ion-icon>
+        <span>Cerrar</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+  <div class="categorical-filter__scrollable-tabs">
+    <ion-chip
+      class="categorical-filter__chip"
+      [class.categorical-filter__chip--active]="activeTab() === 'orders'"
+      (click)="activeTab.set('orders'); loadData()"
+    >
+      <ion-label>Taxonomía</ion-label>
+    </ion-chip>
+    <ion-chip
+      class="categorical-filter__chip"
+      [class.categorical-filter__chip--active]="activeTab() === 'habitats'"
+      (click)="activeTab.set('habitats'); loadData()"
+    >
+      <ion-label>Hábitat</ion-label>
+    </ion-chip>
+    <ion-chip
+      class="categorical-filter__chip"
+      [class.categorical-filter__chip--active]="activeTab() === 'residency'"
+      (click)="activeTab.set('residency'); loadData()"
+    >
+      <ion-label>Residencia</ion-label>
+    </ion-chip>
+    <ion-chip
+      class="categorical-filter__chip"
+      [class.categorical-filter__chip--active]="activeTab() === 'departments'"
+      (click)="activeTab.set('departments'); loadData()"
+    >
+      <ion-label>Geografía</ion-label>
+    </ion-chip>
+  </div>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (activeTab() === 'orders') { @for (o of list(); track o.id) {
+  <div class="category-group">
+    <h3 class="group-title" (click)="selectOrder(o)">{{ o.description }}</h3>
+    <div class="chips-container">
+      @for (f of o.children; track f.id) {
+      <div
+        class="chip"
+        [class.active]="selection().family_id === f.id"
+        (click)="selectFamily(f.id)"
+      >
+        <ion-icon name="caret-forward-circle-outline"></ion-icon>
+        <span>{{ f.description }}</span>
+      </div>
+      }
+    </div>
+  </div>
+  } } @else {
+  <div class="grid-container" [class.list-view]="activeTab() === 'departments'">
+    @for (item of list(); track item.id) {
+    <div
+      class="card-item"
+      [class.active]="isSelected(item)"
+      (click)="selectGeneric(item)"
+    >
+      @if (activeTab() !== 'departments') {
+      <div class="img-wrapper">
+        <img
+          [src]="'assets/imgs/' + activeTab() + '/' + item.id + '.png'"
+          alt="item"
+          (error)="$event.target.src = 'assets/imgs/commons/general-error.png'"
+        />
+      </div>
+      }
+      <span class="label">
+        @if (activeTab() === 'departments') {
+        <ion-icon name="caret-forward-circle-outline"></ion-icon>
+        }
+        {{ item.description || item.departments }}</span
+      >
+    </div>
+    }
+  </div>
+  }
+</ion-content>
+
+<ion-footer class="ion-padding">
+  <ion-button expand="block" (click)="apply()" color="primary"
+    >Aplicar Filtros</ion-button
+  >
+</ion-footer>

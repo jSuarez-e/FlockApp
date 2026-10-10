@@ -1,0 +1,117 @@
+/* ==========================================================================
+   PALETA MAESTRA Y SISTEMA DE DISEÑO FLOCKAPP COLOMBIA
+   ========================================================================== */
+:root {
+  /* --------------------------------------------------------------------------
+     1. FLOCKAPP BRAND TOKENS (Naturaleza y Biodiversidad Colombiana)
+     -------------------------------------------------------------------------- */
+  --flock-primary: #064e3b;
+  --flock-primary-rgb: 6, 78, 59;
+  --flock-primary-light: #047857;
+  --flock-primary-tint: #10b981;
+  --flock-primary-dark: #022c22;
+  --flock-primary-foreground: #fff;
+
+  /* Degradado Continuo Oficial para Headers y Elementos Hero */
+  --flock-gradient-header: linear-gradient(165deg, #064e3b 0%, #047857 55%, #065f46 100%);
+  --flock-gradient-header-subtle: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+  --flock-gradient-btn: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+
+  /* Superficies y Fondos */
+  --flock-background: #f8fafc;
+  --flock-card: #fff;
+  --flock-border: #e2e8f0;
+  --flock-border-subtle: rgb(226 232 240 / 80%);
+
+  /* Tipografía y Textos */
+  --flock-font-family: "Poppins", -apple-system, blinkmacsystemfont, "Segoe UI", roboto, helvetica, arial, sans-serif;
+  --flock-font-regular: 400;
+  --flock-font-medium: 500;
+  --flock-font-semibold: 600;
+  --flock-font-bold: 700;
+  --flock-font-extrabold: 800;
+  --flock-foreground: #0f172a;
+  --flock-muted-foreground: #64748b;
+  --flock-subtle-foreground: #94a3b8;
+  --flock-green-accent: #047857;
+
+  /* Iconografía Unificada */
+  --flock-icon-primary: var(--flock-primary-light);
+  --flock-icon-accent: var(--flock-accent-gold);
+  --flock-icon-muted: var(--flock-muted-foreground);
+  --flock-icon-light: #fff;
+  --flock-icon-size-sm: 16px;
+  --flock-icon-size-md: 20px;
+  --flock-icon-size-lg: 24px;
+
+  /* Estados Semánticos y Badges */
+  --flock-accent-gold: #f59e0b;
+  --flock-accent-gold-bg: #fefce8;
+  --flock-accent-gold-border: #fef08a;
+  --flock-accent-gold-text: #854d0e;
+  --flock-verified-bg: #ecfdf5;
+  --flock-verified-text: #047857;
+  --flock-verified-border: #a7f3d0;
+  --flock-whatsapp: #25d366;
+  --flock-whatsapp-bg: #ecfdf5;
+  --flock-whatsapp-border: #a7f3d0;
+
+  /* Geometría y Radios de Borde */
+  --flock-radius-card: 20px;
+  --flock-radius-button: 14px;
+  --flock-radius-pill: 9999px;
+  --flock-radius-input: 14px;
+  --flock-radius-sm: 8px;
+
+  /* Espaciado Homogéneo */
+  --flock-space-xs: 4px;
+  --flock-space-sm: 8px;
+  --flock-space-md: 16px;
+  --flock-space-lg: 24px;
+  --flock-space-xl: 32px;
+
+  /* Transiciones y Microinteracciones */
+  --flock-transition-fast: 0.15s ease;
+  --flock-transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Sombras y Elevación */
+  --flock-shadow-card: 0 4px 18px -2px rgb(15 23 42 / 5%), 0 2px 6px -1px rgb(15 23 42 / 3%);
+  --flock-shadow-hover: 0 12px 28px -4px rgb(15 23 42 / 10%);
+  --flock-shadow-header: 0 4px 20px rgb(6 78 59 / 25%);
+  --flock-shadow-btn: 0 3px 10px rgb(5 150 105 / 25%);
+  --flock-shadow-pill: 0 2px 8px rgb(0 0 0 / 10%);
+
+  /* --------------------------------------------------------------------------
+     2. RETROCOMPATIBILIDAD (Aliases AviTour)
+     -------------------------------------------------------------------------- */
+  --avitour-primary: var(--flock-primary-light);
+  --avitour-primary-rgb: 4, 120, 87;
+  --avitour-primary-shade: var(--flock-primary);
+  --avitour-primary-tint: var(--flock-primary-tint);
+  --avitour-background: var(--flock-background);
+  --avitour-card: var(--flock-card);
+  --avitour-border: var(--flock-border);
+  --avitour-foreground: var(--flock-foreground);
+  --avitour-muted-foreground: var(--flock-muted-foreground);
+  --avitour-primary-foreground: var(--flock-primary-foreground);
+
+  /* --------------------------------------------------------------------------
+     3. IONIC FRAMEWORK OVERRIDES
+     -------------------------------------------------------------------------- */
+  --ion-color-primary: var(--flock-primary-light);
+  --ion-color-primary-rgb: 4, 120, 87;
+  --ion-color-primary-contrast: #fff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: var(--flock-primary);
+  --ion-color-primary-tint: var(--flock-primary-tint);
+
+  /* Colores de Estado */
+  --ion-color-success: #059669;
+  --ion-color-danger: #ef4444;
+  --ion-color-warning: #f59e0b;
+
+  /* Configuración Global */
+  --ion-background-color: var(--flock-background);
+  --ion-text-color: var(--flock-foreground);
+  --ion-font-family: "Poppins", -apple-system, blinkmacsystemfont, "Segoe UI", roboto, sans-serif;
+}

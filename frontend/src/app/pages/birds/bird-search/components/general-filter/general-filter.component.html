@@ -1,0 +1,133 @@
+<ion-header class="ion-no-border flock-modal-header">
+  <ion-toolbar>
+    <ion-title>Filtros Generales</ion-title>
+    <ion-buttons slot="end">
+      <button type="button" (click)="dismiss()" class="flock-header-pill-btn" aria-label="Cerrar modal">
+        <ion-icon name="close-outline"></ion-icon>
+        <span>Cerrar</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <section class="filter-section">
+    <ion-label class="section-title">Estado de Conservación</ion-label>
+    <div class="horizontal-scroll">
+      @for (status of conservationStatuses(); track status.id) {
+      <div
+        class="status-chip"
+        [class.active]="selectedStatus() === status.id"
+        (click)="
+          selectedStatus.set(selectedStatus() === status.id ? null : status.id)
+        "
+      >
+        <div class="chip-icon">
+          <img
+            [src]="
+              'assets/imgs/status/' + status.image ||
+              'assets/imgs/commons/general-error.png'
+            "
+            [alt]="status.description"
+            (error)="
+              $event.target.src = 'assets/imgs/commons/general-error.png'
+            "
+          />
+        </div>
+        <div class="chip-text">
+          <span class="chip-title">{{ status.convention }}</span>
+          <span class="chip-subtitle">{{ status.description }}</span>
+        </div>
+      </div>
+      } @empty {
+      <p class="loading-msg">Cargando estados...</p>
+      }
+    </div>
+  </section>
+
+  <section class="filter-section ion-margin-top">
+    <ion-label class="section-title">Dificultad de ver</ion-label>
+    <div class="horizontal-scroll">
+      @for (level of difficultyOptions; track level.id) {
+      <div
+        class="status-chip"
+        [class.active]="selectedDifficulty() === level.id"
+        (click)="
+          selectedDifficulty.set(selectedDifficulty() === level.id ? null : level.id)
+        "
+      >
+        <div class="chip-icon">
+          <div class="eye-rating-container">
+            @for (i of [1, 2, 3, 4]; track i) {
+            <ion-icon name="eye" [class.active-eye]="i <= level.id"></ion-icon>
+            }
+          </div>
+        </div>
+        <div class="chip-text">
+          <span class="chip-title">{{ level.name }}</span>
+          <span class="chip-subtitle">Nivel {{ level.id }}</span>
+        </div>
+      </div>
+      }
+    </div>
+  </section>
+
+  <section class="filter-section ion-margin-top">
+    <div class="flex-header">
+      <ion-label class="section-title">Altura (m.s.n.m)</ion-label>
+      <ion-button size="small" fill="outline" (click)="getGPSHeight()">
+        <ion-icon slot="start" name="location-outline"></ion-icon>
+        Usar GPS
+      </ion-button>
+    </div>
+
+    <ion-range
+      dualKnobs="true"
+      pin="true"
+      [min]="0"
+      [max]="5000"
+      step="100"
+      [ngModel]="heightRange()"
+      (ionChange)="onRangeChange($event)"
+    >
+      <ion-label slot="start">0m</ion-label>
+      <ion-label slot="end">5000m</ion-label>
+    </ion-range>
+    <p class="range-info">
+      Rango: {{ heightRange().lower }}m - {{ heightRange().upper }}m
+    </p>
+  </section>
+
+  <section class="filter-section ion-margin-top">
+    <ion-label class="section-title">Tamaño del Ave</ion-label>
+    <div class="horizontal-scroll">
+      @for (size of aTamanios; track size.id) {
+      <div
+        class="status-chip"
+        [class.active]="selectedSize() === size.id"
+        (click)="selectedSize.set(selectedSize() === size.id ? null : size.id)"
+      >
+        <div class="chip-icon">
+          <img
+            [src]="'assets/imgs/sizes/' + size.id + '.png'"
+            [alt]="size.descripcion"
+            (error)="
+              $event.target.src = 'assets/imgs/commons/general-error.png'
+            "
+          />
+        </div>
+        <div class="chip-text">
+          <span class="chip-title">{{ getSizeTitle(size.descripcion) }}</span>
+          <span class="chip-subtitle">{{
+            getSizeSubtitle(size.descripcion)
+          }}</span>
+        </div>
+      </div>
+      }
+    </div>
+  </section>
+
+  <ion-button expand="block" (click)="applyFilters()" class="apply-btn">
+    APLICAR FILTROS
+  </ion-button>
+</ion-content>

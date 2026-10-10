@@ -1,0 +1,35 @@
+    <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+      <ion-refresher-content pullingText="Desliza para actualizar el feed..." refreshingSpinner="bubbles" refreshingText="Actualizando feed...">
+      </ion-refresher-content>
+    </ion-refresher>
+
+    <ion-list lines="none" class="feed-list">
+      @for (item of feedStore.posts(); track item.id) {
+        <app-sighting-card [post]="item"></app-sighting-card>
+      } @empty {
+        @if (!feedStore.isLoading()) {
+          <div class="empty-state ion-padding">
+            <div class="empty-icon-wrapper">
+              <ion-icon name="telescope-outline"></ion-icon>
+            </div>
+            <h3 class="empty-title">Sin Feeds Pajareros</h3>
+            <p class="empty-desc">No hay feeds recientes. ¡Sé el primero en compartir uno!</p>
+            <ion-button expand="block" shape="round" class="empty-btn ion-margin-top" (click)="createNewSighting()">
+              <ion-icon name="camera-outline" slot="start"></ion-icon>
+              ¡Crea un feed pajarero!
+            </ion-button>
+          </div>
+        }
+      }
+    </ion-list>
+
+    <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)" [disabled]="!feedStore.hasMore()">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando más registros...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="feed-fab">
+      <ion-fab-button (click)="createNewSighting()" class="feed-fab-btn" aria-label="Crear publicación en el feed">
+        <ion-icon name="camera"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>

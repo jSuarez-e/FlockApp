@@ -1,0 +1,94 @@
+<div class="logger-container">
+  <div class="search-section">
+    <div class="flock-input-field">
+      <span class="flock-input-label">Especie de Ave</span>
+      <div class="flock-input-trigger">
+        <ion-icon name="search-outline" class="flock-input-icon"></ion-icon>
+        <input
+          type="text"
+          class="flock-input-native"
+          placeholder="Todas las especies..."
+          (input)="onSearchInput($event)"
+          #searchInput
+        />
+        @if (searchInput.value) {
+          <ion-icon
+            name="close-circle-outline"
+            class="flock-input-clear"
+            (click)="searchInput.value = ''; onSearchInput()"
+            title="Limpiar búsqueda"
+            aria-label="Limpiar búsqueda"
+          ></ion-icon>
+        } @else {
+          <ion-icon name="chevron-down-outline" class="flock-input-chevron"></ion-icon>
+        }
+      </div>
+    </div>
+  </div>
+
+  @if (searchResults().length > 0) {
+    <ion-list class="autocomplete-list">
+      @for (bird of searchResults(); track bird.id) {
+        <ion-item button (click)="selectBird(bird)">
+          <ion-avatar slot="start">
+            <img
+              [src]="getBirdImageUrl(bird.base_image)"
+              (error)="onImageError($event)"
+              [alt]="bird.scientific_name"
+            />
+          </ion-avatar>
+          <ion-label>
+            <h2>{{ bird.scientific_name }}</h2>
+            <p>{{ bird.english_name }}</p>
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+  }
+
+  @if (searchResults().length === 0 && sightingsLog().length === 0) {
+    <div class="quick-actions">
+       <p class="hint">Busca un ave para registrarla en la ruta.</p>
+    </div>
+  }
+
+  <!-- Stats -->
+  @if (sightingsLog().length > 0 && searchResults().length === 0) {
+    <div class="stats-container">
+      <div class="stat-box">
+        <h3>{{ uniqueSpeciesCount() }}</h3>
+        <p>Especies<br>Identificadas</p>
+      </div>
+      <div class="stat-box">
+        <h3>{{ totalBirdsCount() }}</h3>
+        <p>Aves<br>Registradas</p>
+      </div>
+    </div>
+
+    <!-- Logged Sightings List -->
+    <ion-list class="logged-list">
+      @for (sighting of sightingsLog(); track sighting.id) {
+        <ion-item>
+          <ion-avatar slot="start">
+            <img
+              [src]="getBirdImageUrl(sighting.birdInfo?.base_image)"
+              (error)="onImageError($event)"
+              [alt]="sighting.birdInfo?.scientific_name || 'Ave'"
+            />
+          </ion-avatar>
+          <ion-label>
+            <h2>{{ sighting.birdInfo?.scientific_name || 'Ave ' + sighting['bird_id'] }}</h2>
+            @if (sighting.birdInfo?.english_name) {
+              <p class="logged-list__english-name">{{ sighting.birdInfo?.english_name }}</p>
+            }
+            <p>Cant: {{ sighting['quantity'] }} 
+              @if (sighting['details']) {
+                <span>| {{ sighting['details'] }}</span>
+              }
+            </p>
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+  }
+</div>

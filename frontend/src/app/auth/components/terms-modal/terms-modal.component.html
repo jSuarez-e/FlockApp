@@ -1,0 +1,40 @@
+<ion-header class="ion-no-border flock-modal-header">
+  <ion-toolbar>
+    <ion-title>Términos y Políticas</ion-title>
+    <ion-buttons slot="end">
+      <button type="button" (click)="dismiss()" class="flock-header-pill-btn" aria-label="Cerrar modal">
+        <ion-icon name="close-outline"></ion-icon>
+        <span>Cerrar</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="modal-content ion-padding">
+  <div class="modal-body">
+    <h3>Políticas de Uso FlockApp</h3>
+    <p class="lead-text">
+      Para brindar la mejor experiencia, nuestra aplicación requiere acceso a:
+    </p>
+
+    <ul class="policy-list">
+      <li>
+        <strong>GPS:</strong> Georreferenciar avistamientos y rutas en tiempo
+        real.
+      </li>
+      <li>
+        <strong>Cámara y Micrófono:</strong> Registro multimedia de especies
+        para el análisis de Inteligencia Artificial.
+      </li>
+      <li>
+        <strong>Almacenamiento:</strong> Soporte offline para guías y mapas
+        cuando estés en la naturaleza.
+      </li>
+    </ul>
+
+    <p class="footer-text">
+      Tus datos serán tratados conforme a la ley de protección de datos de la
+      República de Colombia.
+    </p>
+  </div>
+</ion-content>

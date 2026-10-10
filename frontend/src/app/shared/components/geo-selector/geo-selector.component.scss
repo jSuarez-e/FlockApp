@@ -1,0 +1,262 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos BEM y diseño modal para el componente compartido GeoSelectorComponent.
+ * [I/O - Reusabilidad]: Clases BEM: .geo-selector, .geo-picker, compatible con .flock-input-field.
+ * [Edge Cases - UI]: Soporte para layout grid y stacked, listado con scroll inercial y estados táctiles :active.
+ */
+.geo-selector {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &--grid {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  &__field {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  &__trigger {
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+  }
+
+  &__icon {
+    font-size: 1.15rem;
+    color: var(--flock-primary-light, #047857);
+    flex-shrink: 0;
+  }
+
+  &__value {
+    flex: 1;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--flock-foreground, #0f172a);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &--placeholder {
+      color: var(--flock-subtle-foreground, #94a3b8);
+      font-weight: 400;
+    }
+  }
+}
+
+/* Modal Bottom-Sheet de Selección */
+.geo-picker-modal {
+  --background: #ffffff;
+  --border-radius: 20px 20px 0 0;
+
+  &::part(content) {
+    border-radius: 20px 20px 0 0;
+  }
+}
+
+.geo-picker {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #ffffff;
+
+  &__header {
+    padding: 18px 18px 12px;
+    border-bottom: 1px solid var(--flock-border, #e2e8f0);
+    flex-shrink: 0;
+  }
+
+  &__title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  &__title-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__title-icon {
+    font-size: 1.25rem;
+    color: var(--flock-primary-light, #047857);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--flock-foreground, #0f172a);
+    letter-spacing: -0.01em;
+  }
+
+  &__close-btn {
+    background: #f1f5f9;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background 0.15s ease, color 0.15s ease;
+
+    &:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+  }
+
+  &__search-box {
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 8px 12px;
+    gap: 8px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+
+    &:focus-within {
+      border-color: var(--flock-primary-light, #047857);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.08);
+    }
+  }
+
+  &__search-icon {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    flex-shrink: 0;
+  }
+
+  &__search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: #0f172a;
+    width: 100%;
+    font-family: inherit;
+
+    &::placeholder {
+      color: #94a3b8;
+    }
+  }
+
+  &__search-clear {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.15rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+
+    &:hover {
+      color: #64748b;
+    }
+  }
+
+  &__body {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 12px 24px;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    min-height: 48px;
+    outline: none;
+
+    &:hover,
+    &:focus-visible {
+      background: #f1f5f9;
+    }
+
+    &:active {
+      background: #e2e8f0;
+    }
+
+    &--selected {
+      background: #ecfdf5;
+
+      &:hover,
+      &:focus-visible {
+        background: #d1fae5;
+      }
+    }
+  }
+
+  &__item-name {
+    font-size: 0.94rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  &__item-check {
+    font-size: 1.25rem;
+    color: var(--flock-primary-light, #047857);
+    flex-shrink: 0;
+  }
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 16px;
+    text-align: center;
+  }
+
+  &__empty-icon {
+    font-size: 2.5rem;
+    color: #cbd5e1;
+    margin-bottom: 10px;
+  }
+
+  &__empty-title {
+    margin: 0 0 4px;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #334155;
+  }
+
+  &__empty-desc {
+    margin: 0;
+    font-size: 0.86rem;
+    color: #64748b;
+  }
+}

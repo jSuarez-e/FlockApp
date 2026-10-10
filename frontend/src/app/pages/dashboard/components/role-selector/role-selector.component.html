@@ -1,0 +1,122 @@
+<!--
+  @sdd
+  [Objetivo]: Plantilla semántica del selector de rol (Explorador / Pajarero vs Anfitrión / Proveedor) con microinteracciones y accesibilidad.
+  [I/O - Reusabilidad]: Emite (click/keydown) a través del método onSelect() del componente.
+  [Edge Cases - UI]: Enfoque por teclado (Enter, Space), roles ARIA, etiquetas accesibles y diseño responsivo móvil.
+-->
+<div class="role-selector ion-padding">
+  <header class="role-selector__hero">
+    <div class="role-selector__badge">
+      <ion-icon name="sparkles-outline" class="role-selector__badge-icon"></ion-icon>
+      <span class="role-selector__badge-text">Portal de Experiencia</span>
+    </div>
+    <h1 class="role-selector__title">
+      Bienvenido a <span class="role-selector__brand">FlockApp</span>
+    </h1>
+    <p class="role-selector__subtitle">
+      Selecciona tu perfil de navegación para adaptar tus herramientas y explorar Colombia hoy.
+    </p>
+  </header>
+
+  <div class="role-selector__grid">
+    <!-- Opción Explorador / Pajarero -->
+    <ion-card
+      class="role-card role-card--pajarero"
+      (click)="onSelect('PAJARERO')"
+      (keydown.enter)="onSelect('PAJARERO')"
+      (keydown.space)="onSelect('PAJARERO')"
+      role="button"
+      tabindex="0"
+      aria-label="Ingresar como Explorador y Pajarero"
+    >
+      <div class="role-card__ambient-glow"></div>
+
+      <div class="role-card__top">
+        <div class="role-card__icon-container role-card__icon-container--pajarero">
+          <ion-icon name="binoculars" class="role-card__icon"></ion-icon>
+        </div>
+        <span class="role-card__chip role-card__chip--pajarero">Comunidad & Campo</span>
+        <div class="role-card__arrow-btn">
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </div>
+      </div>
+
+      <div class="role-card__body">
+        <ion-card-title class="role-card__title">Explorador / Pajarero</ion-card-title>
+        <p class="role-card__description">
+          Registra avistamientos en campo, explora mapas de distribución y descubre rutas ornitológicas en Colombia.
+        </p>
+
+        <div class="role-card__features">
+          <span class="role-card__feature-item">
+            <ion-icon name="compass-outline"></ion-icon>
+            <span>Rutas guiadas</span>
+          </span>
+          <span class="role-card__feature-item">
+            <ion-icon name="camera-outline"></ion-icon>
+            <span>Avistamientos</span>
+          </span>
+          <span class="role-card__feature-item">
+            <ion-icon name="people-outline"></ion-icon>
+            <span>Comunidad</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="role-card__footer">
+        <span class="role-card__footer-action">Comenzar exploración</span>
+        <ion-icon name="chevron-forward-outline" class="role-card__footer-icon"></ion-icon>
+      </div>
+    </ion-card>
+
+    <!-- Opción Anfitrión / Proveedor -->
+    <ion-card
+      class="role-card role-card--proveedor"
+      (click)="onSelect('PROVEEDOR')"
+      (keydown.enter)="onSelect('PROVEEDOR')"
+      (keydown.space)="onSelect('PROVEEDOR')"
+      role="button"
+      tabindex="0"
+      aria-label="Ingresar como Anfitrión y Proveedor de servicios turísticos"
+    >
+      <div class="role-card__ambient-glow"></div>
+
+      <div class="role-card__top">
+        <div class="role-card__icon-container role-card__icon-container--proveedor">
+          <ion-icon name="business" class="role-card__icon"></ion-icon>
+        </div>
+        <span class="role-card__chip role-card__chip--proveedor">Gestión Ecoturística</span>
+        <div class="role-card__arrow-btn">
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </div>
+      </div>
+
+      <div class="role-card__body">
+        <ion-card-title class="role-card__title">Anfitrión / Proveedor</ion-card-title>
+        <p class="role-card__description">
+          Administra reservas naturales, promociona servicios de guiado y gestiona expediciones de aviturismo.
+        </p>
+
+        <div class="role-card__features">
+          <span class="role-card__feature-item">
+            <ion-icon name="business-outline"></ion-icon>
+            <span>Mis servicios</span>
+          </span>
+          <span class="role-card__feature-item">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>Reservas</span>
+          </span>
+          <span class="role-card__feature-item">
+            <ion-icon name="trending-up-outline"></ion-icon>
+            <span>Expediciones</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="role-card__footer">
+        <span class="role-card__footer-action">Gestionar servicios</span>
+        <ion-icon name="chevron-forward-outline" class="role-card__footer-icon"></ion-icon>
+      </div>
+    </ion-card>
+  </div>
+</div>

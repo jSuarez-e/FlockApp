@@ -1,0 +1,414 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos BEM de la vista de Configuración y Gestión de Permisos Android.
+ * [I/O - Reusabilidad]: Exporta clases .settings-banner, .permission-card, .settings-guide-card, .settings-policy-card.
+ * [Edge Cases - UI]: Adaptación para pantallas estrechas (< 360px) y estados visuales de chips de permiso.
+ */
+.settings-header-toolbar {
+  --background: transparent;
+
+  background: transparent;
+
+  --color: var(--flock-primary-foreground, #fff);
+
+  padding: 10px 16px 12px;
+
+  .settings-header-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .header-menu-buttons,
+  [slot="start"] {
+    margin-inline: -6px 4px;
+  }
+
+  .header-menu-btn {
+    --color: var(--flock-primary-foreground, #fff);
+    --padding-start: 4px;
+    --padding-end: 4px;
+
+    margin: 0;
+    width: 40px;
+    height: 40px;
+  }
+
+  .settings-header-titles {
+    flex: 1;
+    min-width: 0;
+
+    .settings-header-title {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--flock-primary-foreground, #fff);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .settings-header-subtitle {
+      margin: 4px 0 0;
+      font-size: 0.8rem;
+      color: #a7f3d0;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+  }
+}
+
+.settings-content {
+  --background: var(--avitour-background, #f8fafc);
+}
+
+.settings-container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Banner Superior */
+.settings-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, rgb(16 131 70 / 12%), rgb(136 220 204 / 20%));
+  border: 1px solid rgb(16 131 70 / 20%);
+  border-radius: 16px;
+  box-shadow: var(--flock-shadow-card, 0 4px 18px -2px rgb(15 23 42 / 5%));
+  padding: 1.25rem;
+
+  &__icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--avitour-primary, #108346);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  &__info {
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--avitour-foreground, #1e293b);
+    margin: 0 0 0.25rem;
+  }
+
+  &__subtitle {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--avitour-muted-foreground, #64748b);
+    margin: 0;
+  }
+}
+
+/* Secciones Generales */
+.settings-section {
+  display: flex;
+  flex-direction: column;
+
+  &__heading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--avitour-foreground, #1e293b);
+    margin: 0 0 0.25rem;
+  }
+
+  &__heading-icon {
+    font-size: 1.2rem;
+    color: var(--avitour-primary, #108346);
+  }
+
+  &__subheading {
+    font-size: 0.82rem;
+    color: var(--avitour-muted-foreground, #64748b);
+    margin: 0 0 0.85rem;
+  }
+}
+
+/* Lista de Tarjetas de Permisos */
+.permission-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.permission-card {
+  background: var(--flock-card, #fff);
+  border: 1px solid var(--flock-border-subtle, rgb(226 232 240 / 80%));
+  border-radius: 16px;
+  padding: 1.15rem;
+  box-shadow: var(--flock-shadow-card, 0 4px 18px -2px rgb(15 23 42 / 5%));
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+
+  &__main {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+
+  &__icon-box {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+
+    &--camera {
+      background: rgb(16 131 70 / 12%);
+      color: var(--avitour-primary, #108346);
+    }
+
+    &--location {
+      background: rgb(76 103 147 / 12%);
+      color: #4c6793;
+    }
+
+    &--photos {
+      background: rgb(92 46 126 / 12%);
+      color: #5c2e7e;
+    }
+  }
+
+  &__details {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.25rem;
+  }
+
+  &__title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--avitour-foreground, #1e293b);
+    margin: 0;
+  }
+
+  &__desc {
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: var(--avitour-muted-foreground, #64748b);
+    margin: 0;
+  }
+
+  &__action {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__btn-request {
+    --background: var(--avitour-primary, #108346);
+    --border-radius: 8px;
+
+    font-weight: 700;
+    font-size: 0.8rem;
+    margin: 0;
+  }
+
+  &__btn-active {
+    --color: var(--avitour-primary, #108346);
+    --border-color: var(--avitour-primary, #108346);
+    --border-radius: 8px;
+
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+/* Chips de Estado */
+.permission-chip {
+  height: 24px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding-inline: 8px;
+  margin: 0;
+
+  &--granted {
+    --background: rgb(16 131 70 / 12%);
+    --color: var(--avitour-primary, #108346);
+  }
+
+  &--denied {
+    --background: rgb(235 68 90 / 12%);
+    --color: #eb445a;
+  }
+
+  &--prompt {
+    --background: rgb(245 158 11 / 12%);
+    --color: #d97706;
+  }
+
+  ion-icon {
+    font-size: 0.85rem;
+    margin-right: 4px;
+  }
+}
+
+/* Tarjeta Guía Android */
+.settings-guide-card {
+  background: var(--flock-card, #fff);
+  border: 1px dashed var(--flock-border-subtle, #cbd5e1);
+  border-radius: 16px;
+  box-shadow: var(--flock-shadow-card, 0 4px 18px -2px rgb(15 23 42 / 5%));
+  padding: 1rem;
+
+  &__body {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    margin-bottom: 0.85rem;
+  }
+
+  &__icon-wrap {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: #f1f5f9;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--avitour-foreground, #1e293b);
+    margin: 0 0 0.25rem;
+  }
+
+  &__desc {
+    font-size: 0.8rem;
+    line-height: 1.35;
+    color: var(--avitour-muted-foreground, #64748b);
+    margin: 0;
+  }
+
+  &__btn {
+    --color: var(--avitour-foreground, #334155);
+    --border-color: var(--avitour-border, #cbd5e1);
+    --border-radius: 8px;
+
+    font-weight: 600;
+    font-size: 0.84rem;
+    margin: 0;
+  }
+}
+
+/* Tarjeta Políticas Google Play */
+.settings-policy-card {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 16px;
+  box-shadow: var(--flock-shadow-card, 0 4px 18px -2px rgb(15 23 42 / 5%));
+  padding: 1rem 1.15rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.45rem;
+  }
+
+  &__icon {
+    font-size: 1.2rem;
+    color: var(--avitour-primary, #108346);
+  }
+
+  &__title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--avitour-primary, #108346);
+    margin: 0;
+  }
+
+  &__text {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: #166534;
+    margin: 0 0 0.65rem;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  &__item {
+    font-size: 0.78rem;
+    color: #15803d;
+    font-weight: 500;
+  }
+}
+
+/* Info App */
+.app-info-card {
+  background: var(--flock-card, #fff);
+  border: 1px solid var(--flock-border-subtle, #e2e8f0);
+  border-radius: 16px;
+  box-shadow: var(--flock-shadow-card, 0 4px 18px -2px rgb(15 23 42 / 5%));
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+  }
+
+  &__label {
+    color: var(--avitour-muted-foreground, #64748b);
+    font-weight: 500;
+  }
+
+  &__value {
+    color: var(--avitour-foreground, #1e293b);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}

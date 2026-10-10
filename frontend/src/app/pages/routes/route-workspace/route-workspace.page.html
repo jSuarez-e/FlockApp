@@ -1,0 +1,309 @@
+    <ion-header class="ion-no-border flock-header-seamless">
+      <ion-toolbar class="route-workspace-toolbar" [class.toolbar--readonly]="isReadonly">
+        <div class="flock-header-content">
+          <ion-buttons slot="start" class="header-menu-buttons">
+            <ion-back-button
+              defaultHref="/home/routes-landing"
+              text=""
+              class="header-back-btn header-menu-btn"
+              (click)="goBack()"
+              aria-label="Regresar a rutas"
+            ></ion-back-button>
+          </ion-buttons>
+
+          <div class="flock-header-titles">
+            <h1 class="flock-header-title">{{ isReadonly ? 'Resumen de Ruta' : 'Ruta Activa' }}</h1>
+            <p class="flock-header-subtitle">
+              {{ isReadonly ? 'Detalle y estadísticas del recorrido' : 'Bitácora y tracking GPS en curso' }}
+            </p>
+          </div>
+        </div>
+      </ion-toolbar>
+
+      @if (!isReadonly) {
+        <div class="route-header-actions-bar">
+          <button
+            type="button"
+            class="flock-header-pill-btn flock-header-pill-btn--danger"
+            (click)="deleteRoute()"
+            aria-label="Descartar ruta"
+            title="Descartar ruta"
+          >
+            <ion-icon name="trash-outline"></ion-icon>
+            <span>Descartar</span>
+          </button>
+
+          <button
+            type="button"
+            class="flock-header-pill-btn"
+            (click)="openFinishModal()"
+            aria-label="Finalizar ruta"
+            title="Finalizar ruta"
+          >
+            <ion-icon name="flag-outline"></ion-icon>
+            <span>Finalizar</span>
+          </button>
+        </div>
+      }
+    </ion-header>
+
+    <ion-content [fullscreen]="true" [scrollY]="isReadonly">
+      <div class="workspace-grid" [style.height]="isReadonly ? 'auto' : '100%'">
+        <div class="map-section" [style.flex]="isReadonly ? 'none' : '0 0 55%'" [style.height]="isReadonly ? '40vh' : 'auto'">
+           <app-map-tracker 
+             [path]="store.currentPath()" 
+             [sightings]="store.sightingsLog()">
+           </app-map-tracker>
+        </div>
+        
+        @if (!isReadonly) {
+          <div class="logger-section">
+             <app-sighting-logger 
+               [searchResults]="searchResults()"
+               [sightingsLog]="store.sightingsLog()"
+               (searchQuery)="onSearchBirds($event)"
+               (sightingAdded)="onSightingAdded($event)">
+             </app-sighting-logger>
+          </div>
+        } @else {
+          <div class="logger-section readonly-summary readonly-summary--visible">
+            <!-- Glassmorphism Stats Cards -->
+            <div class="stats-grid stats-grid--padded">
+              <div class="stat-card">
+                <ion-icon name="time-outline" color="primary"></ion-icon>
+                <div class="stat-info">
+                  <h3>{{ getDurationMinutes() }} min</h3>
+                  <p>Duración</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <ion-icon name="footsteps-outline" color="tertiary"></ion-icon>
+                <div class="stat-info">
+                  <h3>{{ store.totalDistance() | number:'1.2-2' }} km</h3>
+                  <p>Distancia</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <ion-icon name="location-outline" color="secondary"></ion-icon>
+                <div class="stat-info">
+                  <h3>{{ store.currentPath().length }}</h3>
+                  <p>Puntos GPS</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <ion-icon name="leaf-outline" color="success"></ion-icon>
+                <div class="stat-info">
+                  <h3>{{ store.sightingsLog().length }}</h3>
+                  <p>Aves</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Resumen Cronológico -->
+            <div class="form-section timeline-section">
+              <h2 class="section-title timeline-section__title">Aves Registradas</h2>
+              @if (store.sightingsLog().length > 0) {
+                <div class="timeline">
+                  @for (s of getSortedSightings(); track s.id) {
+                    <div class="timeline-item">
+                      <div class="timeline-time">
+                        <span class="time timeline-time__text">{{ s.timestamp | date:'HH:mm' }}</span>
+                      </div>
+                      <div class="timeline-content">
+                        <h4 class="timeline-content__title">{{ s.birdInfo?.['scientific_name'] || ('Ave ID: ' + s.bird_id) }}</h4>
+                        <p class="timeline-content__subtitle">{{ s.birdInfo?.['english_name'] }}</p>
+                        <p class="qty timeline-content__qty">Cantidad: <strong>{{ s.quantity }}</strong></p>
+                      </div>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <p class="empty-msg timeline__empty-msg">No hay aves registradas.</p>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Modal de Cierre de Ruta -->
+      <ion-modal #routeModal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false">
+        <ng-template>
+          <ion-header class="ion-no-border flock-modal-header">
+            <ion-toolbar>
+              <ion-title>Resumen de la Ruta</ion-title>
+              <ion-buttons slot="end">
+                <button type="button" (click)="closeModal()" class="flock-header-pill-btn" aria-label="Cerrar modal">
+                  <ion-icon name="close-outline"></ion-icon>
+                  <span>Cerrar</span>
+                </button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="modal-content ion-padding">
+            <!-- Glassmorphism Stats Cards -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <ion-icon name="time-outline" color="primary"></ion-icon>
+                <div class="stat-info">
+                  <h3>{{ getDurationMinutes() }} min</h3>
+                  <p>Duración</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <ion-icon name="footsteps-outline" color="tertiary"></ion-icon>
+                <div class="stat-info">
+                  <h3>{{ store.totalDistance() | number:'1.2-2' }} km</h3>
+                  <p>Distancia</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <ion-icon name="location-outline" color="secondary"></ion-icon>
+                <div class="stat-info">
+                  <h3>{{ store.currentPath().length }}</h3>
+                  <p>Puntos GPS</p>
+                </div>
+              </div>
+              <div class="stat-card">
+                <ion-icon name="leaf-outline" color="success"></ion-icon>
+                <div class="stat-info">
+                  <h3>{{ store.sightingsLog().length }}</h3>
+                  <p>Avistamientos</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Formularios de Ruta -->
+            <div class="form-section">
+              <h2 class="section-title">Detalles de la Ruta</h2>
+
+              <div class="flock-input-field">
+                <span class="flock-input-label">Nombre de la Ruta</span>
+                <div class="flock-input-trigger">
+                  <ion-icon name="trail-sign-outline" class="flock-input-icon"></ion-icon>
+                  <ion-input [(ngModel)]="routeName" placeholder="Ej. Ruta del Cóndor..." class="flock-input-control"></ion-input>
+                </div>
+              </div>
+              
+              <div class="flock-input-field">
+                <span class="flock-input-label">Tipo de Desplazamiento</span>
+                <div class="flock-input-trigger">
+                  <ion-icon name="footsteps-outline" class="flock-input-icon"></ion-icon>
+                  <ion-select [(ngModel)]="routeType" placeholder="Selecciona" interface="popover" class="flock-input-select">
+                    <ion-select-option value="Desplazamiento">Desplazamiento (Caminata)</ion-select-option>
+                    <ion-select-option value="Estacionario">Estacionario (Punto Fijo)</ion-select-option>
+                  </ion-select>
+                  <ion-icon name="chevron-down-outline" class="flock-input-chevron"></ion-icon>
+                </div>
+              </div>
+
+              <div class="flock-input-field">
+                <span class="flock-input-label">Comentarios Adicionales</span>
+                <div class="flock-input-trigger flock-input-trigger--textarea">
+                  <ion-icon name="document-text-outline" class="flock-input-icon flock-input-icon--top"></ion-icon>
+                  <ion-textarea [(ngModel)]="notes" placeholder="Clima, notas del terreno..." [autoGrow]="true" class="flock-input-textarea"></ion-textarea>
+                </div>
+              </div>
+
+              <app-geo-selector
+                [(departmentId)]="selectedDepartmentId"
+                [(municipalityId)]="selectedMunicipalityId"
+                (locationChange)="onRouteLocationChange($event)"
+              ></app-geo-selector>
+            </div>
+
+            <!-- Compartir Ruta -->
+            <div class="form-section">
+              <h2 class="section-title">Opciones de Publicación</h2>
+              <ion-item lines="none" class="checkbox-item">
+                <ion-checkbox [(ngModel)]="shareToSocial" slot="start"></ion-checkbox>
+                <ion-label>Compartir en la red social de FlockApp</ion-label>
+              </ion-item>
+
+              <div class="share-users-box">
+                <div class="flock-input-field">
+                  <span class="flock-input-label">Compartir con otros usuarios</span>
+                  <div class="flock-input-trigger">
+                    <ion-icon name="search-outline" class="flock-input-icon"></ion-icon>
+                    <ion-input
+                      placeholder="Buscar usuario o correo..."
+                      (ionInput)="searchUsers($event)"
+                      [debounce]="300"
+                      class="flock-input-control"
+                    ></ion-input>
+                  </div>
+                </div>
+                
+                @if (userSearchResults.length > 0) {
+                  <ion-list class="user-search-results">
+                    @for (u of userSearchResults; track u['id']) {
+                      <ion-item button (click)="addUserToShare(u)">
+                        <ion-avatar slot="start">
+                          <img [src]="u['avatar'] || 'assets/default-avatar.png'" />
+                        </ion-avatar>
+                        <ion-label>
+                          <h2>{{ u['name'] }}</h2>
+                          <p>{{ u['email'] }}</p>
+                        </ion-label>
+                      </ion-item>
+                    }
+                  </ion-list>
+                }
+
+                @if (selectedUsers.length > 0) {
+                  <div class="selected-users">
+                    @for (u of selectedUsers; track u['id']) {
+                      <ion-chip color="primary">
+                        <ion-avatar>
+                          <img [src]="u['avatar'] || 'assets/default-avatar.png'" />
+                        </ion-avatar>
+                        <ion-label>{{ u['name'] }}</ion-label>
+                        <ion-icon name="close-circle" (click)="removeUserFromShare(u)"></ion-icon>
+                      </ion-chip>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Resumen Cronológico -->
+            <div class="form-section">
+              <h2 class="section-title">Cronología de Avistamientos</h2>
+              @if (store.sightingsLog().length > 0) {
+                <div class="timeline">
+                  @for (s of getSortedSightings(); track s.id) {
+                    <div class="timeline-item">
+                      <div class="timeline-time">
+                        <span class="time">{{ s.timestamp | date:'HH:mm' }}</span>
+                        <span class="date">{{ s.timestamp | date:'dd MMM' }}</span>
+                      </div>
+                      <div class="timeline-dot"></div>
+                      <div class="timeline-content">
+                        <h4><i>{{ s.birdInfo?.['scientific_name'] || ('Ave ID: ' + s.bird_id) }}</i></h4>
+                        <p class="english-name">{{ s.birdInfo?.['english_name'] }}</p>
+                        <p class="qty">Cantidad: <strong>{{ s.quantity }}</strong></p>
+                        @if (s.details) {
+                          <p class="desc">{{ s.details }}</p>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <p class="empty-msg">No has registrado aves en esta ruta.</p>
+              }
+            </div>
+            
+            <div class="action-buttons ion-margin-top">
+              <ion-button expand="block" color="medium" class="ion-margin-bottom" (click)="stopRoute('DRAFT')">
+                <ion-icon name="document-text-outline" slot="start"></ion-icon>
+                Guardar Borrador
+              </ion-button>
+              <ion-button expand="block" color="success" class="save-btn" (click)="stopRoute('COMPLETED')">
+                <ion-icon name="send-outline" slot="start"></ion-icon>
+                Enviar Definitivamente
+              </ion-button>
+            </div>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+    </ion-content>

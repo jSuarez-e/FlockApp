@@ -1,0 +1,294 @@
+<ion-menu [disabled]="!hasActiveMode()" contentId="main-content" type="overlay" class="flock-side-menu">
+  @if (hasActiveMode()) {
+    <ion-content class="flock-menu-content">
+      <div class="menu-profile-hero">
+        <div class="menu-brand-row">
+          <div class="menu-brand-meta">
+            <span class="menu-brand-title">FlockApp</span>
+            <span class="menu-brand-pill">Colombia</span>
+          </div>
+        </div>
+
+        @if (user()) {
+          <div class="menu-user-profile">
+            <div class="avatar-container">
+              <div class="avatar-circle">
+                <img
+                  [src]="getImageUrl(user()?.avatarUrl)"
+                  (error)="handleImageError($event)"
+                  alt="Foto de perfil de {{ user()?.username || 'usuario' }}"
+                  class="avatar-img"
+                />
+              </div>
+            </div>
+
+            <div class="user-details">
+              <h3 class="user-username">&#64;{{ user()?.username }}</h3>
+              <p class="user-email">{{ user()?.email }}</p>
+
+              <div class="role-badge">
+                <ion-icon [name]="currentMode() === 'PROVEEDOR' ? 'business-outline' : 'binoculars-outline'"></ion-icon>
+                <span>{{ currentMode() }}</span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <ion-list lines="none" class="menu-list">
+        @if (currentMode() === 'PAJARERO') {
+          <ion-menu-toggle auto-hide="true">
+            <ion-item
+              button
+              routerLink="/home/dashboard"
+              routerLinkActive="selected"
+              class="menu-item"
+            >
+              <ion-icon slot="start" name="grid-outline"></ion-icon>
+              <ion-label>Dashboard</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-list-header>
+            <ion-label>EXPLORAR CATÁLOGOS</ion-label>
+          </ion-list-header>
+
+          <ion-menu-toggle auto-hide="true">
+            <ion-item
+              button
+              routerLink="/home/birds"
+              routerLinkActive="selected"
+              class="menu-item"
+            >
+              <ion-icon slot="start" name="search-outline"></ion-icon>
+              <ion-label>Buscador de Aves</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle auto-hide="true">
+            <ion-item
+              button
+              routerLink="/home/routes-landing"
+              routerLinkActive="selected"
+              class="menu-item"
+            >
+              <ion-icon slot="start" name="navigate-outline"></ion-icon>
+              <ion-label>Mis Rutas</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle auto-hide="true">
+            <ion-item
+              button
+              routerLink="/home/sightings-map"
+              routerLinkActive="selected"
+              class="menu-item"
+            >
+              <ion-icon slot="start" name="map-outline"></ion-icon>
+              <ion-label>Mapa de Avistamientos</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle auto-hide="true">
+            <ion-item
+              button
+              routerLink="/home/guides"
+              routerLinkActive="selected"
+              class="menu-item"
+            >
+              <ion-icon slot="start" name="people-circle-outline"></ion-icon>
+              <ion-label>Directorio de Guías</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle auto-hide="true">
+            <ion-item
+              button
+              routerLink="/home/sites"
+              routerLinkActive="selected"
+              class="menu-item"
+            >
+              <ion-icon slot="start" name="map-outline"></ion-icon>
+              <ion-label>Sitios de Aviturismo</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle auto-hide="true">
+            <ion-item
+              button
+              routerLink="/home/profile"
+              routerLinkActive="selected"
+              class="menu-item"
+            >
+              <ion-icon slot="start" name="person-outline"></ion-icon>
+              <ion-label>Mi Perfil</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle auto-hide="true">
+            <ion-item
+              button
+              routerLink="/home/settings"
+              routerLinkActive="selected"
+              class="menu-item"
+            >
+              <ion-icon slot="start" name="settings-outline"></ion-icon>
+              <ion-label>Configuración</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        }
+
+        @if (currentMode() === 'PROVEEDOR') {
+          <ion-menu-toggle auto-hide="true">
+            <ion-item
+              button
+              routerLink="/home/dashboard"
+              routerLinkActive="selected"
+              class="menu-item"
+            >
+              <ion-icon slot="start" name="bar-chart-outline"></ion-icon>
+              <ion-label>Panel de Negocio</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-list-header>
+            <ion-label>GESTIÓN DE SERVICIOS</ion-label>
+          </ion-list-header>
+
+          <ion-menu-toggle auto-hide="true">
+            <ion-item
+              button
+              routerLink="/home/business-profile"
+              routerLinkActive="selected"
+              class="menu-item"
+            >
+              <ion-icon slot="start" name="business-outline"></ion-icon>
+              <ion-label>Perfil de Guía</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle auto-hide="true">
+            <ion-item
+              button
+              routerLink="/home/provider-site"
+              routerLinkActive="selected"
+              class="menu-item"
+            >
+              <ion-icon slot="start" name="leaf-outline"></ion-icon>
+              <ion-label>Mi Sitio de Aviturismo</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle auto-hide="true">
+            <ion-item
+              button
+              routerLink="/home/settings"
+              routerLinkActive="selected"
+              class="menu-item"
+            >
+              <ion-icon slot="start" name="settings-outline"></ion-icon>
+              <ion-label>Configuración</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        }
+
+        @if (user()?.role === Roles.BOTH) {
+          <ion-list-header>
+            <ion-label>CAMBIAR VISTA</ion-label>
+          </ion-list-header>
+
+          <ion-menu-toggle auto-hide="true">
+            <ion-item
+              button
+              (click)="setMode(currentMode() === 'PAJARERO' ? 'PROVEEDOR' : 'PAJARERO')"
+              class="menu-item mode-switch"
+            >
+              <ion-icon slot="start" [name]="currentMode() === 'PAJARERO' ? 'business-outline' : 'paw-outline'"></ion-icon>
+              <ion-label>
+                Cambiar a {{ currentMode() === 'PAJARERO' ? 'Modo Proveedor' : 'Modo Pajarero' }}
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+          <ion-menu-toggle auto-hide="true">
+            <ion-item
+              button
+              (click)="setMode(null)"
+              class="menu-item mode-switch"
+            >
+              <ion-icon slot="start" name="swap-horizontal-outline"></ion-icon>
+              <ion-label>Seleccionar Modo (Inicio)</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        }
+      </ion-list>
+    </ion-content>
+
+    <ion-footer class="ion-no-border">
+      <ion-item
+        button
+        (click)="logout()"
+        lines="none"
+        class="menu-item logout-item"
+      >
+        <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        <ion-label>Cerrar Sesión</ion-label>
+      </ion-item>
+    </ion-footer>
+  }
+</ion-menu>
+
+<div class="ion-page" id="main-content">
+  <ion-tabs>
+    @if (currentMode() === 'PAJARERO') {
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button tab="dashboard" routerLink="dashboard">
+          <ion-icon name="grid-outline"></ion-icon>
+          <ion-label>Dashboard</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="records" routerLink="records">
+          <ion-icon name="paw-outline"></ion-icon>
+          <ion-label>Avistamientos</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="routes-landing" routerLink="routes-landing">
+          <ion-icon name="navigate-outline"></ion-icon>
+          <ion-label>Rutas</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="birds" routerLink="birds">
+          <ion-icon name="paw-outline"></ion-icon>
+          <ion-label>Aves</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="profile" routerLink="profile">
+          <ion-icon name="person-outline"></ion-icon>
+          <ion-label>Perfil</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    } @else if (currentMode() === 'PROVEEDOR') {
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button tab="dashboard" routerLink="dashboard">
+          <ion-icon name="bar-chart-outline"></ion-icon>
+          <ion-label>Panel</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="provider-site" routerLink="provider-site">
+          <ion-icon name="leaf-outline"></ion-icon>
+          <ion-label>Mi Sitio</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="business-profile" routerLink="business-profile">
+          <ion-icon name="business-outline"></ion-icon>
+          <ion-label>Perfil Guía</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="profile" routerLink="profile">
+          <ion-icon name="person-outline"></ion-icon>
+          <ion-label>Perfil</ion-label>
+        </ion-tab-button>
+      </ion-tab-bar>
+    }
+  </ion-tabs>
+</div>

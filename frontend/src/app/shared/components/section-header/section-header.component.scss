@@ -1,0 +1,110 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos del encabezado modular FlockApp con degradado continuo esmeralda y glassmorphism.
+ * [I/O - Reusabilidad]: Exporta clases de layout de toolbar, títulos, buscador estilizado y botones de acción.
+ * [Edge Cases - UI]: Transición sin costuras hacia el ion-content adyacente.
+ */
+:host {
+  display: block;
+  width: 100%;
+}
+
+.flock-header-seamless {
+  background: var(--flock-gradient-header);
+  box-shadow: var(--flock-shadow-header);
+  padding-bottom: 14px;
+
+  .section-header-toolbar {
+    --background: transparent;
+
+    background: transparent;
+
+    --color: var(--flock-primary-foreground);
+
+    padding: 10px 16px 8px;
+
+    .section-header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .header-menu-buttons,
+    [slot="start"] {
+      margin-inline: -6px 4px;
+    }
+
+    .header-menu-btn {
+      --color: var(--flock-primary-foreground, #fff);
+      --padding-start: 4px;
+      --padding-end: 4px;
+
+      margin: 0;
+      width: 40px;
+      height: 40px;
+    }
+
+    .header-back-btn {
+      --color: var(--flock-primary-foreground);
+      --icon-font-size: 1.4rem;
+
+      margin-inline-start: -6px;
+    }
+
+    .section-header-titles {
+      flex: 1;
+      min-width: 0;
+
+      .section-header-title {
+        margin: 0;
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: var(--flock-primary-foreground);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .section-header-subtitle {
+        margin: 4px 0 0;
+        font-size: 0.8rem;
+        color: #a7f3d0;
+        font-weight: 500;
+        line-height: 1.35;
+      }
+    }
+
+    .section-header-actions {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  .section-header-subpanel {
+    background: transparent;
+    padding: 10px 16px 4px;
+
+    &.empty-search:empty {
+      display: none;
+    }
+
+    .searchbar-wrapper {
+      .flock-searchbar {
+        --background: #fff;
+        --color: #0f172a;
+        --placeholder-color: #64748b;
+        --icon-color: var(--flock-primary-light);
+        --clear-button-color: #94a3b8;
+        --border-radius: var(--flock-radius-input);
+        --box-shadow: 0 4px 14px rgb(0 0 0 / 14%);
+
+        padding: 0;
+        font-size: 0.88rem;
+      }
+    }
+  }
+}

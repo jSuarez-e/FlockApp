@@ -1,0 +1,61 @@
+<ion-content [fullscreen]="true" class="auth-content">
+  <div class="auth-shell">
+    @if (user()?.role === 'BOTH' && !navState.activeViewMode()) {
+    <div class="brand-section">
+      <h1 class="brand-title">FlockApp</h1>
+      <p class="intro">Bienvenido a la plataforma multirrol.</p>
+    </div>
+
+    <div class="ibirds-card">
+      <div class="card-header-solid ion-padding">
+        <p class="ion-no-margin card-prefix">Selección de perfil</p>
+        <h2 class="ion-no-margin card-title">¿Cómo deseas entrar?</h2>
+        <p class="ion-no-margin card-subtitle">
+          Elige tu modo de interacción para hoy.
+        </p>
+      </div>
+
+      <div class="card-body ion-padding">
+        <div class="action-buttons">
+          <ion-button
+            expand="block"
+            class="primary-btn"
+            (click)="selectRole('PAJARERO')"
+          >
+            <ion-icon slot="start" name="paw-outline"></ion-icon>
+            Modo Pajarero
+          </ion-button>
+
+          <ion-button
+            expand="block"
+            fill="clear"
+            class="secondary-btn"
+            (click)="selectRole('PROVEEDOR')"
+          >
+            <ion-icon slot="start" name="business-outline"></ion-icon>
+            Modo Proveedor
+          </ion-button>
+        </div>
+      </div>
+    </div>
+    } @else {
+    <div class="ibirds-card">
+      <div class="card-header-solid ion-padding">
+        <p class="ion-no-margin card-prefix">Dashboard</p>
+        <h2 class="ion-no-margin card-title">Hola, {{ user()?.firstName }}</h2>
+        <p class="ion-no-margin card-subtitle">
+          Estás operando en modo
+          <strong>{{ navState.activeViewMode() }}</strong>
+        </p>
+      </div>
+
+      <div class="card-body ion-padding">
+        <p class="intro ion-no-margin">
+          Explora las opciones en el menú lateral o utiliza la barra inferior
+          para navegar.
+        </p>
+      </div>
+    </div>
+    }
+  </div>
+</ion-content>

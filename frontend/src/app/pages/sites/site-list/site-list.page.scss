@@ -1,0 +1,109 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.site-header-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.dept-select-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgb(255 255 255 / 16%);
+  border: 1px solid rgb(255 255 255 / 28%);
+  border-radius: var(--flock-radius-pill, 9999px);
+  padding: 4px 12px;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  transition: all var(--flock-transition-fast, 0.15s ease);
+
+  ion-icon {
+    font-size: 0.95rem;
+    color: #6ee7b7;
+  }
+
+  .custom-dept-select {
+    --placeholder-color: #fff;
+    --color: #fff;
+
+    padding: 0;
+    min-height: auto;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+}
+
+.map-container-full {
+  width: 100%;
+  height: 100%;
+  min-height: calc(100vh - 160px);
+  position: relative;
+}
+
+/* --------------------------------------------------------------------------
+   ESTADOS VACÍO Y DE CARGA (IDÉNTICO A GUÍAS)
+   -------------------------------------------------------------------------- */
+.state-container {
+  padding: 64px 24px;
+  text-align: center;
+  max-width: 480px;
+  margin: 0 auto;
+
+  .state-icon-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #ecfdf5;
+    color: #059669;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgb(5 150 105 / 12%);
+  }
+
+  .state-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  .state-text {
+    margin: 8px 0 16px;
+    font-size: 0.88rem;
+    color: #64748b;
+    line-height: 1.45;
+  }
+
+  .btn-reset-filters {
+    padding: 8px 18px;
+    border-radius: 9999px;
+    background: #047857;
+    color: #fff;
+    border: none;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgb(5 150 105 / 20%);
+    transition: transform 0.15s ease;
+
+    &:active {
+      transform: scale(0.96);
+    }
+  }
+}

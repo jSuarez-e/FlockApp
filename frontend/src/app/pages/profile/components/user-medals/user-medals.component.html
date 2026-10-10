@@ -1,0 +1,42 @@
+<ion-header class="ion-no-border flock-modal-header">
+  <ion-toolbar>
+    <ion-title>{{ title }}</ion-title>
+    <ion-buttons slot="end">
+      <button type="button" (click)="close()" class="flock-header-pill-btn" aria-label="Cerrar modal">
+        <ion-icon name="close-outline"></ion-icon>
+        <span>Cerrar</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding medals-content">
+  <div class="medals-stats">
+    <h2>Has desbloqueado <ion-badge color="success">{{ earnedCount() }}</ion-badge> de {{ medals().length }}</h2>
+  </div>
+
+  <ion-grid>
+    <ion-row>
+      @for (medal of medals(); track medal.id) {
+        <ion-col size="6" size-md="4" size-lg="3">
+          <ion-card class="medal-card" [class.locked]="!medal.earned">
+            <ion-card-content class="ion-text-center">
+              <div class="medal-icon-wrapper" [ngClass]="getMedalClass(medal)">
+                @if (medal.iconUrl) {
+                  <img [src]="medal.iconUrl" (error)="handleImageError($event)" class="medal-custom-img" alt="Medalla"/>
+                } @else {
+                  <ion-icon [name]="medal.earned ? 'trophy' : 'lock-closed'" class="medal-icon"></ion-icon>
+                }
+              </div>
+              <h3 class="medal-name">{{ medal.name }}</h3>
+              <p class="medal-desc">{{ medal.description }}</p>
+              @if (medal.earned) {
+                <span class="earned-date">{{ medal.awarded_at | date:'dd/MM/yyyy' }}</span>
+              }
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      }
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -1,0 +1,745 @@
+<!--
+  @sdd
+  [Objetivo]: Plantilla HTML para la gestión de Sitios de Aviturismo en Modo Proveedor.
+  [I/O - Reusabilidad]: Consume componentes oficiales de Ionic 9, Angular Control Flow (@if, @for), y clases BEM.
+  [Edge Cases - UI]: Estados de carga, lista vacía de servicios, soporte para ausencia de checklist de aves.
+-->
+
+<ion-header class="ion-no-border flock-header-seamless">
+  <ion-toolbar class="provider-site-header-toolbar">
+    <div class="flock-header-content">
+      <ion-buttons slot="start" class="header-menu-buttons">
+        <ion-back-button defaultHref="/home/dashboard" class="header-menu-btn"></ion-back-button>
+      </ion-buttons>
+
+      <div class="flock-header-titles">
+        <h1 class="flock-header-title">Gestión de Sitio</h1>
+        <p class="flock-header-subtitle">Configuración y oferta de aviturismo</p>
+      </div>
+
+      <div class="profile-header-actions">
+        @if (activeTab() === 'info') {
+          <button
+            class="flock-header-pill-btn"
+            (click)="onSaveInfo()"
+            [disabled]="isSaving()"
+            aria-label="Guardar información"
+          >
+            @if (isSaving()) {
+              <ion-spinner name="crescent" color="light"></ion-spinner>
+            } @else {
+              <ion-icon name="checkmark-outline"></ion-icon>
+            }
+            <span>Guardar</span>
+          </button>
+        }
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="provider-site-content">
+  @if (isLoading()) {
+    <div class="loading-state ion-text-center ion-padding">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p>Cargando información del sitio...</p>
+    </div>
+  } @else {
+    <!-- HERO: PORTADA Y LOGO ESTANDARIZADOS FULL-BLEED -->
+    <div class="hero-image">
+      @if (coverUrl()) {
+        <img
+          [src]="getImageUrl(coverUrl())"
+          class="hero-image__img"
+          alt="Foto de portada del sitio"
+        />
+      } @else {
+        <div class="hero-image__fallback-banner"></div>
+      }
+
+      <ion-button
+        fill="clear"
+        class="btn-edit-cover"
+        (click)="changePhoto('COVER')"
+        aria-label="Cambiar foto de portada"
+      >
+        <ion-icon slot="start" name="camera-outline"></ion-icon>
+        <span>Cambiar portada</span>
+      </ion-button>
+
+      <div class="hero-image__logo-circle">
+        @if (logoUrl()) {
+          <img [src]="getImageUrl(logoUrl())" alt="Logo del sitio" class="hero-image__logo-img" />
+        } @else {
+          <ion-icon name="business-outline" class="site-hero__logo-fallback"></ion-icon>
+        }
+        <ion-button
+          fill="clear"
+          class="btn-edit-logo-circular"
+          (click)="changePhoto('LOGO')"
+          aria-label="Cambiar logotipo"
+        >
+          <ion-icon slot="icon-only" name="camera-outline"></ion-icon>
+        </ion-button>
+      </div>
+
+      <!-- Inputs ocultos para subida de imágenes en navegador Web y PWA -->
+      <input
+        #coverFileInput
+        type="file"
+        accept="image/*"
+        class="hidden-file-input"
+        (change)="onFileInputChange($event, 'COVER')"
+      />
+      <input
+        #logoFileInput
+        type="file"
+        accept="image/*"
+        class="hidden-file-input"
+        (change)="onFileInputChange($event, 'LOGO')"
+      />
+    </div>
+
+    <div class="flock-cards-wrapper">
+      <div class="flock-outer-card provider-card">
+        <div class="content-wrapper ion-padding">
+
+      <!-- TITULAR Y CALIFICACIÓN OBTENIDA -->
+      <div class="site-identity ion-text-center ion-padding-horizontal">
+        <h2 class="site-identity__name">{{ name() || 'Mi Sitio de Aviturismo' }}</h2>
+        <div class="site-identity__location">
+          <ion-icon name="map-outline" class="location-icon"></ion-icon>
+          <span>{{ municipality() ? municipality() + ', ' : '' }}{{ department() || 'Colombia' }}</span>
+        </div>
+
+        <!-- Calificación obtenida (Estrellas e indicador visual) -->
+        <div class="site-rating-box">
+          <div class="site-rating-box__stars">
+            @for (starIndex of starArray; track starIndex) {
+              <ion-icon
+                [name]="starIndex <= (site()?.rating || 5) ? 'star' : 'star-outline'"
+                class="star-icon"
+              ></ion-icon>
+            }
+          </div>
+          <div class="site-rating-box__score">
+            <strong>{{ (site()?.rating || 5.0) | number:'1.1-1' }}</strong> / 5.0
+            <span class="site-rating-box__reviews">
+              ({{ site()?.total_reviews || 0 }} reseñas recibidas)
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SELECTOR DE PESTAÑAS (SEGMENTOS) -->
+      <div class="provider-segment-wrapper ion-padding-horizontal">
+        <ion-segment
+          [value]="activeTab()"
+          (ionChange)="onTabChange($event)"
+          class="provider-segment"
+          mode="ios"
+        >
+          <ion-segment-button value="info">
+            <ion-icon name="business-outline"></ion-icon>
+            <ion-label>Datos</ion-label>
+          </ion-segment-button>
+
+          <ion-segment-button value="services">
+            <ion-icon name="cash-outline"></ion-icon>
+            <ion-label>Oferta</ion-label>
+            @if (servicesList().length > 0) {
+              <ion-badge color="primary" class="tab-badge">
+                {{ servicesList().length }}
+              </ion-badge>
+            }
+          </ion-segment-button>
+
+          <ion-segment-button value="checklist">
+            <ion-icon name="list-outline"></ion-icon>
+            <ion-label>Aves</ion-label>
+            @if (selectedBirdsCount() > 0) {
+              <ion-badge color="success" class="tab-badge">
+                {{ selectedBirdsCount() }}
+              </ion-badge>
+            }
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+
+      <!-- CUERPO DE CONTENIDO SEGÚN PESTAÑA -->
+      <div class="provider-body ion-padding">
+        <!-- ============================================== -->
+        <!-- TAB 1: DATOS GENERALES Y CONTACTO             -->
+        <!-- ============================================== -->
+        @if (activeTab() === 'info') {
+          <div class="tab-info">
+            <ion-card class="form-card">
+              <ion-card-header>
+                <ion-card-title>Información General</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="form-group">
+                  <label class="form-label">Nombre del Sitio o Reserva *</label>
+                  <input
+                    type="text"
+                    class="custom-input"
+                    [ngModel]="name()"
+                    (ngModelChange)="name.set($event)"
+                    placeholder="Ej. Reserva Natural El Colibrí"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Departamento</label>
+                  <ion-select
+                    [value]="department()"
+                    (ionChange)="onDepartmentChange($event.detail.value)"
+                    placeholder="Seleccionar"
+                    class="custom-select"
+                    interface="popover"
+                  >
+                    @for (dept of departments(); track dept.id) {
+                      <ion-select-option [value]="dept.name">
+                        {{ dept.name }}
+                      </ion-select-option>
+                    }
+                  </ion-select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Municipio</label>
+                  <ion-select
+                    [value]="municipality()"
+                    (ionChange)="municipality.set($event.detail.value)"
+                    placeholder="Seleccionar"
+                    class="custom-select"
+                    interface="popover"
+                    [disabled]="municipalities().length === 0"
+                  >
+                    @for (muni of municipalities(); track muni.id) {
+                      <ion-select-option [value]="muni.name">
+                        {{ muni.name }}
+                      </ion-select-option>
+                    }
+                  </ion-select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Descripción del Sitio y Atractivos</label>
+                  <textarea
+                    rows="4"
+                    class="custom-textarea"
+                    [ngModel]="description()"
+                    (ngModelChange)="description.set($event)"
+                    placeholder="Describe los ecosistemas, senderos, facilidades para fotógrafos de aves..."
+                  ></textarea>
+                </div>
+              </ion-card-content>
+            </ion-card>
+
+            <!-- UBICACIÓN GEOGRÁFICA Y MAPA INTERACTIVO -->
+            <ion-card class="form-card">
+              <ion-card-header>
+                <ion-card-title>
+                  <ion-icon name="map-outline" class="form-title-icon"></ion-icon> Ubicación en el Mapa
+                </ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <p class="map-hint-text">
+                  Ubica tu sitio o reserva en el mapa de Colombia. Puedes hacer clic en el mapa, arrastrar el marcador para colocar el punto exacto, ingresar las coordenadas o usar tu GPS actual.
+                </p>
+
+                <!-- MAPA LEAFLET INTERACTIVO -->
+                <div class="site-map-container" #siteMapContainer></div>
+
+                <!-- BOTÓN PARA DETECCIÓN GPS -->
+                <div class="map-gps-btn-wrapper ion-margin-bottom">
+                  <ion-button
+                    expand="block"
+                    fill="outline"
+                    color="secondary"
+                    (click)="useCurrentLocation()"
+                    [disabled]="isLocating()"
+                    class="btn-gps-locate"
+                  >
+                    @if (isLocating()) {
+                      <ion-spinner name="crescent"></ion-spinner>
+                      <span class="ion-margin-start">Obteniendo GPS...</span>
+                    } @else {
+                      <ion-icon slot="start" name="navigate-outline"></ion-icon>
+                      <span>Usar mi ubicación GPS actual</span>
+                    }
+                  </ion-button>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Latitud GPS</label>
+                  <input
+                    type="number"
+                    step="any"
+                    class="custom-input"
+                    [ngModel]="latitude()"
+                    (ngModelChange)="onLatitudeChange($event)"
+                    placeholder="Ej. 4.570868"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Longitud GPS</label>
+                  <input
+                    type="number"
+                    step="any"
+                    class="custom-input"
+                    [ngModel]="longitude()"
+                    (ngModelChange)="onLongitudeChange($event)"
+                    placeholder="Ej. -74.297333"
+                  />
+                </div>
+              </ion-card-content>
+            </ion-card>
+
+            <!-- CONTACTO Y REDES SOCIALES -->
+            <ion-card class="form-card">
+              <ion-card-header>
+                <ion-card-title>Contacto y Redes Sociales</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <div class="form-group">
+                  <label class="form-label">
+                    <ion-icon name="call-outline" class="form-label-icon"></ion-icon> Teléfono de Contacto
+                  </label>
+                  <input
+                    type="tel"
+                    class="custom-input"
+                    [ngModel]="contactPhone()"
+                    (ngModelChange)="contactPhone.set($event)"
+                    placeholder="Ej. +57 310 123 4567"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">
+                    <ion-icon name="logo-whatsapp" color="success" class="form-label-icon"></ion-icon> WhatsApp
+                  </label>
+                  <input
+                    type="tel"
+                    class="custom-input"
+                    [ngModel]="contactWhatsapp()"
+                    (ngModelChange)="contactWhatsapp.set($event)"
+                    placeholder="Ej. 3101234567"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">
+                    <ion-icon name="globe-outline" class="form-label-icon"></ion-icon> Página Web Oficial
+                  </label>
+                  <input
+                    type="url"
+                    class="custom-input"
+                    [ngModel]="website()"
+                    (ngModelChange)="website.set($event)"
+                    placeholder="https://www.misitioaviturismo.com"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">
+                    <ion-icon name="logo-instagram" class="form-label-icon"></ion-icon> Instagram
+                  </label>
+                  <input
+                    type="text"
+                    class="custom-input"
+                    [ngModel]="instagram()"
+                    (ngModelChange)="instagram.set($event)"
+                    placeholder="@reserva_colibri"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">
+                    <ion-icon name="logo-facebook" class="form-label-icon"></ion-icon> Facebook
+                  </label>
+                  <input
+                    type="text"
+                    class="custom-input"
+                    [ngModel]="facebook()"
+                    (ngModelChange)="facebook.set($event)"
+                    placeholder="facebook.com/reserva"
+                  />
+                </div>
+              </ion-card-content>
+            </ion-card>
+
+            <!-- CHECKLIST STATUS SWITCH -->
+            <ion-card class="form-card">
+              <ion-card-content class="checklist-toggle-box">
+                <div class="checklist-toggle-info">
+                  <ion-label>
+                    <h3>¿Cuentas con Checklist de Aves propia?</h3>
+                    <p>Habilita la pestaña de aves para seleccionar las especies registradas en tu predio.</p>
+                  </ion-label>
+                </div>
+                <ion-toggle
+                  [checked]="hasBirdChecklist()"
+                  (ionChange)="hasBirdChecklist.set($event.detail.checked)"
+                  color="success"
+                ></ion-toggle>
+              </ion-card-content>
+            </ion-card>
+
+            <div class="form-actions ion-margin-top ion-margin-bottom">
+              <ion-button
+                expand="block"
+                color="primary"
+                (click)="onSaveInfo()"
+                [disabled]="isSaving()"
+                class="btn-save-main"
+              >
+                @if (isSaving()) {
+                  <ion-spinner name="crescent"></ion-spinner>
+                  <span class="ion-margin-start">Guardando...</span>
+                } @else {
+                  <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+                  <span>Guardar Información del Sitio</span>
+                }
+              </ion-button>
+            </div>
+          </div>
+        }
+
+        <!-- ============================================== -->
+        <!-- TAB 2: SERVICIOS Y PRODUCTOS                  -->
+        <!-- ============================================== -->
+        @if (activeTab() === 'services') {
+          <div class="tab-services">
+            <div class="services-header">
+              <div>
+                <h3 class="services-title">Catálogo Comercial</h3>
+                <p class="services-subtitle">Crea paquetes, alojamiento, tours, alimentación o recuerdos.</p>
+              </div>
+              <ion-button
+                size="small"
+                color="primary"
+                (click)="toggleAddService()"
+              >
+                <ion-icon slot="start" [name]="isAddingService() ? 'close-circle-outline' : 'add-outline'"></ion-icon>
+                <span>{{ isAddingService() ? 'Cancelar' : 'Nuevo' }}</span>
+              </ion-button>
+            </div>
+
+            <!-- FORMULARIO CREAR SERVICIO/PRODUCTO -->
+            @if (isAddingService()) {
+              <ion-card class="service-create-card">
+                <ion-card-header>
+                  <ion-card-title>Agregar Oferta</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                  <div class="service-type-toggle ion-margin-bottom">
+                    <ion-segment
+                      [value]="newServiceType()"
+                      (ionChange)="onServiceTypeChange($event.detail.value)"
+                    >
+                      <ion-segment-button value="service">
+                        <ion-label>Servicio</ion-label>
+                      </ion-segment-button>
+                      <ion-segment-button value="product">
+                        <ion-label>Producto</ion-label>
+                      </ion-segment-button>
+                    </ion-segment>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Nombre del Ítem *</label>
+                    <input
+                      type="text"
+                      class="custom-input"
+                      [ngModel]="newServiceName()"
+                      (ngModelChange)="newServiceName.set($event)"
+                      placeholder="Ej. Tour de Colibríes al Amanecer / Café Tostado 500g"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Precio en COP *</label>
+                    <input
+                      type="number"
+                      class="custom-input"
+                      [ngModel]="newServicePrice()"
+                      (ngModelChange)="newServicePrice.set($event)"
+                      placeholder="Ej. 65000"
+                      min="0"
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Descripción de lo que incluye</label>
+                    <textarea
+                      rows="3"
+                      class="custom-textarea"
+                      [ngModel]="newServiceDescription()"
+                      (ngModelChange)="newServiceDescription.set($event)"
+                      placeholder="Detalles sobre duración, qué incluye, recomendaciones..."
+                    ></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">Foto de la Oferta (Opcional)</label>
+                    <p class="form-helper-text">Formatos permitidos: JPG, PNG. Tamaño máximo: 1 MB.</p>
+
+                    @if (!newServicePhotoUrl()) {
+                      <div
+                        class="service-photo-uploader"
+                        (click)="changeServicePhoto()"
+                        role="button"
+                        tabindex="0"
+                        aria-label="Subir foto del producto o servicio"
+                      >
+                        <ion-icon name="camera-outline" class="service-photo-uploader__icon"></ion-icon>
+                        <span class="service-photo-uploader__label">Seleccionar o tomar foto</span>
+                        <span class="service-photo-uploader__hint">JPG o PNG hasta 1 MB</span>
+                      </div>
+                    } @else {
+                      <div class="service-photo-preview">
+                        <div class="service-photo-preview__image-wrapper">
+                          <img
+                            [src]="getImageUrl(newServicePhotoUrl())"
+                            alt="Previsualización de la foto de la oferta"
+                            class="service-photo-preview__img"
+                          />
+                        </div>
+                        <div class="service-photo-preview__actions">
+                          <ion-button
+                            size="small"
+                            fill="outline"
+                            color="medium"
+                            (click)="changeServicePhoto()"
+                          >
+                            <ion-icon slot="start" name="camera-outline"></ion-icon>
+                            <span>Cambiar</span>
+                          </ion-button>
+                          <ion-button
+                            size="small"
+                            fill="clear"
+                            color="danger"
+                            (click)="removeServicePhoto()"
+                          >
+                            <ion-icon slot="start" name="trash-outline"></ion-icon>
+                            <span>Quitar</span>
+                          </ion-button>
+                        </div>
+                      </div>
+                    }
+
+                    <input
+                      #serviceFileInput
+                      type="file"
+                      accept="image/png,image/jpeg,image/jpg"
+                      class="hidden-file-input"
+                      (change)="onServiceFileInputChange($event)"
+                    />
+                  </div>
+
+                  <div class="service-create-actions ion-margin-top">
+                    <ion-button
+                      expand="block"
+                      color="success"
+                      (click)="onAddService()"
+                      [disabled]="isUploadingServicePhoto()"
+                    >
+                      <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+                      <span>Guardar Ítem</span>
+                    </ion-button>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            }
+
+            <!-- LISTADO DE SERVICIOS EXISTENTES -->
+            @if (servicesList().length === 0 && !isAddingService()) {
+              <div class="empty-state ion-text-center ion-padding">
+                <ion-icon name="pricetagOutline" class="empty-icon"></ion-icon>
+                <h4>Aún no has creado productos o servicios</h4>
+                <p>Agrega los servicios y productos que ofreces en tu sitio para que los pajareros conozcan tu oferta.</p>
+                <ion-button
+                  color="primary"
+                  fill="outline"
+                  (click)="isAddingService.set(true)"
+                  class="ion-margin-top"
+                >
+                  <ion-icon slot="start" name="add-outline"></ion-icon>
+                  <span>Crear Primer Servicio</span>
+                </ion-button>
+              </div>
+            } @else {
+              <div class="services-grid">
+                @for (item of servicesList(); track item.id) {
+                  <div class="service-card" [class.service-card--has-photo]="!!item.photoUrl">
+                    @if (item.photoUrl) {
+                      <div class="service-card__media">
+                        <img
+                          [src]="getImageUrl(item.photoUrl)"
+                          [alt]="item.name"
+                          loading="lazy"
+                          class="service-card__img"
+                        />
+                      </div>
+                    }
+                    <div class="service-card__content">
+                      <div class="service-card__badge" [class.service-card__badge--product]="item.type === 'product'">
+                        {{ item.type === 'product' ? 'PRODUCTO' : 'SERVICIO' }}
+                      </div>
+                      <h4 class="service-card__title">{{ item.name }}</h4>
+                      @if (item.description) {
+                        <p class="service-card__desc">{{ item.description }}</p>
+                      }
+                      <div class="service-card__footer">
+                        <span class="service-card__price">{{ formatCurrency(item.price) }}</span>
+                        <ion-button
+                          fill="clear"
+                          color="danger"
+                          size="small"
+                          (click)="onDeleteService(item.id)"
+                          aria-label="Eliminar servicio"
+                        >
+                          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                        </ion-button>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+
+        <!-- ============================================== -->
+        <!-- TAB 3: CHECKLIST DE AVES DEL SITIO            -->
+        <!-- ============================================== -->
+        @if (activeTab() === 'checklist') {
+          <div class="tab-checklist">
+            @if (!hasBirdChecklist()) {
+              <ion-card class="checklist-notice-card">
+                <ion-card-content class="ion-text-center">
+                  <ion-icon name="list-outline" class="checklist-notice-icon"></ion-icon>
+                  <h3>Checklist Desactivado</h3>
+                  <p>Activa la casilla para crear y vincular el listado de especies que los pajareros podrán avistar en tu predio.</p>
+                  <ion-button
+                    color="success"
+                    (click)="hasBirdChecklist.set(true)"
+                    class="ion-margin-top"
+                  >
+                    <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+                    <span>Activar Checklist</span>
+                  </ion-button>
+                </ion-card-content>
+              </ion-card>
+            } @else {
+              <!-- BUSCADOR DE AVES -->
+              <div class="checklist-search-box">
+                <ion-searchbar
+                  placeholder="Buscar ave por nombre común o científico..."
+                  [debounce]="300"
+                  (ionInput)="onSearchBirds($event)"
+                  class="bird-searchbar"
+                ></ion-searchbar>
+
+                <!-- RESULTADOS DE BÚSQUEDA -->
+                @if (birdSearchResults().length > 0) {
+                  <ion-card class="search-results-card">
+                    <ion-list lines="inset">
+                      @for (bird of birdSearchResults(); track bird.id) {
+                        <ion-item button (click)="addBirdToChecklist(bird)">
+                          <ion-label>
+                            <h3>{{ bird.common_name }}</h3>
+                            <p><i>{{ bird.scientific_name }}</i></p>
+                          </ion-label>
+                          <ion-button slot="end" size="small" fill="outline" color="success">
+                            <ion-icon slot="start" name="add-outline"></ion-icon>
+                            <span>Añadir</span>
+                          </ion-button>
+                        </ion-item>
+                      }
+                    </ion-list>
+                  </ion-card>
+                }
+              </div>
+
+              <!-- RESUMEN Y LISTA DE AVES SELECCIONADAS -->
+              <div class="checklist-summary ion-margin-top">
+                <div class="checklist-summary__header">
+                  <div>
+                    <h4 class="checklist-summary__title">Especies Registradas ({{ selectedBirdsCount() }})</h4>
+                    <p class="checklist-hint">Los pajareros consultarán este listado desde el detalle del sitio.</p>
+                  </div>
+                  @if (selectedBirdsCount() > 0) {
+                    <ion-button
+                      size="small"
+                      color="success"
+                      (click)="onSaveChecklist()"
+                      [disabled]="isSavingChecklist()"
+                    >
+                      @if (isSavingChecklist()) {
+                        <ion-spinner name="crescent"></ion-spinner>
+                      } @else {
+                        <ion-icon slot="start" name="checkmark-outline"></ion-icon>
+                        <span>Guardar</span>
+                      }
+                    </ion-button>
+                  }
+                </div>
+
+                @if (selectedBirds().length === 0) {
+                  <div class="empty-checklist ion-text-center ion-padding">
+                    <p>No has añadido aves aún. Usa el buscador superior para seleccionar las especies avistadas en tu sitio.</p>
+                  </div>
+                } @else {
+                  <div class="birds-selected-list">
+                    @for (bird of selectedBirds(); track bird.id) {
+                      <div class="bird-pill">
+                        <div class="bird-pill__info">
+                          <span class="bird-pill__common">{{ bird.common_name }}</span>
+                          <span class="bird-pill__scientific">{{ bird.scientific_name }}</span>
+                        </div>
+                        <ion-button
+                          fill="clear"
+                          color="danger"
+                          size="small"
+                          (click)="removeBirdFromChecklist(bird.id)"
+                          class="bird-pill__remove"
+                          aria-label="Quitar especie"
+                        >
+                          <ion-icon slot="icon-only" name="close-circle-outline"></ion-icon>
+                        </ion-button>
+                      </div>
+                    }
+                  </div>
+
+                  <div class="checklist-save-footer ion-margin-top ion-margin-bottom">
+                    <ion-button
+                      expand="block"
+                      color="success"
+                      (click)="onSaveChecklist()"
+                      [disabled]="isSavingChecklist()"
+                      class="btn-save-checklist"
+                    >
+                      @if (isSavingChecklist()) {
+                        <ion-spinner name="crescent"></ion-spinner>
+                        <span class="ion-margin-start">Guardando Checklist...</span>
+                      } @else {
+                        <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+                        <span>Guardar Checklist ({{ selectedBirdsCount() }} Especies)</span>
+                      }
+                    </ion-button>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+      </div>
+      </div>
+    </div>
+  }
+</ion-content>

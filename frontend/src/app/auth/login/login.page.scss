@@ -1,0 +1,72 @@
+.brand-title {
+  margin: 10px 0 5px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--avitour-primary);
+  letter-spacing: -1px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.options-row {
+  margin: 8px;
+
+  ion-checkbox {
+    --size: 20px;
+    --border-radius: 6px;
+    --checkbox-background-checked: var(--avitour-primary);
+
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--avitour-muted-foreground);
+
+    &::part(label) {
+      margin-left: 8px;
+    }
+  }
+}
+
+.primary-btn {
+  --border-radius: 18px;
+
+  height: 56px;
+
+  --background: var(--avitour-primary);
+  --color: #fff;
+
+  font-weight: 800;
+}
+
+.recovery-link {
+  --color: var(--avitour-primary);
+
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  margin: 0;
+}
+
+.registration-footer {
+  padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .footer-question {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--avitour-muted-foreground);
+    margin: 0;
+  }
+
+  .footer-link {
+    color: var(--avitour-primary);
+    font-weight: 800;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+}

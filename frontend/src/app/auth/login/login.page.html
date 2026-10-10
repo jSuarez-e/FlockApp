@@ -1,0 +1,167 @@
+<!-- <ion-content class="auth-content">
+  <div class="auth-shell">
+    <app-brand-header></app-brand-header>
+
+    <div class="ibirds-card">
+      <div class="card-header-solid ion-text-center">
+        <h2 class="card-title">¡Bienvenido!</h2>
+        <p class="card-subtitle">
+          Tu App para rutas, avistamientos y sitios en Colombia.
+        </p>
+      </div>
+
+      <div class="card-body ion-padding">
+        <form
+          [formGroup]="loginForm"
+          (ngSubmit)="onLogin()"
+          class="auth-form"
+          novalidate
+        >
+          <div class="form-field">
+            <label>Usuario o correo</label>
+            <div
+              class="input-wrapper"
+              [class.invalid]="loginForm.get('identifier')?.invalid && loginForm.get('identifier')?.touched"
+            >
+              <ion-icon name="person-outline"></ion-icon>
+              <input
+                class="native-input"
+                formControlName="identifier"
+                type="text"
+                placeholder="ej: pajarero o tu@email.com"
+              />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Contraseña</label>
+            <div
+              class="input-wrapper"
+              [class.invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            >
+              <ion-icon name="lock-closed-outline"></ion-icon>
+              <input
+                class="native-input"
+                formControlName="password"
+                [type]="showPassword() ? 'text' : 'password'"
+                placeholder="Mínimo 8 caracteres"
+              />
+              <ion-button
+                slot="end"
+                fill="clear"
+                (click)="togglePassword()"
+                color="medium"
+              >
+                <ion-icon
+                  [name]="showPassword() ? 'eye-off-outline' : 'eye-outline'"
+                ></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+
+          <div class="options-row">
+            <ion-checkbox formControlName="rememberMe" labelPlacement="end">
+              Recordar mi sesión
+            </ion-checkbox>
+          </div>
+
+          <ion-button
+            expand="block"
+            class="primary-btn"
+            type="submit"
+            [disabled]="loginForm.invalid"
+          >
+            INICIAR SESIÓN
+          </ion-button>
+
+          <div class="ion-text-center">
+            <ion-button
+              fill="clear"
+              class="recovery-link"
+              [routerLink]="['/auth/forgot-password']"
+            >
+              ¿Olvidaste tu contraseña?
+            </ion-button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="registration-footer ion-text-center ion-margin-top">
+      <p class="footer-question">¿Aún no eres parte?</p>
+      <a [routerLink]="['/auth/register']" class="footer-link"
+        >Crea tu cuenta aquí</a
+      >
+    </div>
+  </div>
+</ion-content> -->
+
+<ion-content class="auth-content">
+  <div class="auth-shell">
+    <app-brand-header></app-brand-header>
+
+    <div class="ibirds-card">
+      <app-auth-card-header
+        title="¡Bienvenido!"
+        subtitle="Tu App para rutas, avistamientos y sitios en Colombia."
+      >
+      </app-auth-card-header>
+
+      <div class="card-body ion-padding">
+        <form
+          (ngSubmit)="onLogin()"
+          class="auth-form"
+          novalidate
+        >
+          <app-auth-input
+            label="Usuario o correo"
+            icon="person-outline"
+            placeholder="ej: pajarero o tu@email.com"
+            [(value)]="identifier"
+            [isInvalid]="isFormSubmitted() && !isIdentifierValid()"
+          >
+          </app-auth-input>
+
+          <app-password-input
+            label="Contraseña"
+            [(value)]="password"
+            [isInvalid]="isFormSubmitted() && !isPasswordValid()"
+          >
+          </app-password-input>
+
+          <div class="options-row">
+            <ion-checkbox [(ngModel)]="rememberMe" name="rememberMe" labelPlacement="end">
+              Recordar mi sesión
+            </ion-checkbox>
+          </div>
+
+          <ion-button
+            expand="block"
+            class="primary-btn"
+            type="submit"
+            [disabled]="isFormSubmitted() && !isFormValid()"
+          >
+            INICIAR SESIÓN
+          </ion-button>
+
+          <div class="ion-text-center">
+            <ion-button
+              fill="clear"
+              class="recovery-link"
+              [routerLink]="['/auth/forgot-password']"
+            >
+              ¿Olvidaste tu contraseña?
+            </ion-button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="registration-footer ion-text-center ion-margin-top">
+      <p class="footer-question">¿Aún no eres parte?</p>
+      <a [routerLink]="['/auth/register']" class="footer-link"
+        >Crea tu cuenta aquí</a
+      >
+    </div>
+  </div>
+</ion-content>
