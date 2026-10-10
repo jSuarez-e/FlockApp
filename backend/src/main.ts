@@ -32,14 +32,23 @@ async function bootstrap() {
     }),
   );
 
-  // 3. CORS: Permitir peticiones desde el Frontend de Angular
+  // 3. CORS: Permitir peticiones desde el Frontend de Angular, Ionic y Capacitor Móvil
+  const allowedOrigins: string[] = [
+    'http://localhost:8100', // Ionic App (Desarrollo)
+    'http://localhost:4200', // Angular App (Web)
+    'http://localhost:3000', // NestJS (Self-reference)
+    'https://localhost', // Capacitor Android WebView
+    'capacitor://localhost', // Capacitor iOS
+    'ionic://localhost', // Ionic WebView
+  ];
+
+  const frontendUrl = process.env['FRONTEND_URL'];
+  if (frontendUrl) {
+    allowedOrigins.push(frontendUrl);
+  }
+
   app.enableCors({
-    // origin: process.env['FRONTEND_URL'] || 'http://localhost:4200',
-    origin: [
-      'http://localhost:8100', // Ionic App (Desarrollo)
-      'http://localhost:4200', // Angular App (Web)
-      'http://localhost:3000', // NestJS (Self-reference)
-    ],
+    origin: allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
