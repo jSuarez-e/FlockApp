@@ -37,7 +37,8 @@ async function bootstrap() {
     'http://localhost:8100', // Ionic App (Desarrollo)
     'http://localhost:4200', // Angular App (Web)
     'http://localhost:3000', // NestJS (Self-reference)
-    'https://localhost', // Capacitor Android WebView
+    'https://localhost', // Capacitor Android WebView (HTTPS)
+    'http://localhost', // Capacitor Android WebView (HTTP)
     'capacitor://localhost', // Capacitor iOS
     'ionic://localhost', // Ionic WebView
   ];
