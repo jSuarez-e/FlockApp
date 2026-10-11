@@ -49,6 +49,7 @@ import { UserService } from '../../../core/services/user.service';
 import { User } from '../../../core/models/auth.models';
 import { UserMedalsComponent } from '../components/user-medals/user-medals.component';
 import { logger } from '../../../core/utils/logger';
+import { environment } from '../../../../environments/environment';
 
 /**
  * Componente de presentación de perfil público de usuarios en modo información.
@@ -93,9 +94,6 @@ export class PublicProfilePage implements OnInit {
   public readonly isLoading = signal<boolean>(true);
   /** Mensaje de error en caso de fallo */
   public readonly errorMessage = signal<string | null>(null);
-
-  /** URL base para resolución de multimedia */
-  private readonly baseUrl = 'http://localhost:3000';
 
   /**
    * Registra los íconos del ecosistema visual de perfiles.
@@ -166,7 +164,7 @@ export class PublicProfilePage implements OnInit {
    */
   public getImageUrl(path?: string | null): string {
     if (!path) return '';
-    return path.startsWith('http') ? path : `${this.baseUrl}${path}`;
+    return path.startsWith('http') ? path : `${environment.urlBack}${path}`;
   }
 
   /**

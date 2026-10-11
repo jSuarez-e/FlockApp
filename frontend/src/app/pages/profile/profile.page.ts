@@ -34,6 +34,7 @@ import {
   GeographyService, GeoLocation
 } from '../../core/services/geography.service';
 import { User, UserStats } from '../../core/models/auth.models';
+import { environment } from '../../../environments/environment';
 
 // Icons
 import { addIcons } from 'ionicons';
@@ -116,9 +117,6 @@ export class ProfilePage implements OnInit {
   /** @description Listado de municipios del departamento seleccionado */
   public municipalities = signal<GeoLocation[]>([]);
 
-  /** @description URL base del backend para activos estáticos */
-  private readonly BASE_URL = 'http://localhost:3000';
-
   /** @description Computado para determinar propiedad del perfil */
   public isOwnProfile = computed(() => {
     const viewed = this.viewedUser();
@@ -180,7 +178,7 @@ export class ProfilePage implements OnInit {
    */
   public getImageUrl(path: string | undefined): string {
     if (!path) return '';
-    return path.startsWith('http') ? path : `${this.BASE_URL}${path}`;
+    return path.startsWith('http') ? path : `${environment.urlBack}${path}`;
   }
 
   /**

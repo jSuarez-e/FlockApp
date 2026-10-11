@@ -7,9 +7,9 @@ import { AppEnvironment } from './environment.interface';
 export const environment: AppEnvironment = {
   production: false,
   target: 'local',
-  urlBack: 'http://localhost:3000',
-  apiUrl: 'http://localhost:3000/api/v1',
-  authUrl: 'http://localhost:3000/api/auth',
+  urlBack: 'https://flockapp.onrender.com',
+  apiUrl: 'https://flockapp.onrender.com/api/v1',
+  authUrl: 'https://flockapp.onrender.com/api/auth',
 };
 
 /*
