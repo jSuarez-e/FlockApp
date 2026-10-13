@@ -1,134 +1,127 @@
 <ion-header class="ion-no-border flock-header-seamless">
-  <ion-toolbar class="business-header-toolbar">
-    <div class="flock-header-content">
+  <ion-toolbar class="settings-header-toolbar">
+    <div class="settings-header-content">
       <ion-buttons slot="start" class="header-menu-buttons">
-        <ion-back-button defaultHref="/home/dashboard" class="header-menu-btn"></ion-back-button>
+        <ion-menu-button class="header-menu-btn"></ion-menu-button>
       </ion-buttons>
 
-      <div class="flock-header-titles">
-        <h1 class="flock-header-title">Perfil de Negocio</h1>
-        <p class="flock-header-subtitle">Gestión y servicios de anfitrión de aviturismo</p>
-      </div>
-
-      <div class="profile-header-actions">
-        @if (store.activeTab() === 'profile') {
-          <button
-            class="flock-header-pill-btn"
-            (click)="onSaveProfile()"
-            [disabled]="isPristine()"
-            aria-label="Guardar perfil"
-          >
-            <ion-icon name="checkmark-outline"></ion-icon>
-            <span>Guardar</span>
-          </button>
-        }
+      <div class="settings-header-titles">
+        <h1 class="settings-header-title">Perfil de Guía</h1>
+        <p class="settings-header-subtitle">Gestión y servicios</p>
       </div>
     </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="business-profile-content">
-  <!-- HERO: PORTADA Y AVATAR UNIFICADO -->
-  <div class="hero-image">
-    @if (store.coverUrl()) {
-      <img
-        [src]="getImageUrl(store.coverUrl())"
-        class="hero-image__img"
-        alt="Foto de portada"
-      />
-    } @else {
-      <div class="hero-image__fallback-banner"></div>
-    }
+  @if (store.isLoading()) {
+    <app-loading message="Cargando perfil de guía..." [fullHeight]="true"></app-loading>
+  } @else {
+    <!-- HERO: PORTADA Y AVATAR UNIFICADO -->
+    <div class="hero-image">
+      @if (store.coverUrl()) {
+        <img
+          [src]="getImageUrl(store.coverUrl())"
+          class="hero-image__img"
+          alt="Foto de portada"
+        />
+      } @else {
+        <div class="hero-image__fallback-banner"></div>
+      }
 
-    <ion-button
-      fill="clear"
-      class="btn-edit-cover"
-      (click)="changePhoto('COVER')"
-      aria-label="Cambiar foto de portada"
-    >
-      <ion-icon slot="start" name="camera-outline"></ion-icon>
-      <span>Cambiar portada</span>
-    </ion-button>
-
-    <div class="hero-image__avatar-circle">
-      <img
-        [src]="getImageUrl(store.photoUrl()) || getAvatarFallback()"
-        (error)="onAvatarError($event)"
-        alt="Foto del perfil de negocio"
-        class="hero-image__avatar-img"
-      />
       <ion-button
         fill="clear"
-        class="btn-edit-avatar-circular"
-        (click)="changePhoto('AVATAR')"
-        aria-label="Cargar foto de perfil"
+        class="btn-edit-cover"
+        (click)="changePhoto('COVER')"
+        aria-label="Cambiar foto de portada"
       >
-        <ion-icon slot="icon-only" name="camera-outline"></ion-icon>
+        <ion-icon slot="start" name="camera-outline"></ion-icon>
+        <span>Cambiar portada</span>
       </ion-button>
+
+      <div class="hero-image__avatar-circle">
+        <img
+          [src]="getImageUrl(store.photoUrl()) || getAvatarFallback()"
+          (error)="onAvatarError($event)"
+          alt="Foto del perfil de negocio"
+          class="hero-image__avatar-img"
+        />
+        <ion-button
+          fill="clear"
+          class="btn-edit-avatar-circular"
+          (click)="changePhoto('AVATAR')"
+          aria-label="Cargar foto de perfil"
+        >
+          <ion-icon slot="icon-only" name="camera-outline"></ion-icon>
+        </ion-button>
+      </div>
+
+      <!-- Inputs ocultos para subida de imágenes en navegador Web y PWA -->
+      <input
+        #coverFileInput
+        type="file"
+        accept="image/*"
+        class="hidden-file-input"
+        (change)="onFileInputChange($event, 'COVER')"
+      />
+      <input
+        #avatarFileInput
+        type="file"
+        accept="image/*"
+        class="hidden-file-input"
+        (change)="onFileInputChange($event, 'AVATAR')"
+      />
     </div>
 
-    <!-- Inputs ocultos para subida de imágenes en navegador Web y PWA -->
-    <input
-      #coverFileInput
-      type="file"
-      accept="image/*"
-      class="hidden-file-input"
-      (change)="onFileInputChange($event, 'COVER')"
-    />
-    <input
-      #avatarFileInput
-      type="file"
-      accept="image/*"
-      class="hidden-file-input"
-      (change)="onFileInputChange($event, 'AVATAR')"
-    />
-  </div>
+    <!-- CONTENEDOR PRINCIPAL: CARDS Y SUBCARDS -->
+    <div class="flock-cards-wrapper">
+      <div class="flock-outer-card business-card">
+        <div class="content-wrapper ion-padding">
+          <div class="profile-header-meta ion-margin-bottom">
+            <h2 class="title">{{ store.username() || 'Mi Perfil de Guía' }}</h2>
+            <div class="profile-chips">
+              <span class="guide-role-badge">
+                <ion-icon name="business-outline"></ion-icon>
+                <span>Guía Profesional de Aves</span>
+              </span>
+            </div>
+          </div>
 
-  <!-- CONTENEDOR PRINCIPAL: CARDS Y SUBCARDS -->
-  <div class="flock-cards-wrapper">
-    <div class="flock-outer-card business-card">
-      <div class="content-wrapper ion-padding">
-        <h2 class="title">{{ store.username() || 'Mi Perfil de Guía' }}</h2>
-        <div class="profile-chips ion-margin-bottom">
-          <ion-chip color="primary" outline="true">
-            <ion-icon name="business-outline"></ion-icon>
-            <ion-label>Guía Profesional de Aves</ion-label>
-          </ion-chip>
-        </div>
+          <!-- Segment Selector -->
+          <div class="provider-segment-container ion-margin-bottom">
+            <ion-segment
+              [value]="store.activeTab()"
+              (ionChange)="onTabChange($event)"
+              class="provider-segment"
+              mode="ios"
+            >
+              <ion-segment-button value="profile" layout="icon-top">
+                <ion-icon name="business-outline"></ion-icon>
+                <ion-label>Datos</ion-label>
+              </ion-segment-button>
+              <ion-segment-button value="calendar" layout="icon-top">
+                <ion-icon name="calendar-outline"></ion-icon>
+                <ion-label>Agenda</ion-label>
+              </ion-segment-button>
+              <ion-segment-button value="bookings" layout="icon-top">
+                <ion-icon name="document-text-outline"></ion-icon>
+                <ion-label>
+                  Solicitudes
+                  @if (store.incomingBookings().length > 0) {
+                    <ion-badge color="danger" class="tab-badge">
+                      {{ store.incomingBookings().length }}
+                    </ion-badge>
+                  }
+                </ion-label>
+              </ion-segment-button>
+            </ion-segment>
+          </div>
 
-        <!-- Segment Selector -->
-        <div class="provider-segment-container ion-margin-bottom">
-          <ion-segment
-            [value]="store.activeTab()"
-            (ionChange)="onTabChange($event)"
-            class="provider-segment"
-          >
-            <ion-segment-button value="profile">
-              <ion-icon name="business-outline"></ion-icon>
-              <ion-label>Datos</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="calendar">
-              <ion-icon name="calendar-outline"></ion-icon>
-              <ion-label>Agenda</ion-label>
-            </ion-segment-button>
-            <ion-segment-button value="bookings">
-              <ion-icon name="document-text-outline"></ion-icon>
-              <ion-label>Solicitudes</ion-label>
-              @if (store.incomingBookings().length > 0) {
-                <ion-badge color="danger" class="tab-badge">
-                  {{ store.incomingBookings().length }}
-                </ion-badge>
-              }
-            </ion-segment-button>
-          </ion-segment>
-        </div>
-
-        <div class="card-body">
-          @if (!store.isLoading()) {
+          <div class="card-body">
             <!-- TAB 1: DATOS DE PERFIL Y REGISTRO -->
             @if (store.activeTab() === 'profile') {
               <app-business-form-tab
-                [isPristine]="isPristine()"
+                [isFormValid]="isFormValid()"
                 (save)="onSaveProfile()"
               ></app-business-form-tab>
             }
@@ -142,14 +135,9 @@
             @if (store.activeTab() === 'bookings') {
               <app-business-bookings-tab></app-business-bookings-tab>
             }
-          } @else {
-            <div class="ion-text-center ion-padding">
-              <ion-spinner name="crescent"></ion-spinner>
-              <p>Cargando datos de negocio...</p>
-            </div>
-          }
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 </ion-content>

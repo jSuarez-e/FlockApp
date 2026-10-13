@@ -74,6 +74,12 @@
 
   <!-- Contenedor del Mapa Leaflet -->
   <div class="map-container-full">
+    @if (sightingsMapStore.isLoading() && sightingsSignal().length === 0) {
+      <div class="map-loading-overlay">
+        <app-loading message="Cargando mapa y avistamientos..." [fullHeight]="false"></app-loading>
+      </div>
+    }
+
     <!-- Chip flotante con contador de avistamientos -->
     @if (sightingsSignal().length > 0) {
       <div class="map-stats-chip">

@@ -76,6 +76,10 @@ export class GuideEntity {
   @Column({ type: 'boolean', default: true })
   is_published: boolean;
 
+  @ApiProperty({ description: 'Verificado por el sistema' })
+  @Column({ type: 'boolean', default: false })
+  is_verified: boolean;
+
   @ApiProperty({ description: 'Foto de portada del guía' })
   @Column({ type: 'varchar', length: 255, nullable: true })
   cover_url: string;

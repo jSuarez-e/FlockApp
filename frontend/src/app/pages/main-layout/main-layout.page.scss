@@ -223,7 +223,7 @@ ion-menu.flock-side-menu {
 /* 3. TABS INFERIORES */
 .ibirds-tab-bar {
   border-top: 1px solid var(--flock-border-subtle, rgb(226 232 240 / 80%));
-  height: 65px;
+  height: 64px;
 
   --background: var(--flock-card);
 
@@ -233,16 +233,36 @@ ion-menu.flock-side-menu {
     --color-selected: var(--flock-primary-light, var(--flock-primary-light));
     --color: var(--flock-muted-foreground, var(--flock-muted-foreground));
 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6px 0;
+
+    &::part(native) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    ion-icon {
+      font-size: 22px;
+      margin: 0 0 3px;
+      line-height: 1;
+    }
+
     ion-label {
       font-weight: 800;
       font-size: 0.75rem;
       letter-spacing: 0.2px;
+      margin: 0;
+      line-height: 1.2;
     }
   }
-}
-
-/* stylelint-disable-next-line no-descending-specificity */
-.ibirds-tab-bar ion-tab-button ion-icon {
-  font-size: 24px;
-  margin-bottom: 2px;
 }

@@ -32,6 +32,13 @@ export class GuideBookingEntity {
   @Column({ type: 'date' })
   booking_date: string;
 
+  @ApiProperty({
+    description: 'Fecha final para reservas de rango de días (YYYY-MM-DD)',
+    required: false,
+  })
+  @Column({ type: 'date', nullable: true })
+  end_date: string;
+
   @ApiProperty({ description: 'Tipo de actividad' })
   @Column({ type: 'varchar', length: 100, default: 'Aviturismo General' })
   activity_type: string;

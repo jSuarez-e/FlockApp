@@ -1,3 +1,4 @@
+.settings-header-toolbar,
 .dashboard-header-toolbar {
   --background: transparent;
 
@@ -5,8 +6,9 @@
 
   --color: var(--flock-primary-foreground);
 
-  padding: 6px 16px 10px;
+  padding: 10px 16px 12px;
 
+  .settings-header-content,
   .dashboard-header-content {
     display: flex;
     align-items: center;
@@ -31,10 +33,12 @@
     height: 40px;
   }
 
+  .settings-header-titles,
   .dashboard-header-titles {
     flex: 1;
     min-width: 0;
 
+    .settings-header-title,
     .dashboard-header-title {
       margin: 0;
       font-size: 1.35rem;
@@ -46,6 +50,7 @@
       text-overflow: ellipsis;
     }
 
+    .settings-header-subtitle,
     .dashboard-header-subtitle {
       margin: 4px 0 0;
       font-size: 0.8rem;

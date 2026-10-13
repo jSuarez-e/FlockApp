@@ -78,4 +78,13 @@ describe('MainLayoutPage', () => {
       replaceUrl: true,
     });
   });
+
+  it('debería redirigir al selector de modo y cerrar el menú en changeViewMode()', async () => {
+    const dashboardStoreMock = TestBed.inject(DashboardStore);
+    await component.changeViewMode();
+
+    expect(dashboardStoreMock.setMode).toHaveBeenCalledWith(null);
+    expect(menuCtrlSpy.close).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalledWith(['/home/dashboard']);
+  });
 });

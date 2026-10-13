@@ -82,6 +82,10 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 
   .field-label {
     display: block;
@@ -103,11 +107,17 @@
   border: 1px solid var(--avitour-border);
   border-radius: 14px;
   transition: all 0.2s ease;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 
   /* stylelint-disable-next-line no-descending-specificity */
   ion-icon {
     color: var(--avitour-primary);
     font-size: 1.2rem;
+    flex-shrink: 0;
   }
 
   &.invalid {
@@ -119,6 +129,8 @@
     border: none;
     background: transparent;
     width: 100%;
+    min-width: 0;
+    max-width: 100%;
     outline: none;
     font-size: 0.95rem;
     color: var(--flock-foreground);
@@ -128,13 +140,43 @@
 .select-box {
   padding: 0 12px !important;
   border: 2px solid var(--avitour-border);
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 
   ion-select {
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
     font-size: 0.9rem;
+    min-height: 48px;
 
     --placeholder-color: var(--flock-muted-foreground);
     --placeholder-opacity: 1;
+
+    &::part(text) {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    &::part(placeholder) {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    &::part(icon) {
+      flex-shrink: 0;
+    }
   }
 }
 

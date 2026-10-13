@@ -11,6 +11,7 @@
   justify-content: center;
   padding: 2rem;
   text-align: center;
+  animation: loading-fade-in 0.25s ease-in-out;
 
   &--full-height {
     min-height: 50vh;
@@ -26,5 +27,16 @@
     font-size: 1rem;
     color: var(--flock-muted-foreground, var(--ion-color-medium, var(--flock-muted-foreground)));
     font-weight: 500;
+  }
+}
+
+@keyframes loading-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

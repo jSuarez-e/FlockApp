@@ -24,4 +24,10 @@ describe('DashboardPage (Orquestador)', () => {
     component.handleRoleSelection('PAJARERO');
     expect(spy).toHaveBeenCalledWith('PAJARERO');
   });
+
+  it('debe restablecer a null el modo al invocar changeViewMode()', () => {
+    const spy = spyOn(dashboardStore, 'setMode');
+    component.changeViewMode();
+    expect(spy).toHaveBeenCalledWith(null);
+  });
 });

@@ -49,7 +49,7 @@ export class GuideBookingsService {
     guideId: string,
     dto: CreateBookingDto,
   ): Promise<IGuideBooking> {
-    if (birderId === guideId) {
+    if (birderId === guideId && process.env.NODE_ENV === 'production') {
       throw new BadRequestException(
         'No puedes contratarte a ti mismo como guía.',
       );
@@ -62,36 +62,50 @@ export class GuideBookingsService {
       throw new NotFoundException(`Guía con ID ${guideId} no encontrado.`);
     }
 
-    // Verificar si el día está bloqueado por el guía
-    const isBlocked = await this.availabilityRepo.findOne({
-      where: { guide_id: guideId, date: dto.bookingDate },
-    });
-    if (isBlocked) {
-      throw new BadRequestException(
-        `La fecha ${dto.bookingDate} no está disponible en la agenda del guía.`,
-      );
+    // Calcular lista de fechas a validar si se seleccionó un rango
+    const datesToCheck: string[] = [dto.bookingDate];
+    if (dto.endDate && dto.endDate > dto.bookingDate) {
+      const cur = new Date(`${dto.bookingDate}T00:00:00Z`);
+      const end = new Date(`${dto.endDate}T00:00:00Z`);
+      while (cur < end) {
+        cur.setUTCDate(cur.getUTCDate() + 1);
+        datesToCheck.push(cur.toISOString().split('T')[0]);
+      }
     }
 
-    // Verificar si ya existe una reserva confirmada en esa fecha
-    const existingConfirmed = await this.bookingRepo.findOne({
-      where: {
-        guide_id: guideId,
-        booking_date: dto.bookingDate,
-        status: 'CONFIRMED',
-      },
-    });
-    if (existingConfirmed) {
-      throw new BadRequestException(
-        `El guía ya tiene una reserva confirmada para la fecha ${dto.bookingDate}.`,
-      );
+    for (const dateStr of datesToCheck) {
+      // Verificar si el día está bloqueado por el guía
+      const isBlocked = await this.availabilityRepo.findOne({
+        where: { guide_id: guideId, date: dateStr },
+      });
+      if (isBlocked) {
+        throw new BadRequestException(
+          `La fecha ${dateStr} no está disponible en la agenda del guía.`,
+        );
+      }
+
+      // Verificar si ya existe una reserva confirmada en esa fecha
+      const existingConfirmed = await this.bookingRepo.findOne({
+        where: {
+          guide_id: guideId,
+          booking_date: dateStr,
+          status: 'CONFIRMED',
+        },
+      });
+      if (existingConfirmed) {
+        throw new BadRequestException(
+          `El guía ya tiene una reserva confirmada para la fecha ${dateStr}.`,
+        );
+      }
     }
 
     const booking = this.bookingRepo.create({
       birder_id: birderId,
       guide_id: guideId,
       booking_date: dto.bookingDate,
+      end_date: dto.endDate || undefined,
       activity_type: dto.activityType,
-      message: dto.message,
+      message: dto.message || '',
       contact_phone: dto.contactPhone,
       contact_email: dto.contactEmail || '',
       status: 'PENDING',
@@ -202,6 +216,7 @@ export class GuideBookingsService {
         guideId: b.guide_id,
         birderId: b.birder_id,
         bookingDate: b.booking_date,
+        endDate: b.end_date || undefined,
         activityType: b.activity_type,
         message: b.message,
         contactPhone: b.contact_phone,
@@ -244,6 +259,7 @@ export class GuideBookingsService {
         guideId: b.guide_id,
         birderId: b.birder_id,
         bookingDate: b.booking_date,
+        endDate: b.end_date || undefined,
         activityType: b.activity_type,
         message: b.message,
         contactPhone: b.contact_phone,
@@ -363,6 +379,7 @@ export class GuideBookingsService {
       guideId: booking.guide_id,
       birderId: booking.birder_id,
       bookingDate: booking.booking_date,
+      endDate: booking.end_date || undefined,
       activityType: booking.activity_type,
       message: booking.message,
       contactPhone: booking.contact_phone,

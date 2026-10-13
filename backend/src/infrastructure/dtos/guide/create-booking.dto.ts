@@ -21,6 +21,18 @@ export class CreateBookingDto implements ICreateBookingDto {
   bookingDate: string;
 
   @ApiProperty({
+    description: 'Fecha final si es un rango de días (YYYY-MM-DD)',
+    example: '2026-10-18',
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+    message: 'endDate debe tener el formato YYYY-MM-DD',
+  })
+  endDate?: string;
+
+  @ApiProperty({
     description: 'Tipo de actividad',
     example: 'Aviturismo Especializado',
   })
@@ -30,10 +42,11 @@ export class CreateBookingDto implements ICreateBookingDto {
 
   @ApiProperty({
     description: 'Mensaje descriptivo con expectativas o requerimientos',
+    required: false,
   })
+  @IsOptional()
   @IsString()
-  @IsNotEmpty()
-  message: string;
+  message?: string;
 
   @ApiProperty({ description: 'Telefono de contacto del solicitante' })
   @IsString()

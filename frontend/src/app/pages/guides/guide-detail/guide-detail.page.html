@@ -14,10 +14,7 @@
 
 <ion-content class="guide-detail-content">
   @if (isLoading()) {
-    <div class="ion-text-center ion-padding detail-loader">
-      <ion-spinner name="crescent" color="primary"></ion-spinner>
-      <p>Cargando información del guía...</p>
-    </div>
+    <app-loading message="Cargando información del guía..." [fullHeight]="true"></app-loading>
   } @else if (guide(); as g) {
     <!-- HERO: PORTADA Y AVATAR UNIFICADO -->
     <div class="hero-image">
@@ -38,7 +35,7 @@
           alt="Foto de {{ g.fullName }}"
           class="hero-image__avatar-img"
         />
-        @if (g.isPublished) {
+        @if (g.isVerified) {
           <span class="avatar-verified-dot" title="Guía Verificado">
             <ion-icon name="checkmark-done-outline"></ion-icon>
           </span>
@@ -56,23 +53,36 @@
             <span>{{ g.location || 'Colombia' }}</span>
           </p>
 
-          <div class="profile-chips ion-margin-bottom">
-            <ion-chip color="primary" outline="true">
+          <!-- BLOQUE DE BADGES ARMONIZADOS (Especialidad, Verificado, Rating & Nivel) -->
+          <div class="guide-badges-row ion-margin-bottom">
+            <!-- Badge 1: Especialidad y Servicios -->
+            <div class="guide-badge-pill guide-badge-pill--specialty">
               <ion-icon name="ribbon-outline"></ion-icon>
-              <ion-label>{{ g.specialty || 'Guía Profesional de Aves' }}</ion-label>
-            </ion-chip>
-            @if (g.isPublished) {
-              <ion-chip color="success" outline="true">
-                <ion-icon name="checkmark-circle-outline"></ion-icon>
-                <ion-label>Verificado</ion-label>
-              </ion-chip>
-            }
-          </div>
+              <span>{{ g.specialty || 'Guía Profesional de Aves' }}</span>
+            </div>
 
-          <div class="site-detail__rating ion-margin-bottom">
-            <ion-icon name="star" color="warning" class="site-detail__rating-icon"></ion-icon>
-            <span class="site-detail__rating-score">{{ (g.rating || 5) | number:'1.1-1' }}</span>
-            <span class="site-detail__rating-badge">Guía Profesional</span>
+            <!-- Badge 2: Verificado por el sistema -->
+            @if (g.isVerified) {
+              <div class="guide-badge-pill guide-badge-pill--verified">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+                <span>Verificado</span>
+              </div>
+            }
+
+            <!-- Badge 3: Calificación y Categoría -->
+            <div class="guide-badge-pill guide-badge-pill--rating">
+              <ion-icon name="star"></ion-icon>
+              <span class="score">{{ (g.rating || 5) | number:'1.1-1' }}</span>
+              <span class="tier">Guía Profesional</span>
+            </div>
+
+            <!-- Badge 4: Destacado (si rating >= 4.6) -->
+            @if ((g.rating || 0) >= 4.6) {
+              <div class="guide-badge-pill guide-badge-pill--featured">
+                <ion-icon name="sparkles-outline"></ion-icon>
+                <span>Destacado</span>
+              </div>
+            }
           </div>
 
           <!-- SUBCARDS INTERNAS DE INFORMACIÓN -->
@@ -121,7 +131,7 @@
 
             <!-- Quick Contact Actions -->
             <div class="quick-contact-row ion-margin-top">
-              @if (g.phone && g.hasWhatsapp) {
+              @if (g.phone && g.hasWhatsapp && hasBusinessRelationship()) {
                 <ion-button
                   color="success"
                   expand="block"
@@ -165,7 +175,7 @@
               <ion-icon name="calendar-outline"></ion-icon>
               <span>Calendario de Disponibilidad</span>
             </h3>
-            <p class="subcard-subtitle">Consulta los días libres para reservar tu salida</p>
+            <p class="subcard-subtitle">Consulta los días libres o selecciona un rango para reservar</p>
 
             <div class="calendar-navigation ion-margin-top">
               <ion-button fill="clear" size="small" (click)="prevMonth()" aria-label="Mes anterior">
@@ -178,24 +188,41 @@
             </div>
 
             <div class="calendar-days-grid ion-margin-top">
-              @for (day of calendarDays(); track day.dateString) {
-                <button
-                  type="button"
-                  class="day-btn"
-                  [class.day-btn--selected]="day.isSelected"
-                  [class.day-btn--blocked]="day.isBlocked"
-                  [class.day-btn--past]="day.isPast"
-                  [disabled]="day.isBlocked || day.isPast"
-                  (click)="selectDate(day)"
-                >
-                  <span class="day-num">{{ day.dayNumber }}</span>
-                  @if (day.isBlocked) {
-                    <span class="day-tag day-tag--busy">Ocupado</span>
-                  } @else if (!day.isPast) {
-                    <span class="day-tag day-tag--free">Libre</span>
+              <!-- Encabezado con días de la semana -->
+              <div class="calendar-weekdays-row">
+                @for (d of weekDayHeaders; track d) {
+                  <span class="weekday-header-cell">{{ d }}</span>
+                }
+              </div>
+
+              <!-- Cuadrícula de celdas -->
+              <div class="calendar-cells-grid">
+                @for (day of calendarDays(); track day.dateString) {
+                  @if (day.isEmptySlot) {
+                    <div class="day-slot day-slot--empty"></div>
+                  } @else {
+                    <button
+                      type="button"
+                      class="day-btn"
+                      [class.day-btn--selected]="day.isSelected"
+                      [class.day-btn--range-start]="day.isRangeStart"
+                      [class.day-btn--range-end]="day.isRangeEnd"
+                      [class.day-btn--in-range]="day.isInRange"
+                      [class.day-btn--blocked]="day.isBlocked"
+                      [class.day-btn--past]="day.isPast"
+                      [disabled]="day.isBlocked || day.isPast"
+                      (click)="selectDate(day)"
+                    >
+                      <span class="day-num">{{ day.dayNumber }}</span>
+                      <span
+                        class="day-status-dot"
+                        [class.day-status-dot--free]="!day.isBlocked && !day.isPast"
+                        [class.day-status-dot--busy]="day.isBlocked"
+                      ></span>
+                    </button>
                   }
-                </button>
-              }
+                }
+              </div>
             </div>
 
             <div class="calendar-legend-bar ion-margin-top">
@@ -209,7 +236,7 @@
               </div>
               <div class="legend-chip">
                 <span class="chip-color chip-color--selected"></span>
-                <span>Seleccionado</span>
+                <span>Seleccionado / Rango</span>
               </div>
             </div>
           </div>
@@ -220,20 +247,30 @@
               <ion-icon name="paper-plane-outline"></ion-icon>
               <span>Reservar y Contactar por la App</span>
             </h3>
-            <p class="subcard-subtitle">Establece contacto formal y asegura la fecha de tu salida</p>
+            <p class="subcard-subtitle">Establece contacto formal y asegura las fechas de tu salida</p>
 
-            @if (selectedDate()) {
+            @if (isOwnProfile()) {
+              <div class="own-profile-notice ion-margin-top ion-margin-bottom">
+                <ion-icon name="information-circle-outline"></ion-icon>
+                <div>
+                  <strong>Modo Vista Previa</strong>
+                  <p>Estás visualizando tu propio perfil de guía. Las reservas están inhabilitadas para tu propia cuenta.</p>
+                </div>
+              </div>
+            }
+
+            @if (selectedDateRangeLabel()) {
               <div class="selected-date-banner ion-margin-top ion-margin-bottom">
                 <ion-icon name="checkmark-circle-outline" color="success"></ion-icon>
                 <div>
-                  <span class="banner-label">Fecha Seleccionada:</span>
-                  <strong class="banner-date">{{ selectedDate() }}</strong>
+                  <span class="banner-label">Fecha o Rango Seleccionado:</span>
+                  <strong class="banner-date">{{ selectedDateRangeLabel() }}</strong>
                 </div>
               </div>
             } @else {
               <div class="unselected-date-tip ion-margin-top ion-margin-bottom">
                 <ion-icon name="calendar-outline" color="primary"></ion-icon>
-                <span>Por favor toca un día <strong>Libre</strong> en el calendario de arriba.</span>
+                <span>Por favor toca un día <strong>Libre</strong> (o dos días para un rango) en el calendario.</span>
               </div>
             }
 
@@ -269,7 +306,7 @@
             </div>
 
             <div class="form-field ion-margin-bottom">
-              <label class="field-title">Mensaje o Requerimientos Específicos</label>
+              <label class="field-title">Mensaje o Requerimientos Específicos (opcional)</label>
               <div class="input-textarea-box">
                 <textarea
                   rows="3"
@@ -285,11 +322,11 @@
               expand="block"
               color="primary"
               class="btn-submit-booking"
-              [disabled]="!selectedDate() || !contactPhone() || isSubmitting()"
+              [disabled]="!selectedStartDate() || !contactPhone() || isSubmitting() || isOwnProfile()"
               (click)="onSubmitBooking()"
             >
               <ion-icon name="send-outline" slot="start"></ion-icon>
-              Enviar Solicitud de Reserva
+              {{ isOwnProfile() ? 'Vista Previa (Propio Guía)' : 'Enviar Solicitud de Reserva' }}
             </ion-button>
           </div>
 

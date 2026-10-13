@@ -18,6 +18,7 @@ import {
   IonMenuButton,
   IonSearchbar,
 } from '@ionic/angular';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { GuideStore } from '../../../core/stores/guide.store';
 import { GuideBookingService } from '../../../core/services/guide-booking.service';
 import { UiService } from '../../../core/services/ui.service';
@@ -65,6 +66,7 @@ interface RefresherTarget {
   standalone: true,
   imports: [
     CommonModule,
+    LoadingComponent,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -142,9 +144,9 @@ export class GuideListPage implements OnInit {
 
       let matchFilter = true;
       if (filter === 'verified') {
-        matchFilter = !!g.isPublished;
+        matchFilter = Boolean(g.isVerified);
       } else if (filter === 'top') {
-        matchFilter = (g.rating || 0) >= 4.8;
+        matchFilter = (g.rating || 0) >= 4.6;
       } else if (filter === 'fotografia') {
         matchFilter = Boolean(
           g.specialty?.toLowerCase().includes('foto') ||
@@ -224,12 +226,27 @@ export class GuideListPage implements OnInit {
       if (photoUrl.startsWith('http')) {
         return photoUrl;
       }
-      const baseUrl = environment.apiUrl.replace(/\/api\/?$/, '');
+      const baseUrl =
+        environment.urlBack ||
+        environment.apiUrl.replace(/\/api(\/v\d+)?\/?$/, '');
       const cleanPath = photoUrl.startsWith('/') ? photoUrl : `/${photoUrl}`;
       return `${baseUrl}${cleanPath}`;
     }
     const safeName = encodeURIComponent(fullName?.trim() || 'Guía');
     return `https://ui-avatars.com/api/?name=${safeName}&background=1b5e20&color=fff&bold=true`;
+  }
+
+  /**
+   * Valida si el usuario actual ha cerrado algún trato o reserva confirmada/finalizada con este guía.
+   * @param guideId ID del guía evaluado.
+   * @returns Verdadero si existe historial de reservas confirmadas o completadas.
+   */
+  hasBusinessRelationship(guideId: string): boolean {
+    return this.myBookings().some(
+      (b) =>
+        b.guideId === guideId &&
+        (b.status === 'CONFIRMED' || b.status === 'COMPLETED'),
+    );
   }
 
   /**

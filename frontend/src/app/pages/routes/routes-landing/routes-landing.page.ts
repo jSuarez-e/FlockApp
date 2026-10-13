@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, signal, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader,
@@ -17,6 +17,7 @@ import {
 } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { DbHelperService } from '../../../core/services/db-helper.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { NetworkService } from '../../../core/services/network.service';
@@ -114,6 +115,7 @@ export interface RouteModel {
     IonSegmentButton,
     IonButton,
     IonChip,
+    LoadingComponent,
   ],
   templateUrl: './routes-landing.page.html',
   styleUrls: ['./routes-landing.page.scss'],
@@ -153,6 +155,10 @@ export class RoutesLandingPage {
    */
   currentTab = 'drafts';
   /**
+   * Estado reactivo de carga de rutas
+   */
+  isLoading = signal<boolean>(true);
+  /**
    * Listado de rutas en borrador
    */
   draftRoutes: RouteModel[] = [];
@@ -186,7 +192,13 @@ export class RoutesLandingPage {
 
   /** Refresca las rutas cada vez que la vista se hace activa */
   async ionViewWillEnter() {
-    await this.loadRoutes();
+    this.isLoading.set(true);
+    try {
+      await this.loadRoutes();
+    } finally {
+      this.isLoading.set(false);
+      this.cdr.markForCheck();
+    }
   }
 
   /**

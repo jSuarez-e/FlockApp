@@ -7,17 +7,17 @@ import {
   IonMenuButton,
   IonContent,
   IonIcon,
-  IonSpinner,
 } from '@ionic/angular';
 import { AuthStore } from '../../core/stores/auth.store';
 import { DashboardStore } from '../../core/stores/dashboard.store';
 import { DbHelperService } from '../../core/services/db-helper.service';
 import { RoleSelectorComponent } from './components/role-selector/role-selector.component';
 import { FeedPajareroComponent } from './components/feed-pajarero/feed-pajarero.component';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { ViewMode } from '../../core/models/auth.models';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { downloadOutline, binocularsOutline, businessOutline, logOutOutline } from 'ionicons/icons';
+import { downloadOutline, binocularsOutline, businessOutline, logOutOutline, swapHorizontalOutline } from 'ionicons/icons';
 import { logger } from '../../core/utils/logger';
 
 /**
@@ -33,13 +33,13 @@ import { logger } from '../../core/utils/logger';
   imports: [
     RoleSelectorComponent,
     FeedPajareroComponent,
+    LoadingComponent,
     IonHeader,
     IonToolbar,
     IonButtons,
     IonMenuButton,
     IonContent,
     IonIcon,
-    IonSpinner,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -57,18 +57,20 @@ export class DashboardPage implements OnInit {
   private readonly dbHelper = inject(DbHelperService);
 
   /** Signal computado del usuario autenticado */
-  public user = this.authStore.user;
+  public readonly user = this.authStore.user;
+
+  /** Signal de carga de autenticación */
+  public readonly isLoading = this.authStore.isLoading;
 
   /**
    * Registra los iconos del dashboard.
    */
   constructor() {
-    addIcons({ downloadOutline, binocularsOutline, businessOutline, logOutOutline });
+    addIcons({ downloadOutline, binocularsOutline, businessOutline, logOutOutline, swapHorizontalOutline });
   }
 
   /**
-   * @method ngOnInit
-   * @description Al entrar, si no hay un modo de vista activo, lo inicializa según el rol.
+   * Al entrar, si no hay un modo de vista activo, lo inicializa según el rol.
    */
   ngOnInit(): void {
     const currentUser = this.user();
@@ -80,17 +82,22 @@ export class DashboardPage implements OnInit {
   }
 
   /**
-   * @method handleRoleSelection
-   * @description Actualiza el estado global al elegir una vista en el selector.
-   * @param {ViewMode} mode - Vista a cargar
+   * Actualiza el estado global al elegir una vista en el selector.
+   * @param mode - Vista a cargar
    */
   handleRoleSelection(mode: ViewMode): void {
     this.navState.setMode(mode);
   }
 
   /**
-   * @method downloadDatabase
-   * @description Acción oculta/DEV para descargar el estado offline actual como JSON.
+   * Cambia el modo actual y redirige a la vista de selección de modo (app-role-selector).
+   */
+  changeViewMode(): void {
+    this.navState.setMode(null);
+  }
+
+  /**
+   * Acción oculta/DEV para descargar el estado offline actual como SQL dump.
    */
   async downloadDatabase() {
     try {

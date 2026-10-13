@@ -36,6 +36,9 @@ async function bootstrap() {
   const allowedOrigins: string[] = [
     'http://localhost:8100', // Ionic App (Desarrollo)
     'http://localhost:4200', // Angular App (Web)
+    'http://localhost:4201', // Angular App (Web port alterno)
+    'http://127.0.0.1:4200',
+    'http://127.0.0.1:4201',
     'http://localhost:3000', // NestJS (Self-reference)
     'https://localhost', // Capacitor Android WebView (HTTPS)
     'http://localhost', // Capacitor Android WebView (HTTP)

@@ -71,12 +71,25 @@
 
   <div class="form-row">
     <div class="form-field">
-      <app-auth-input
-        label="Idiomas que maneja"
-        icon="chatbubble-ellipses-outline"
-        [value]="store.languages()"
-        (valueChange)="store.updateField('languages', $event)"
-      ></app-auth-input>
+      <label class="field-label">Idiomas que maneja *</label>
+      <div class="input-wrapper select-box">
+        <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+        <ion-select
+          class="native-input"
+          [value]="selectedLanguages()"
+          [multiple]="true"
+          okText="Aceptar"
+          cancelText="Cancelar"
+          placeholder="Selecciona uno o varios idiomas"
+          (ionChange)="onLanguagesChange($event)"
+        >
+          @for (lang of availableLanguages; track lang) {
+            <ion-select-option [value]="lang">
+              {{ lang }}
+            </ion-select-option>
+          }
+        </ion-select>
+      </div>
     </div>
     <div class="form-field">
       <app-auth-input
@@ -125,12 +138,27 @@
     </div>
   </div>
 
-  <app-auth-input
-    label="Especialidad (Ej: Aves Endémicas, Fotografía, Senderismo)"
-    icon="star-outline"
-    [value]="store.specialties()"
-    (valueChange)="store.updateField('specialties', $event)"
-  ></app-auth-input>
+  <div class="form-field ion-margin-top">
+    <label class="field-label">Especialidad de Guianza *</label>
+    <div class="input-wrapper select-box">
+      <ion-icon name="star-outline"></ion-icon>
+      <ion-select
+        class="native-input"
+        [value]="selectedSpecialties()"
+        [multiple]="true"
+        okText="Aceptar"
+        cancelText="Cancelar"
+        placeholder="Especialidades"
+        (ionChange)="onSpecialtiesChange($event)"
+      >
+        @for (spec of availableSpecialties; track spec) {
+          <ion-select-option [value]="spec">
+            {{ spec }}
+          </ion-select-option>
+        }
+      </ion-select>
+    </div>
+  </div>
 
   <div class="form-field ion-margin-top">
     <label class="field-label">Detalles del Servicio y Biografía *</label>
@@ -151,7 +179,7 @@
     expand="block"
     type="submit"
     class="primary-btn ion-margin-top"
-    [disabled]="isPristine()"
+    [disabled]="!isFormValid()"
   >
     Actualizar Perfil de Proveedor
   </ion-button>

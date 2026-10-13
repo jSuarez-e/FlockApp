@@ -97,6 +97,14 @@ interface IRawGuideResponse {
    */
   isPublished?: boolean;
   /**
+   * Verificado por el sistema.
+   */
+  is_verified?: boolean;
+  /**
+   * Verificado por el sistema (camelCase).
+   */
+  isVerified?: boolean;
+  /**
    * Foto de portada.
    */
   cover_url?: string;
@@ -149,6 +157,7 @@ export class GuideService {
           email: rawGuide.email || '',
           rnt: rawGuide.rnt || '',
           isPublished: rawGuide.isPublished ?? rawGuide.is_published ?? true,
+          isVerified: rawGuide.isVerified ?? rawGuide.is_verified ?? false,
           last_modified: rawGuide.last_modified,
           sql_deleted: rawGuide.sql_deleted,
         })),

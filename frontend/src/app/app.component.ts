@@ -1,5 +1,14 @@
-import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  Router,
+  NavigationStart,
+  NavigationEnd,
+  NavigationCancel,
+  NavigationError,
+  RouteConfigLoadStart,
+  RouteConfigLoadEnd,
+} from '@angular/router';
 import { IonApp, IonRouterOutlet } from '@ionic/angular';
 
 import { DbHelperService } from './core/services/db-helper.service';
@@ -8,6 +17,7 @@ import { AuthStore } from './core/stores/auth.store';
 import { User } from './core/models/auth.models';
 import { SyncQueueStore } from './core/stores/sync-queue.store';
 import { NativeBridgeService } from './core/services/native-bridge.service';
+import { UiService } from './core/services/ui.service';
 import { addIcons } from 'ionicons';
 import {
   optionsOutline,
@@ -56,6 +66,10 @@ export class AppComponent implements OnInit {
   private readonly syncStore = inject(SyncQueueStore);
   /** Servicio para puente nativo de Capacitor */
   private readonly nativeBridge = inject(NativeBridgeService);
+  /** Servicio de interfaz y feedback visual */
+  public readonly ui = inject(UiService);
+  /** Signal para rastrear transiciones de ruta y carga de chunks perezosos */
+  public readonly isNavigating = signal<boolean>(false);
 
   /**
    * Constructor del componente, registra iconos.
@@ -81,6 +95,19 @@ export class AppComponent implements OnInit {
       'checkmark-outline': checkmarkOutline,
       'git-branch-outline': gitBranchOutline,
       'caret-forward-circle-outline': caretForwardCircleOutline,
+    });
+
+    this.router.events.pipe(takeUntilDestroyed()).subscribe((event) => {
+      if (event instanceof NavigationStart || event instanceof RouteConfigLoadStart) {
+        this.isNavigating.set(true);
+      } else if (
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError ||
+        event instanceof RouteConfigLoadEnd
+      ) {
+        this.isNavigating.set(false);
+      }
     });
   }
 

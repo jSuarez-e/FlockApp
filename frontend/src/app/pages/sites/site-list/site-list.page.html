@@ -38,10 +38,7 @@
   </ion-refresher>
 
   @if (siteStore.isLoading() && siteStore.allSites().length === 0) {
-    <div class="ion-text-center ion-padding state-container">
-      <ion-spinner name="crescent" color="primary"></ion-spinner>
-      <p class="state-text">Explorando sitios de aviturismo en Colombia...</p>
-    </div>
+    <app-loading message="Explorando sitios de aviturismo en Colombia..." [fullHeight]="true"></app-loading>
   } @else if (filteredSitesMapMarkers().length === 0) {
     <div class="ion-padding ion-text-center state-container">
       <div class="state-icon-circle">

@@ -14,6 +14,7 @@ import {
   IonSelect,
   IonSelectOption,
 } from '@ionic/angular';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { addIcons } from 'ionicons';
 import { informationCircleOutline, locationOutline } from 'ionicons/icons';
 import { SiteStore } from '../../../core/stores/site.store';
@@ -50,6 +51,7 @@ interface SiteMarkerClickEvent extends ISightingMapMarker {
   standalone: true,
   imports: [
     CommonModule,
+    LoadingComponent,
     IonSpinner,
     IonContent,
     IonRefresher,

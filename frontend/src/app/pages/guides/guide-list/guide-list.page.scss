@@ -321,6 +321,24 @@
           font-size: 0.7rem;
           font-weight: 700;
         }
+
+        .badge-featured {
+          display: inline-flex;
+          align-items: center;
+          gap: 3px;
+          background: var(--flock-accent-gold-bg, #fef3c7);
+          color: var(--flock-accent-gold, #b45309);
+          border: 1px solid var(--flock-accent-gold-border, #fde68a);
+          padding: 2px 8px;
+          border-radius: 9999px;
+          font-size: 0.7rem;
+          font-weight: 700;
+
+          ion-icon {
+            font-size: 0.72rem;
+            color: var(--flock-accent-gold, #b45309);
+          }
+        }
       }
 
       .guide-specialty {

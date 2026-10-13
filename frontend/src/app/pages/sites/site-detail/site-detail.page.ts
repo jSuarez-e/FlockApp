@@ -19,7 +19,6 @@ import {
   IonIcon,
   IonChip,
   IonButton,
-  IonSpinner,
   IonModal,
   IonList,
   IonItem,
@@ -53,6 +52,7 @@ import { IBirdSearch } from '../../../core/models/birds.interfaces';
 import { logger } from '../../../core/utils/logger';
 
 import { SiteProviderService } from '../../../core/services/site-provider.service';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 /**
  * Respuesta del endpoint de detalle de sitio con servicios opcionales.
@@ -81,7 +81,7 @@ export interface ISiteDetailResponse extends ISite {
     IonIcon,
     IonChip,
     IonButton,
-    IonSpinner,
+    LoadingComponent,
     IonModal,
     IonList,
     IonItem,

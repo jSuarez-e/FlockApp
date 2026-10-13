@@ -86,10 +86,7 @@
   </div>
 
   @if (searchStore.isLoading()) {
-  <div class="ion-text-center ion-padding">
-    <ion-spinner name="crescent" color="primary"></ion-spinner>
-    <p class="loading-text">Cargando catálogo...</p>
-  </div>
+    <app-loading message="Cargando catálogo de aves de Colombia..." [fullHeight]="true"></app-loading>
   } @else {
   <div class="viewport-wrapper-relative">
     @if (currentHeader && searchStore.totalFound() > 0) {

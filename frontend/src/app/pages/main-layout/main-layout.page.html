@@ -200,24 +200,11 @@
           <ion-menu-toggle auto-hide="true">
             <ion-item
               button
-              (click)="setMode(currentMode() === 'PAJARERO' ? 'PROVEEDOR' : 'PAJARERO')"
-              class="menu-item mode-switch"
-            >
-              <ion-icon slot="start" [name]="currentMode() === 'PAJARERO' ? 'business-outline' : 'paw-outline'"></ion-icon>
-              <ion-label>
-                Cambiar a {{ currentMode() === 'PAJARERO' ? 'Modo Proveedor' : 'Modo Pajarero' }}
-              </ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-
-          <ion-menu-toggle auto-hide="true">
-            <ion-item
-              button
-              (click)="setMode(null)"
+              (click)="changeViewMode()"
               class="menu-item mode-switch"
             >
               <ion-icon slot="start" name="swap-horizontal-outline"></ion-icon>
-              <ion-label>Seleccionar Modo (Inicio)</ion-label>
+              <ion-label>Cambiar de Modo (Seleccionar Vista)</ion-label>
             </ion-item>
           </ion-menu-toggle>
         }
@@ -241,14 +228,14 @@
 <div class="ion-page" id="main-content">
   <ion-tabs>
     @if (currentMode() === 'PAJARERO') {
-      <ion-tab-bar slot="bottom">
+      <ion-tab-bar slot="bottom" class="ibirds-tab-bar">
         <ion-tab-button tab="dashboard" routerLink="dashboard">
           <ion-icon name="grid-outline"></ion-icon>
           <ion-label>Dashboard</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="records" routerLink="records">
-          <ion-icon name="paw-outline"></ion-icon>
+        <ion-tab-button tab="sightings-map" routerLink="sightings-map">
+          <ion-icon name="map-outline"></ion-icon>
           <ion-label>Avistamientos</ion-label>
         </ion-tab-button>
 
@@ -268,7 +255,7 @@
         </ion-tab-button>
       </ion-tab-bar>
     } @else if (currentMode() === 'PROVEEDOR') {
-      <ion-tab-bar slot="bottom">
+      <ion-tab-bar slot="bottom" class="ibirds-tab-bar">
         <ion-tab-button tab="dashboard" routerLink="dashboard">
           <ion-icon name="bar-chart-outline"></ion-icon>
           <ion-label>Panel</ion-label>

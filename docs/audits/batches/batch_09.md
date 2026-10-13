@@ -14,28 +14,6 @@ Actúa como el Ingeniero de Software Lead. Tienes la tarea de resolver las viola
 ```json
 [
   {
-    "file": "frontend/src/app/shared/components/permission-rationale-modal/permission-rationale-modal.component.ts",
-    "errors": [
-      "Línea 29: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 48: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 49: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 51: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 53: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 64: [jsdoc/require-returns] Missing JSDoc @returns declaration.",
-      "Línea 68: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 69: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 70: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 71: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 72: [jsdoc/require-jsdoc] Missing JSDoc comment."
-    ]
-  },
-  {
-    "file": "frontend/src/app/shared/components/section-header/section-header.component.ts",
-    "errors": [
-      "Línea 75: [jsdoc/require-jsdoc] Missing JSDoc comment."
-    ]
-  },
-  {
     "file": "frontend/src/environments/environment.interface.ts",
     "errors": [
       "Línea 8: [jsdoc/require-jsdoc] Missing JSDoc comment.",
@@ -50,6 +28,38 @@ Actúa como el Ingeniero de Software Lead. Tienes la tarea de resolver las viola
     "errors": [
       "Línea 25: [jsdoc/require-jsdoc] Missing JSDoc comment.",
       "Línea 25: [jsdoc/require-jsdoc] Missing JSDoc comment."
+    ]
+  },
+  {
+    "file": "shared/models/catalogs.interface.ts",
+    "errors": [
+      "Línea 8: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 49: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 63: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 63: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 92: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 113: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 128: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 191: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 199: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 199: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 203: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 203: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 203: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 205: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 205: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 205: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 205: [jsdoc/require-jsdoc] Missing JSDoc comment."
+    ]
+  },
+  {
+    "file": "shared/models/feed.model.ts",
+    "errors": [
+      "Línea 12: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 32: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 32: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 45: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 62: [jsdoc/require-jsdoc] Missing JSDoc comment."
     ]
   }
 ]

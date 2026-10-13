@@ -14,6 +14,7 @@ import {
 } from '@ionic/angular';
 import { SightingCardComponent } from './components/sighting-card/sighting-card.component';
 import { CreateFeedPostComponent } from './components/create-feed-post/create-feed-post.component';
+import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { FeedStore } from '../../../../core/stores/feed.store';
 import { addIcons } from 'ionicons';
 import { camera, cameraOutline, telescopeOutline } from 'ionicons/icons';
@@ -29,6 +30,7 @@ import { camera, cameraOutline, telescopeOutline } from 'ionicons/icons';
   standalone: true,
   imports: [
     SightingCardComponent,
+    LoadingComponent,
     IonList,
     IonIcon,
     IonFab,
@@ -54,14 +56,14 @@ export class FeedPajareroComponent implements OnInit {
   private readonly modalCtrl = inject(ModalController);
 
   /**
-   *
+   * Registro de iconos de Ionic necesarios para el feed.
    */
   constructor() {
     addIcons({ camera, cameraOutline, telescopeOutline });
   }
 
   /**
-   *
+   * Carga inicial de avistamientos del feed si la lista está vacía.
    */
   ngOnInit() {
     if (this.feedStore.posts().length === 0) {
@@ -77,9 +79,7 @@ export class FeedPajareroComponent implements OnInit {
     this.feedStore.refreshFeed();
     setTimeout(() => {
       const target = event.target as unknown as {
-        /**
-         *
-         */
+        /** Completa la animación del refresher */
         complete: () => void;
       };
       if (target?.complete) target.complete();
@@ -87,16 +87,14 @@ export class FeedPajareroComponent implements OnInit {
   }
 
   /**
-   *
-   * @param event
+   * Manejador del scroll infinito para paginar más avistamientos.
+   * @param event Evento disparado por IonInfiniteScroll.
    */
   onIonInfinite(event: CustomEvent) {
     this.feedStore.loadMorePosts();
     setTimeout(() => {
       const target = event.target as unknown as {
-        /**
-         *
-         */
+        /** Completa la animación del scroll infinito */
         complete: () => void;
       };
       if (target?.complete) target.complete();
@@ -104,7 +102,7 @@ export class FeedPajareroComponent implements OnInit {
   }
 
   /**
-   *
+   * Abre el modal para reportar y registrar un nuevo avistamiento de ave.
    */
   async createNewSighting() {
     const modal = await this.modalCtrl.create({

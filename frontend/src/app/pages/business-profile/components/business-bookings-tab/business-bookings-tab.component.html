@@ -5,10 +5,7 @@
   </div>
 
   @if (store.isLoadingBookings()) {
-    <div class="ion-text-center ion-padding">
-      <ion-spinner name="crescent"></ion-spinner>
-      <p>Cargando solicitudes...</p>
-    </div>
+    <app-loading message="Cargando solicitudes..." [fullHeight]="false"></app-loading>
   } @else if (store.incomingBookings().length === 0) {
     <div class="empty-bookings-box ion-text-center ion-padding">
       <ion-icon name="document-text-outline" class="empty-icon"></ion-icon>

@@ -28,7 +28,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { AuthStore } from '../../core/stores/auth.store';
 import { ProfileStore } from '../../core/stores/profile.store';
 import { DashboardStore } from '../../core/stores/dashboard.store';
-import { UserRole, ViewMode } from '../../core/models/auth.models';
+import { UserRole } from '../../core/models/auth.models';
 import { environment } from '../../../environments/environment';
 import { of } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -239,14 +239,21 @@ export class MainLayoutPage implements OnInit {
   }
 
   /**
-   * Cambia el modo de visualización polimórfico (Pajarero/Proveedor) o null (Selector).
-   * @param mode Nuevo modo de vista.
+   * Cambia el modo de visualización o redirige a la selección de modo.
+   * Al alternar entre vistas, siempre limpia la ventana activa actual
+   * y redirige a la vista de selección de modo (/home/dashboard con null).
    */
-  async setMode(mode: ViewMode): Promise<void> {
-    this.navState.setMode(mode);
+  async setMode(): Promise<void> {
+    this.navState.setMode(null);
     await this.menuCtrl.close();
-    if (mode === null) {
-      await this.router.navigate(['/home/dashboard']);
-    }
+    await this.router.navigate(['/home/dashboard']);
+  }
+
+  /**
+   * Redirige siempre a la vista de selección de modo (app-role-selector),
+   * asegurando que no quede activa la última ventana o sección visitada.
+   */
+  async changeViewMode(): Promise<void> {
+    await this.setMode();
   }
 }

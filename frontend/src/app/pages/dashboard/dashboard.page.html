@@ -1,26 +1,30 @@
 <ion-header class="ion-no-border flock-header-seamless">
-  <ion-toolbar class="dashboard-header-toolbar">
-    <div class="dashboard-header-content">
+  <ion-toolbar class="settings-header-toolbar">
+    <div class="settings-header-content">
       <ion-buttons slot="start" class="header-menu-buttons">
         <ion-menu-button class="header-menu-btn"></ion-menu-button>
       </ion-buttons>
 
-      <div class="dashboard-header-titles">
-        <h1 class="dashboard-header-title">FlockApp</h1>
-        <p class="dashboard-header-subtitle">Plumas y Cantos de Colombia</p>
+      <div class="settings-header-titles">
+        <h1 class="settings-header-title">
+          {{ navState.activeViewMode() === 'PROVEEDOR' ? 'Panel de Negocio' : 'FlockApp' }}
+        </h1>
+        <p class="settings-header-subtitle">
+          {{ navState.activeViewMode() === 'PROVEEDOR' ? 'Gestión y métricas de anfitrión' : 'Plumas y Cantos de Colombia' }}
+        </p>
       </div>
 
       <div class="dashboard-header-actions">
-        @if (navState.activeViewMode() === null) {
+        @if (user()?.role === 'BOTH' && navState.activeViewMode() !== null) {
+          <button (click)="changeViewMode()" title="Cambiar Modo" class="flock-header-pill-btn" aria-label="Cambiar Modo">
+            <ion-icon name="swap-horizontal-outline"></ion-icon>
+            <span>Cambiar Modo</span>
+          </button>
+        } @else if (navState.activeViewMode() === null) {
           <button (click)="logout()" title="Cerrar Sesión" class="flock-header-pill-btn" aria-label="Cerrar Sesión">
             <ion-icon name="log-out-outline"></ion-icon>
             <span>Cerrar Sesión</span>
           </button>
-        } @else {
-          <!-- <button (click)="downloadDatabase()" title="Descargar BD Offline (DEV)" class="flock-header-pill-btn" aria-label="Descargar BD Offline (DEV)">
-            <ion-icon name="download-outline"></ion-icon>
-            <span>BD Offline</span>
-          </button> -->
         }
       </div>
     </div>
@@ -29,7 +33,9 @@
 
 <ion-content [fullscreen]="true">
   <div class="dashboard-wrapper">
-    @if (user()) {
+    @if (isLoading() || !user()) {
+      <app-loading message="Cargando tu panel de aviturismo..." [fullHeight]="true"></app-loading>
+    } @else {
       @switch (navState.activeViewMode()) {
         @case (null) {
           <app-role-selector
@@ -47,10 +53,6 @@
           </div>
         }
       }
-    } @else {
-      <div class="loading-container">
-        <ion-spinner name="crescent"></ion-spinner>
-      </div>
     }
   </div>
 </ion-content>

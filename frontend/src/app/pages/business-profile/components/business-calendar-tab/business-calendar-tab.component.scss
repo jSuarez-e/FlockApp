@@ -40,8 +40,9 @@
 
   .calendar-grid {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 6px;
+    width: 100%;
   }
 
   .calendar-day-cell {
@@ -49,31 +50,48 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 8px 2px;
-    border-radius: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 56px;
+    padding: 4px 2px;
+    border-radius: 12px;
     border: 1.5px solid var(--flock-border);
     background: var(--flock-card);
     cursor: pointer;
-    transition: all 0.2s ease;
-    min-height: 56px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    position: relative;
+    user-select: none;
 
     .day-number {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 800;
       color: var(--flock-surface-dark);
+      line-height: 1.1;
     }
 
     &--blocked {
-      background: var(--flock-accent-gold-bg);
-      border-color: var(--ion-color-danger);
+      background: #FEF2F2 !important;
+      border: 1.5px solid var(--ion-color-danger) !important;
+
+      .day-number {
+        color: var(--flock-foreground);
+      }
     }
 
     .day-status-pill {
-      font-size: 9px;
-      font-weight: 700;
-      padding: 1px 4px;
-      border-radius: 6px;
-      margin-top: 4px;
+      font-size: 8px;
+      font-weight: 800;
+      line-height: 1;
+      padding: 2px 4px;
+      border-radius: 5px;
+      margin-top: 3px;
+      max-width: 92%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+      display: inline-block;
 
       &--free {
         background: var(--flock-verified-bg);
@@ -81,20 +99,24 @@
       }
 
       &--blocked {
-        background: var(--flock-accent-gold-bg);
+        background: #FEE2E2;
         color: var(--ion-color-danger);
       }
     }
 
     &--today {
-      border: 2px solid var(--avitour-primary);
-      box-shadow: 0 0 0 2px rgb(136 220 204 / 30%);
+      border: 1.5px solid var(--avitour-primary) !important;
+      box-shadow: 0 0 0 1px var(--avitour-primary);
     }
 
     &--past {
-      opacity: 0.4;
+      opacity: 0.35;
       cursor: not-allowed;
       background: var(--flock-surface-subtle);
+
+      .day-number {
+        color: var(--flock-muted-foreground);
+      }
     }
 
     &:active:not(:disabled) {

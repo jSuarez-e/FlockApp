@@ -140,7 +140,7 @@ export class LoginPage implements ViewWillEnter, ViewDidEnter {
       const error = err as AuthError;
       const msg = Array.isArray(error.error?.message)
         ? error.error.message[0]
-        : error.error?.message || 'Error de acceso';
+        : error.error?.message || (err instanceof Error ? err.message : 'Error de acceso');
       await this.ui.showToast(msg, 'danger');
     }
   }

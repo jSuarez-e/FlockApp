@@ -13,7 +13,6 @@ import { CommonModule } from '@angular/common';
 import {
   IonIcon,
   IonButton,
-  IonSpinner,
   IonBadge,
   IonCard,
   IonCardHeader,
@@ -32,6 +31,7 @@ import {
   checkmarkDoneOutline,
 } from 'ionicons/icons';
 import { BusinessProfileStore, BookingStatus } from '../../business-profile.store';
+import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 
 /**
  * Componente presentador para la pestaña de solicitudes de reserva del guía.
@@ -43,9 +43,9 @@ import { BusinessProfileStore, BookingStatus } from '../../business-profile.stor
   standalone: true,
   imports: [
     CommonModule,
+    LoadingComponent,
     IonIcon,
     IonButton,
-    IonSpinner,
     IonBadge,
     IonCard,
     IonCardHeader,

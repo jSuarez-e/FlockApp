@@ -78,6 +78,7 @@ import { UiService } from '../../../core/services/ui.service';
 import { GeographyService, ResolvedLocation } from '../../../core/services/geography.service';
 import { PublicProfilePage } from '../../profile/public-profile/public-profile.page';
 import { IBirdSearch } from '../../../core/models/birds.interfaces';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { addIcons } from 'ionicons';
 import {
   chevronDownOutline,
@@ -98,6 +99,7 @@ import {
   standalone: true,
   imports: [
     CommonModule,
+    LoadingComponent,
     SearchMapComponent,
     SightingDetailModalComponent,
     BirdFilterModalComponent,

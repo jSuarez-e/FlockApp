@@ -14,71 +14,37 @@ Actúa como el Ingeniero de Software Lead. Tienes la tarea de resolver las viola
 ```json
 [
   {
-    "file": "shared/models/catalogs.interface.ts",
-    "errors": [
-      "Línea 8: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 49: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 63: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 63: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 92: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 113: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 128: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 191: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 199: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 199: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 203: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 203: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 203: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 205: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 205: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 205: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 205: [jsdoc/require-jsdoc] Missing JSDoc comment."
-    ]
-  },
-  {
-    "file": "shared/models/feed.model.ts",
-    "errors": [
-      "Línea 12: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 32: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 32: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 45: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 62: [jsdoc/require-jsdoc] Missing JSDoc comment."
-    ]
-  },
-  {
     "file": "frontend/src/global.scss",
     "errors": [
-      "Línea 316: [alpha-value-notation] Expected \"0.12\" to be \"12%\" (alpha-value-notation)",
-      "Línea 316: [color-function-alias-notation] Expected \"rgba\" to be \"rgb\" (color-function-alias-notation)",
-      "Línea 316: [color-function-notation] Expected modern color-function notation (color-function-notation)",
-      "Línea 322: [color-hex-length] Expected \"#ffffff\" to be \"#fff\" (color-hex-length)",
-      "Línea 331: [color-hex-length] Expected \"#ffffff\" to be \"#fff\" (color-hex-length)",
-      "Línea 322: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
-      "Línea 324: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
-      "Línea 422: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
-      "Línea 429: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
-      "Línea 452: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
-      "Línea 459: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
-      "Línea 469: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
-      "Línea 476: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
-      "Línea 549: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
-      "Línea 555: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
-      "Línea 604: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
-      "Línea 608: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
-      "Línea 233: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
-      "Línea 321: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
-      "Línea 323: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
-      "Línea 426: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
-      "Línea 456: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
-      "Línea 473: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
-      "Línea 552: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
-      "Línea 557: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
-      "Línea 606: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
-      "Línea 609: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
-      "Línea 653: [no-descending-specificity] Expected selector \"ion-icon\" (\":is(.form-field .input-wrapper) ion-icon\") to come before selector \"ion-icon\" (\":is(:is(__avatar-circle.hero-image,__logo-circle.hero-image) .btn-edit-avatar-circular,:is(__avatar-circle.hero-image,__logo-circle.hero-image) .btn-edit-logo-circular) ion-icon\"), at line 614 (no-descending-specificity)",
-      "Línea 820: [no-descending-specificity] Expected selector \".flock-subcard\" to come before selector \"&:last-child\" (\".flock-subcard:last-child\"), at line 512 (no-descending-specificity)",
-      "Línea 809: [no-duplicate-selectors] Duplicate selector \".flock-outer-card\", first used at line 492 (no-duplicate-selectors)",
-      "Línea 820: [no-duplicate-selectors] Duplicate selector \".flock-subcard\", first used at line 503 (no-duplicate-selectors)",
+      "Línea 317: [alpha-value-notation] Expected \"0.12\" to be \"12%\" (alpha-value-notation)",
+      "Línea 317: [color-function-alias-notation] Expected \"rgba\" to be \"rgb\" (color-function-alias-notation)",
+      "Línea 317: [color-function-notation] Expected modern color-function notation (color-function-notation)",
+      "Línea 323: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 325: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 423: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 430: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 453: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 460: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 470: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 477: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 550: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 556: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 605: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 609: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 234: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 322: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 324: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 427: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 457: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 474: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 553: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 558: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 607: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 610: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 654: [no-descending-specificity] Expected selector \"ion-icon\" (\":is(.form-field .input-wrapper) ion-icon\") to come before selector \"ion-icon\" (\":is(:is(__avatar-circle.hero-image,__logo-circle.hero-image) .btn-edit-avatar-circular,:is(__avatar-circle.hero-image,__logo-circle.hero-image) .btn-edit-logo-circular) ion-icon\"), at line 615 (no-descending-specificity)",
+      "Línea 821: [no-descending-specificity] Expected selector \".flock-subcard\" to come before selector \"&:last-child\" (\".flock-subcard:last-child\"), at line 513 (no-descending-specificity)",
+      "Línea 810: [no-duplicate-selectors] Duplicate selector \".flock-outer-card\", first used at line 493 (no-duplicate-selectors)",
+      "Línea 821: [no-duplicate-selectors] Duplicate selector \".flock-subcard\", first used at line 504 (no-duplicate-selectors)",
       "Línea 109: [property-no-vendor-prefix] Vendor-prefixed property \"-webkit-backdrop-filter\" (property-no-vendor-prefix)",
       "Línea 190: [property-no-vendor-prefix] Vendor-prefixed property \"-webkit-backdrop-filter\" (property-no-vendor-prefix)"
     ]
@@ -92,8 +58,39 @@ Actúa como el Ingeniero de Software Lead. Tienes la tarea de resolver las viola
       "Línea 46: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
       "Línea 84: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
       "Línea 87: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
-      "Línea 399: [no-descending-specificity] Expected selector \"ion-icon\" (\":is(.provider-segment ion-segment-button) ion-icon\") to come before selector \"ion-icon\" (\":is(.hero-image .btn-edit-cover) ion-icon\"), at line 51 (no-descending-specificity)",
-      "Línea 430: [no-descending-specificity] Expected selector \"ion-icon\" (\":is(.directory-status-card .directory-status-info) ion-icon\") to come before selector \"ion-icon\" (\":is(__avatar-circle.hero-image .btn-edit-avatar-circular) ion-icon\"), at line 92 (no-descending-specificity)"
+      "Línea 151: [no-descending-specificity] Expected selector \"ion-icon\" (\":is(.provider-segment ion-segment-button) ion-icon\") to come before selector \"ion-icon\" (\":is(.hero-image .btn-edit-cover) ion-icon\"), at line 51 (no-descending-specificity)"
+    ]
+  },
+  {
+    "file": "frontend/src/app/pages/profile/profile.page.scss",
+    "errors": [
+      "Línea 110: [alpha-value-notation] Expected \"0.6\" to be \"60%\" (alpha-value-notation)",
+      "Línea 121: [alpha-value-notation] Expected \"0.35\" to be \"35%\" (alpha-value-notation)",
+      "Línea 110: [color-function-alias-notation] Expected \"rgba\" to be \"rgb\" (color-function-alias-notation)",
+      "Línea 121: [color-function-alias-notation] Expected \"rgba\" to be \"rgb\" (color-function-alias-notation)",
+      "Línea 110: [color-function-notation] Expected modern color-function notation (color-function-notation)",
+      "Línea 121: [color-function-notation] Expected modern color-function notation (color-function-notation)",
+      "Línea 110: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 116: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 156: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 160: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 352: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 113: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 118: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 158: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 161: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 244: [no-descending-specificity] Expected selector \"ion-icon\" (\":is(.stat-subcard .subcard-title) ion-icon\") to come before selector \"ion-icon\" (\":is(__avatar-circle.hero-image .btn-edit-avatar-circular) ion-icon\"), at line 166 (no-descending-specificity)",
+      "Línea 281: [no-descending-specificity] Expected selector \"ion-icon\" (\":is(.form-subcard .subcard-title) ion-icon\") to come before selector \"ion-icon\" (\":is(__avatar-circle.hero-image .btn-edit-avatar-circular) ion-icon\"), at line 166 (no-descending-specificity)",
+      "Línea 325: [no-descending-specificity] Expected selector \"ion-icon\" (\".input-wrapper ion-icon\") to come before selector \"ion-icon\" (\":is(.hero-image .btn-edit-cover) ion-icon\"), at line 124 (no-descending-specificity)"
+    ]
+  },
+  {
+    "file": "frontend/src/app/pages/guides/guide-detail/guide-detail.page.scss",
+    "errors": [
+      "Línea 93: [custom-property-empty-line-before] Expected empty line before custom property (custom-property-empty-line-before)",
+      "Línea 92: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 94: [declaration-empty-line-before] Expected empty line before declaration (declaration-empty-line-before)",
+      "Línea 134: [no-duplicate-selectors] Duplicate selector \".content-wrapper\", first used at line 20 (no-duplicate-selectors)"
     ]
   }
 ]

@@ -14,12 +14,12 @@ Actúa como el Ingeniero de Software Lead. Tienes la tarea de resolver las viola
 ```json
 [
   {
-    "file": "frontend/src/app/pages/routes/route-workspace/route-workspace.page.ts",
+    "file": "frontend/src/app/pages/routes/route-workspace/components/map-tracker/map-tracker.component.ts",
     "errors": [
-      "Línea 216: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 217: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 218: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 219: [jsdoc/require-jsdoc] Missing JSDoc comment."
+      "Línea 73: [jsdoc/require-description] Missing JSDoc block description.",
+      "Línea 134: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 161: [jsdoc/require-description] Missing JSDoc block description.",
+      "Línea 181: [jsdoc/require-description] Missing JSDoc block description."
     ]
   },
   {
@@ -29,19 +29,25 @@ Actúa como el Ingeniero de Software Lead. Tienes la tarea de resolver las viola
     ]
   },
   {
-    "file": "frontend/src/app/shared/components/brand-header/brand-header.component.ts",
+    "file": "frontend/src/app/shared/components/permission-rationale-modal/permission-rationale-modal.component.ts",
     "errors": [
-      "Línea 49: [jsdoc/require-description] Remove the @description tag to leave a plain block description or add additional description text above the @description line."
+      "Línea 29: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 48: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 49: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 51: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 53: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 64: [jsdoc/require-returns] Missing JSDoc @returns declaration.",
+      "Línea 68: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 69: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 70: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 71: [jsdoc/require-jsdoc] Missing JSDoc comment.",
+      "Línea 72: [jsdoc/require-jsdoc] Missing JSDoc comment."
     ]
   },
   {
-    "file": "frontend/src/app/shared/components/otp-input/otp-input.component.ts",
+    "file": "frontend/src/app/shared/components/section-header/section-header.component.ts",
     "errors": [
-      "Línea 95: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 97: [jsdoc/require-description] Missing JSDoc block description.",
-      "Línea 117: [jsdoc/require-description] Remove the @description tag to leave a plain block description or add additional description text above the @description line.",
-      "Línea 134: [jsdoc/require-description] Remove the @description tag to leave a plain block description or add additional description text above the @description line.",
-      "Línea 146: [jsdoc/require-description] Remove the @description tag to leave a plain block description or add additional description text above the @description line."
+      "Línea 75: [jsdoc/require-jsdoc] Missing JSDoc comment."
     ]
   }
 ]

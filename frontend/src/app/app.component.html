@@ -1,3 +1,8 @@
 <ion-app>
+  @if (isNavigating() || ui.isGlobalLoading()) {
+    <div class="global-route-loader" role="progressbar" aria-label="Cargando contenido">
+      <div class="global-route-loader__bar"></div>
+    </div>
+  }
   <ion-router-outlet></ion-router-outlet>
 </ion-app>

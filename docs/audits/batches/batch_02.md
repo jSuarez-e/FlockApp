@@ -52,13 +52,7 @@ Actúa como el Ingeniero de Software Lead. Tienes la tarea de resolver las viola
   {
     "file": "frontend/src/app/core/services/crypto.service.ts",
     "errors": [
-      "Línea 20: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 21: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 22: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 24: [jsdoc/require-description] Remove the @description tag to leave a plain block description or add additional description text above the @description line.",
-      "Línea 35: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 45: [jsdoc/require-description] Remove the @description tag to leave a plain block description or add additional description text above the @description line.",
-      "Línea 58: [@typescript-eslint/no-unused-vars] '_error' is defined but never used."
+      "Línea 41: [jsdoc/require-jsdoc] Missing JSDoc comment."
     ]
   }
 ]

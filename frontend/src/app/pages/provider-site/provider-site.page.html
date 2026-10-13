@@ -6,33 +6,15 @@
 -->
 
 <ion-header class="ion-no-border flock-header-seamless">
-  <ion-toolbar class="provider-site-header-toolbar">
-    <div class="flock-header-content">
+  <ion-toolbar class="settings-header-toolbar">
+    <div class="settings-header-content">
       <ion-buttons slot="start" class="header-menu-buttons">
-        <ion-back-button defaultHref="/home/dashboard" class="header-menu-btn"></ion-back-button>
+        <ion-menu-button class="header-menu-btn"></ion-menu-button>
       </ion-buttons>
 
-      <div class="flock-header-titles">
-        <h1 class="flock-header-title">Gestión de Sitio</h1>
-        <p class="flock-header-subtitle">Configuración y oferta de aviturismo</p>
-      </div>
-
-      <div class="profile-header-actions">
-        @if (activeTab() === 'info') {
-          <button
-            class="flock-header-pill-btn"
-            (click)="onSaveInfo()"
-            [disabled]="isSaving()"
-            aria-label="Guardar información"
-          >
-            @if (isSaving()) {
-              <ion-spinner name="crescent" color="light"></ion-spinner>
-            } @else {
-              <ion-icon name="checkmark-outline"></ion-icon>
-            }
-            <span>Guardar</span>
-          </button>
-        }
+      <div class="settings-header-titles">
+        <h1 class="settings-header-title">Gestión de Sitio</h1>
+        <p class="settings-header-subtitle">Configuración y oferta de aviturismo</p>
       </div>
     </div>
   </ion-toolbar>
@@ -40,16 +22,14 @@
 
 <ion-content class="provider-site-content">
   @if (isLoading()) {
-    <div class="loading-state ion-text-center ion-padding">
-      <ion-spinner name="crescent" color="primary"></ion-spinner>
-      <p>Cargando información del sitio...</p>
-    </div>
+    <app-loading message="Cargando información del sitio de aviturismo..." [fullHeight]="true"></app-loading>
   } @else {
     <!-- HERO: PORTADA Y LOGO ESTANDARIZADOS FULL-BLEED -->
     <div class="hero-image">
-      @if (coverUrl()) {
+      @if (coverUrl() && !coverLoadError()) {
         <img
           [src]="getImageUrl(coverUrl())"
+          (error)="coverLoadError.set(true)"
           class="hero-image__img"
           alt="Foto de portada del sitio"
         />
@@ -68,10 +48,15 @@
       </ion-button>
 
       <div class="hero-image__logo-circle">
-        @if (logoUrl()) {
-          <img [src]="getImageUrl(logoUrl())" alt="Logo del sitio" class="hero-image__logo-img" />
+        @if (logoUrl() && !logoLoadError()) {
+          <img
+            [src]="getImageUrl(logoUrl())"
+            (error)="logoLoadError.set(true)"
+            alt="Logo del sitio"
+            class="hero-image__logo-img"
+          />
         } @else {
-          <ion-icon name="business-outline" class="site-hero__logo-fallback"></ion-icon>
+          <ion-icon name="leaf-outline" class="hero-image__logo-fallback"></ion-icon>
         }
         <ion-button
           fill="clear"
@@ -100,71 +85,69 @@
       />
     </div>
 
+    <!-- CONTENEDOR PRINCIPAL: CARDS Y SUBCARDS -->
     <div class="flock-cards-wrapper">
       <div class="flock-outer-card provider-card">
         <div class="content-wrapper ion-padding">
 
-      <!-- TITULAR Y CALIFICACIÓN OBTENIDA -->
-      <div class="site-identity ion-text-center ion-padding-horizontal">
-        <h2 class="site-identity__name">{{ name() || 'Mi Sitio de Aviturismo' }}</h2>
-        <div class="site-identity__location">
-          <ion-icon name="map-outline" class="location-icon"></ion-icon>
-          <span>{{ municipality() ? municipality() + ', ' : '' }}{{ department() || 'Colombia' }}</span>
-        </div>
-
-        <!-- Calificación obtenida (Estrellas e indicador visual) -->
-        <div class="site-rating-box">
-          <div class="site-rating-box__stars">
-            @for (starIndex of starArray; track starIndex) {
-              <ion-icon
-                [name]="starIndex <= (site()?.rating || 5) ? 'star' : 'star-outline'"
-                class="star-icon"
-              ></ion-icon>
-            }
+          <!-- TITULAR Y METADATOS ESTANDARIZADOS -->
+          <div class="profile-header-meta ion-margin-bottom">
+            <h2 class="title">{{ name() || 'Mi Sitio de Aviturismo' }}</h2>
+            <div class="profile-chips">
+              <span class="site-location-badge">
+                <ion-icon name="location-outline"></ion-icon>
+                <span>{{ municipality() ? municipality() + ', ' : '' }}{{ department() || 'Colombia' }}</span>
+              </span>
+              <span class="site-role-badge">
+                <ion-icon name="leaf-outline"></ion-icon>
+                <span>Sitio Anfitrión</span>
+              </span>
+              <span class="site-rating-badge">
+                <ion-icon name="star" class="star-icon"></ion-icon>
+                <strong>{{ (site()?.rating || 5.0) | number:'1.1-1' }}</strong>
+                <span class="reviews-count">({{ site()?.total_reviews || 0 }} reseñas)</span>
+              </span>
+            </div>
           </div>
-          <div class="site-rating-box__score">
-            <strong>{{ (site()?.rating || 5.0) | number:'1.1-1' }}</strong> / 5.0
-            <span class="site-rating-box__reviews">
-              ({{ site()?.total_reviews || 0 }} reseñas recibidas)
-            </span>
+
+          <!-- SELECTOR DE PESTAÑAS (SEGMENTOS ARMONIOSOS) -->
+          <div class="provider-segment-container ion-margin-bottom">
+            <ion-segment
+              [value]="activeTab()"
+              (ionChange)="onTabChange($event)"
+              class="provider-segment"
+              mode="ios"
+            >
+              <ion-segment-button value="info" layout="icon-top">
+                <ion-icon name="business-outline"></ion-icon>
+                <ion-label>Datos</ion-label>
+              </ion-segment-button>
+
+              <ion-segment-button value="services" layout="icon-top">
+                <ion-icon name="cash-outline"></ion-icon>
+                <ion-label>
+                  Oferta
+                  @if (servicesList().length > 0) {
+                    <ion-badge color="primary" class="tab-badge">
+                      {{ servicesList().length }}
+                    </ion-badge>
+                  }
+                </ion-label>
+              </ion-segment-button>
+
+              <ion-segment-button value="checklist" layout="icon-top">
+                <ion-icon name="list-outline"></ion-icon>
+                <ion-label>
+                  Aves
+                  @if (selectedBirdsCount() > 0) {
+                    <ion-badge color="success" class="tab-badge">
+                      {{ selectedBirdsCount() }}
+                    </ion-badge>
+                  }
+                </ion-label>
+              </ion-segment-button>
+            </ion-segment>
           </div>
-        </div>
-      </div>
-
-      <!-- SELECTOR DE PESTAÑAS (SEGMENTOS) -->
-      <div class="provider-segment-wrapper ion-padding-horizontal">
-        <ion-segment
-          [value]="activeTab()"
-          (ionChange)="onTabChange($event)"
-          class="provider-segment"
-          mode="ios"
-        >
-          <ion-segment-button value="info">
-            <ion-icon name="business-outline"></ion-icon>
-            <ion-label>Datos</ion-label>
-          </ion-segment-button>
-
-          <ion-segment-button value="services">
-            <ion-icon name="cash-outline"></ion-icon>
-            <ion-label>Oferta</ion-label>
-            @if (servicesList().length > 0) {
-              <ion-badge color="primary" class="tab-badge">
-                {{ servicesList().length }}
-              </ion-badge>
-            }
-          </ion-segment-button>
-
-          <ion-segment-button value="checklist">
-            <ion-icon name="list-outline"></ion-icon>
-            <ion-label>Aves</ion-label>
-            @if (selectedBirdsCount() > 0) {
-              <ion-badge color="success" class="tab-badge">
-                {{ selectedBirdsCount() }}
-              </ion-badge>
-            }
-          </ion-segment-button>
-        </ion-segment>
-      </div>
 
       <!-- CUERPO DE CONTENIDO SEGÚN PESTAÑA -->
       <div class="provider-body ion-padding">
@@ -371,22 +354,23 @@
               </ion-card-content>
             </ion-card>
 
-            <!-- CHECKLIST STATUS SWITCH -->
-            <ion-card class="form-card">
-              <ion-card-content class="checklist-toggle-box">
-                <div class="checklist-toggle-info">
-                  <ion-label>
-                    <h3>¿Cuentas con Checklist de Aves propia?</h3>
-                    <p>Habilita la pestaña de aves para seleccionar las especies registradas en tu predio.</p>
-                  </ion-label>
+            <!-- SWITCH DE CHECKLIST DE AVES EN ESTILO DIRECTORY-STATUS-CARD -->
+            <div class="directory-status-card ion-margin-bottom">
+              <div class="directory-status-info">
+                <ion-icon name="list-outline" color="primary"></ion-icon>
+                <div>
+                  <h4 class="directory-status-title">Checklist de Aves Propia</h4>
+                  <p class="directory-status-sub">
+                    Habilita la pestaña de especies para registrar las aves observadas en tu predio
+                  </p>
                 </div>
-                <ion-toggle
-                  [checked]="hasBirdChecklist()"
-                  (ionChange)="hasBirdChecklist.set($event.detail.checked)"
-                  color="success"
-                ></ion-toggle>
-              </ion-card-content>
-            </ion-card>
+              </div>
+              <ion-toggle
+                [checked]="hasBirdChecklist()"
+                (ionChange)="hasBirdChecklist.set($event.detail.checked)"
+                color="success"
+              ></ion-toggle>
+            </div>
 
             <div class="form-actions ion-margin-top ion-margin-bottom">
               <ion-button

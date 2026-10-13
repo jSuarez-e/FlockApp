@@ -14,15 +14,15 @@ import {
   IonHeader,
   IonToolbar,
   IonButtons,
-  IonBackButton,
+  IonMenuButton,
   IonIcon,
   IonButton,
-  IonSpinner,
   IonSegment,
   IonSegmentButton,
   IonLabel,
   IonBadge,
-  IonChip,
+  ActionSheetController,
+  ActionSheetButton,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
@@ -31,6 +31,8 @@ import {
   businessOutline,
   calendarOutline,
   documentTextOutline,
+  trashOutline,
+  closeOutline,
 } from 'ionicons/icons';
 
 // Child Tab Presenters
@@ -42,6 +44,7 @@ import { BusinessBookingsTabComponent } from './components/business-bookings-tab
 import { UiService } from '../../core/services/ui.service';
 import { NativeBridgeService } from '../../core/services/native-bridge.service';
 import { UserService } from '../../core/services/user.service';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import { BusinessProfileStore } from './business-profile.store';
 import { logger } from '../../core/utils/logger';
 import { environment } from '../../../environments/environment';
@@ -65,15 +68,14 @@ export { CalendarDay } from './components/business-calendar-tab/business-calenda
     IonHeader,
     IonToolbar,
     IonButtons,
-    IonBackButton,
+    IonMenuButton,
     IonIcon,
     IonButton,
-    IonSpinner,
+    LoadingComponent,
     IonSegment,
     IonSegmentButton,
     IonLabel,
     IonBadge,
-    IonChip,
     BusinessFormTabComponent,
     BusinessCalendarTabComponent,
     BusinessBookingsTabComponent,
@@ -90,6 +92,8 @@ export class BusinessProfilePage implements OnInit {
   private readonly nativeBridge = inject(NativeBridgeService);
   /** Servicio de usuario inyectado */
   private readonly userService = inject(UserService);
+  /** Controlador de ActionSheet inyectado */
+  private readonly actionSheetCtrl = inject(ActionSheetController);
 
   /** Referencia al input file oculto para foto de portada */
   @ViewChild('coverFileInput') coverFileInput?: ElementRef<HTMLInputElement>;
@@ -99,13 +103,16 @@ export class BusinessProfilePage implements OnInit {
   /** URL base del backend */
   private readonly BASE_URL = environment.urlBack;
 
-  /** Determina si el formulario de negocio está sin cambios o vacío */
-  public readonly isPristine = computed(() => {
+  /** Determina si todos los campos obligatorios del perfil de negocio están completos */
+  public readonly isFormValid = computed(() => {
     return (
-      !this.store.username() &&
-      !this.store.department() &&
-      !this.store.municipality() &&
-      !this.store.bio()
+      Boolean(this.store.username()?.trim()) &&
+      Boolean(this.store.phone()?.trim()) &&
+      Boolean(this.store.department()?.trim()) &&
+      Boolean(this.store.municipality()?.trim()) &&
+      Boolean(this.store.languages()?.trim()) &&
+      Boolean(this.store.specialties()?.trim()) &&
+      Boolean(this.store.bio()?.trim())
     );
   });
 
@@ -119,6 +126,8 @@ export class BusinessProfilePage implements OnInit {
       businessOutline,
       calendarOutline,
       documentTextOutline,
+      trashOutline,
+      closeOutline,
     });
   }
 
@@ -174,10 +183,60 @@ export class BusinessProfilePage implements OnInit {
   }
 
   /**
-   * Abre selector de cámara o selector de archivos según la plataforma.
+   * Abre un menú de opciones para subir o eliminar la foto seleccionada,
+   * replicando el comportamiento estándar de Mi Perfil.
    * @param type Tipo de fotografía a actualizar ('AVATAR' o 'COVER').
    */
   public async changePhoto(type: 'AVATAR' | 'COVER' = 'AVATAR'): Promise<void> {
+    const hasCurrentPhoto =
+      type === 'AVATAR' ? Boolean(this.store.photoUrl()) : Boolean(this.store.coverUrl());
+    const label = type === 'AVATAR' ? 'foto de perfil' : 'foto de portada';
+
+    const buttons: ActionSheetButton[] = [
+      {
+        text: `Subir nueva ${label}`,
+        icon: 'camera-outline',
+        /**
+         * Dispara la carga o captura de una nueva fotografía.
+         */
+        handler: () => {
+          this.executePhotoUpload(type);
+        },
+      },
+    ];
+
+    if (hasCurrentPhoto) {
+      buttons.push({
+        text: `Eliminar ${label}`,
+        role: 'destructive',
+        icon: 'trash-outline',
+        /**
+         * Dispara la eliminación de la foto seleccionada.
+         */
+        handler: () => {
+          this.removePhoto(type);
+        },
+      });
+    }
+
+    buttons.push({
+      text: 'Cancelar',
+      role: 'cancel',
+      icon: 'close-outline',
+    });
+
+    const sheet = await this.actionSheetCtrl.create({
+      header: `Opciones de ${label}`,
+      buttons,
+    });
+    await sheet.present();
+  }
+
+  /**
+   * Ejecuta la captura nativa con fallback al input file HTML.
+   * @param type Tipo de fotografía ('AVATAR' o 'COVER').
+   */
+  private async executePhotoUpload(type: 'AVATAR' | 'COVER'): Promise<void> {
     if (Capacitor.isNativePlatform()) {
       try {
         const image = await this.nativeBridge.getPhoto();
@@ -196,6 +255,27 @@ export class BusinessProfilePage implements OnInit {
       this.coverFileInput.nativeElement.click();
     } else if (type === 'AVATAR' && this.avatarFileInput) {
       this.avatarFileInput.nativeElement.click();
+    }
+  }
+
+  /**
+   * Elimina la foto del perfil del negocio persistiendo los cambios.
+   * @param type Tipo de recurso a limpiar ('AVATAR' o 'COVER').
+   */
+  private async removePhoto(type: 'AVATAR' | 'COVER'): Promise<void> {
+    await this.ui.showLoading('Eliminando foto...');
+    try {
+      if (type === 'AVATAR') {
+        this.store.updateField('photoUrl', '');
+      } else {
+        this.store.updateField('coverUrl', '');
+      }
+      await this.store.saveProfile();
+      await this.ui.dismissLoading();
+      this.ui.showToast('Foto eliminada exitosamente');
+    } catch {
+      await this.ui.dismissLoading();
+      this.ui.showToast('Error al eliminar la foto');
     }
   }
 

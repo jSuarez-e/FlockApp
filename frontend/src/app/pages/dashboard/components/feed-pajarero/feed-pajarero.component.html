@@ -4,10 +4,12 @@
     </ion-refresher>
 
     <ion-list lines="none" class="feed-list">
-      @for (item of feedStore.posts(); track item.id) {
-        <app-sighting-card [post]="item"></app-sighting-card>
-      } @empty {
-        @if (!feedStore.isLoading()) {
+      @if (feedStore.isLoading() && feedStore.posts().length === 0) {
+        <app-loading message="Cargando avistamientos del feed..." [fullHeight]="true"></app-loading>
+      } @else {
+        @for (item of feedStore.posts(); track item.id) {
+          <app-sighting-card [post]="item"></app-sighting-card>
+        } @empty {
           <div class="empty-state ion-padding">
             <div class="empty-icon-wrapper">
               <ion-icon name="telescope-outline"></ion-icon>

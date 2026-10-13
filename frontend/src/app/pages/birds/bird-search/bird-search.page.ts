@@ -12,8 +12,8 @@ import {
   IonMenuButton,
   IonSearchbar,
   IonContent,
-  IonSpinner,
 } from '@ionic/angular';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { BirdSearchStore, ListItem } from './../../../core/stores/bird-search.store';
 import { NetworkService } from './../../../core/services/network.service';
 import { GeneralFilterComponent } from './components/general-filter/general-filter.component';
@@ -46,7 +46,7 @@ import { BirdEncyclopediaViewComponent } from '../components/bird-encyclopedia-v
     IonMenuButton,
     IonSearchbar,
     IonContent,
-    IonSpinner,
+    LoadingComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

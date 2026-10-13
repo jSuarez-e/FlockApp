@@ -6,7 +6,7 @@
  */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { GuideEntity } from '../../infrastructure/entities/guide.entity';
 import { UserEntity } from '../../infrastructure/entities/user.entity';
 import { UpdateGuideProfileDto } from '../../infrastructure/dtos/guide/update-guide-profile.dto';
@@ -21,10 +21,30 @@ export class GuidesService {
   ) {}
 
   async findAll() {
-    return this.guidesRepo.find({
+    const guides = await this.guidesRepo.find({
       where: { sql_deleted: false },
       order: { rating: 'DESC' },
     });
+
+    const userIds = guides.map((g) => g.id);
+    if (userIds.length > 0) {
+      const users = await this.usersRepo.find({
+        where: { id: In(userIds) },
+        select: ['id', 'avatarUrl', 'coverUrl'],
+      });
+      const userMap = new Map(users.map((u) => [u.id, u]));
+
+      return guides.map((g) => {
+        const u = userMap.get(g.id);
+        return {
+          ...g,
+          photo_url: g.photo_url || u?.avatarUrl || '',
+          cover_url: g.cover_url || u?.coverUrl || '',
+        };
+      });
+    }
+
+    return guides;
   }
 
   async findOne(id: string) {

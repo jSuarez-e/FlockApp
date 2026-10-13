@@ -59,10 +59,7 @@
   </ion-refresher>
 
   @if (guideStore.isLoading() && guideStore.allGuides().length === 0) {
-    <div class="ion-text-center ion-padding state-container">
-      <ion-spinner name="crescent" color="primary"></ion-spinner>
-      <p class="state-text">Explorando guías certificados en Colombia...</p>
-    </div>
+    <app-loading message="Explorando guías certificados en Colombia..." [fullHeight]="true"></app-loading>
   } @else if (filteredGuides().length === 0) {
     <div class="ion-padding ion-text-center state-container">
       <div class="state-icon-circle">
@@ -98,7 +95,7 @@
                   alt="Foto de {{ guide.fullName }}"
                   class="avatar-img"
                 />
-                @if (guide.isPublished) {
+                @if (guide.isVerified) {
                   <span class="avatar-verified-dot" title="Guía Verificado">
                     <ion-icon name="checkmark-done-outline"></ion-icon>
                   </span>
@@ -108,10 +105,16 @@
               <div class="guide-info">
                 <div class="guide-name-row">
                   <h2 class="guide-name">{{ guide.fullName }}</h2>
-                  @if (guide.isPublished) {
+                  @if (guide.isVerified) {
                     <span class="badge-verified">
                       <ion-icon name="ribbon-outline"></ion-icon>
                       <span>Verificado</span>
+                    </span>
+                  }
+                  @if ((guide.rating || 0) >= 4.6) {
+                    <span class="badge-featured">
+                      <ion-icon name="star"></ion-icon>
+                      <span>Destacado</span>
                     </span>
                   }
                 </div>
@@ -152,7 +155,7 @@
                 <span>Contactar / Reservar</span>
               </button>
 
-              @if (guide.phone && guide.hasWhatsapp) {
+              @if (guide.phone && guide.hasWhatsapp && hasBusinessRelationship(guide.id)) {
                 <button
                   type="button"
                   class="btn-whatsapp"

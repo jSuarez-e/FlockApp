@@ -324,8 +324,16 @@ export const BusinessProfileStore = signalStore(
         isPublished,
       } = state;
       
-      if (!username() || !department() || !municipality() || !bio()) {
-        ui.showToast('Por favor completa los campos obligatorios (*)');
+      if (
+        !username()?.trim() ||
+        !phone()?.trim() ||
+        !department()?.trim() ||
+        !municipality()?.trim() ||
+        !languages()?.trim() ||
+        !specialties()?.trim() ||
+        !bio()?.trim()
+      ) {
+        ui.showToast('Por favor completa todos los campos obligatorios (*)');
         return false;
       }
       

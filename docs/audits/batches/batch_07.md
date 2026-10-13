@@ -14,6 +14,14 @@ Actúa como el Ingeniero de Software Lead. Tienes la tarea de resolver las viola
 ```json
 [
   {
+    "file": "frontend/src/app/pages/dashboard/components/feed-pajarero/components/sighting-card/sighting-card.component.ts",
+    "errors": [
+      "Línea 295: [jsdoc/require-description] Missing JSDoc block description.",
+      "Línea 310: [jsdoc/require-description] Missing JSDoc block description.",
+      "Línea 323: [jsdoc/require-description] Missing JSDoc block description."
+    ]
+  },
+  {
     "file": "frontend/src/app/pages/dashboard/components/feed-pajarero/feed-pajarero.component.ts",
     "errors": [
       "Línea 56: [jsdoc/require-description] Missing JSDoc block description.",
@@ -61,15 +69,6 @@ Actúa como el Ingeniero de Software Lead. Tienes la tarea de resolver las viola
       "Línea 347: [jsdoc/require-returns] Missing JSDoc @returns declaration.",
       "Línea 414: [jsdoc/require-jsdoc] Missing JSDoc comment.",
       "Línea 425: [jsdoc/require-jsdoc] Missing JSDoc comment."
-    ]
-  },
-  {
-    "file": "frontend/src/app/pages/routes/route-workspace/components/map-tracker/map-tracker.component.ts",
-    "errors": [
-      "Línea 81: [jsdoc/require-description] Missing JSDoc block description.",
-      "Línea 142: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 169: [jsdoc/require-description] Missing JSDoc block description.",
-      "Línea 189: [jsdoc/require-description] Missing JSDoc block description."
     ]
   }
 ]

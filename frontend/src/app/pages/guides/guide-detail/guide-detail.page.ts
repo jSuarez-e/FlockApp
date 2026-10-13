@@ -13,6 +13,7 @@ import {
   computed,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -24,7 +25,6 @@ import {
   IonBackButton,
   IonIcon,
   IonButton,
-  IonSpinner,
   IonBadge,
   IonModal,
   IonSelect,
@@ -53,9 +53,11 @@ import {
   sendOutline,
   informationCircleOutline,
   ribbonOutline,
+  sparklesOutline,
 } from 'ionicons/icons';
 
 // Services
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 import { GuideService } from '../../../core/services/guide.service';
 import {
   GuideBookingService,
@@ -85,6 +87,14 @@ export interface DetailCalendarDay {
   isPast: boolean;
   /** Indica si es la fecha seleccionada */
   isSelected: boolean;
+  /** Inicio del rango seleccionado */
+  isRangeStart: boolean;
+  /** Fin del rango seleccionado */
+  isRangeEnd: boolean;
+  /** Día intermedio dentro del rango */
+  isInRange: boolean;
+  /** Celda vacía para alinear el primer día de la semana */
+  isEmptySlot?: boolean;
 }
 
 /**
@@ -101,6 +111,7 @@ export interface DetailCalendarDay {
   imports: [
     CommonModule,
     FormsModule,
+    LoadingComponent,
     IonContent,
     IonHeader,
     IonToolbar,
@@ -109,7 +120,6 @@ export interface DetailCalendarDay {
     IonBackButton,
     IonIcon,
     IonButton,
-    IonSpinner,
     IonBadge,
     IonModal,
     IonSelect,
@@ -143,10 +153,39 @@ export class GuideDetailPage implements OnInit {
   /** Disponibilidad del calendario */
   public readonly availability = signal<IGuideAvailabilityResponse | null>(null);
 
+  /** ID del usuario actual autenticado */
+  public readonly currentUserId = signal<string>('');
+  /** Indica si el usuario autenticado está viendo su propio perfil de guía */
+  public readonly isOwnProfile = computed(() => {
+    const uid = this.currentUserId();
+    const gid = this.guide()?.id;
+    return Boolean(uid && gid && uid === gid);
+  });
+
+  /** Días de la semana para encabezado del calendario */
+  public readonly weekDayHeaders = ['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do'];
+
   /** Mes visible en el calendario */
   public readonly currentCalendarMonth = signal<Date>(new Date());
-  /** Fecha seleccionada por el usuario (YYYY-MM-DD) */
-  public readonly selectedDate = signal<string>('');
+  /** Fecha seleccionada por el usuario (inicio del rango) */
+  public readonly selectedStartDate = signal<string>('');
+  /** Fecha final si es un rango de días */
+  public readonly selectedEndDate = signal<string>('');
+
+  /** Etiqueta descriptiva del rango de fechas seleccionado */
+  public readonly selectedDateRangeLabel = computed(() => {
+    const start = this.selectedStartDate();
+    const end = this.selectedEndDate();
+    if (!start) return '';
+    if (!end || end === start) {
+      return `${start} (1 día)`;
+    }
+    const d1 = new Date(`${start}T00:00:00Z`);
+    const d2 = new Date(`${end}T00:00:00Z`);
+    const diffTime = Math.abs(d2.getTime() - d1.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    return `Del ${start} al ${end} (${diffDays} días)`;
+  });
 
   /** Formulario de reserva: tipo de actividad */
   public readonly activityType = signal<string>('Aviturismo General');
@@ -162,6 +201,13 @@ export class GuideDetailPage implements OnInit {
   /** Reservas del usuario con este guía */
   public readonly myBookings = signal<IGuideBooking[]>([]);
 
+  /** Valida si existe al menos una reserva confirmada o completada entre usuario y guía */
+  public readonly hasBusinessRelationship = computed(() =>
+    this.myBookings().some(
+      (b) => b.status === 'CONFIRMED' || b.status === 'COMPLETED',
+    ),
+  );
+
   /** Modal de calificación: reserva activa */
   public readonly ratingModalBooking = signal<IGuideBooking | null>(null);
   /** Modal de calificación: puntaje seleccionado (1-5) */
@@ -169,7 +215,7 @@ export class GuideDetailPage implements OnInit {
   /** Modal de calificación: texto de reseña */
   public readonly ratingReview = signal<string>('');
 
-  /** Días generados para el mes visible */
+  /** Días generados para el mes visible con offset y rango */
   public calendarDays = computed<DetailCalendarDay[]>(() => {
     const current = this.currentCalendarMonth();
     const year = current.getFullYear();
@@ -184,14 +230,39 @@ export class GuideDetailPage implements OnInit {
       ...(avail?.confirmedDates || []),
     ]);
 
-    const selected = this.selectedDate();
+    const start = this.selectedStartDate();
+    const end = this.selectedEndDate();
     const days: DetailCalendarDay[] = [];
+
+    // Calcular desplazamiento del primer día (0 = Lunes, 6 = Domingo)
+    const firstDayOfWeek = (new Date(year, month, 1).getDay() + 6) % 7;
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      days.push({
+        dayNumber: 0,
+        dateString: `empty-${i}`,
+        isBlocked: true,
+        isPast: true,
+        isSelected: false,
+        isRangeStart: false,
+        isRangeEnd: false,
+        isInRange: false,
+        isEmptySlot: true,
+      });
+    }
 
     for (let day = 1; day <= daysInCurrentMonth; day++) {
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
       const isPast = dateStr < todayStr;
       const isBlocked = blockedDates.has(dateStr);
-      const isSelected = dateStr === selected;
+      const isRangeStart = dateStr === start;
+      const isRangeEnd = dateStr === end;
+      const isInRange = Boolean(
+        start && end && dateStr > start && dateStr < end,
+      );
+      const isSelected =
+        isRangeStart ||
+        isRangeEnd ||
+        (Boolean(start && !end) && dateStr === start);
 
       days.push({
         dayNumber: day,
@@ -199,6 +270,10 @@ export class GuideDetailPage implements OnInit {
         isBlocked,
         isPast,
         isSelected,
+        isRangeStart,
+        isRangeEnd,
+        isInRange,
+        isEmptySlot: false,
       });
     }
 
@@ -235,6 +310,7 @@ export class GuideDetailPage implements OnInit {
       sendOutline,
       informationCircleOutline,
       ribbonOutline,
+      sparklesOutline,
     });
   }
 
@@ -302,12 +378,13 @@ export class GuideDetailPage implements OnInit {
   }
 
   /**
-   * Precarga el teléfono y correo del usuario autenticado en el formulario.
+   * Precarga el correo del usuario autenticado en el formulario.
    */
   async prefillBirderData() {
     try {
       const user = await this.userService.getProfile();
       if (user) {
+        if (user.id) this.currentUserId.set(String(user.id));
         if (user.email) this.contactEmail.set(user.email);
       }
     } catch {
@@ -364,10 +441,37 @@ export class GuideDetailPage implements OnInit {
   }
 
   /**
-   * Selecciona una fecha libre para reservar.
-   * @param day Día del calendario.
+   * Verifica si alguna fecha dentro del rango se encuentra ocupada o bloqueada.
+   * @param start Fecha de inicio YYYY-MM-DD.
+   * @param end Fecha de fin YYYY-MM-DD.
+   * @returns Verdadero si al menos un día en el intervalo no está disponible.
+   */
+  private isRangeBlocked(start: string, end: string): boolean {
+    const avail = this.availability();
+    const blockedDates = new Set([
+      ...(avail?.blockedDates || []),
+      ...(avail?.confirmedDates || []),
+    ]);
+
+    const cur = new Date(`${start}T00:00:00Z`);
+    const target = new Date(`${end}T00:00:00Z`);
+
+    while (cur <= target) {
+      const dStr = cur.toISOString().split('T')[0];
+      if (blockedDates.has(dStr)) {
+        return true;
+      }
+      cur.setUTCDate(cur.getUTCDate() + 1);
+    }
+    return false;
+  }
+
+  /**
+   * Selecciona una fecha o un rango de fechas libres para reservar.
+   * @param day Día del calendario pulsado.
    */
   selectDate(day: DetailCalendarDay) {
+    if (day.isEmptySlot) return;
     if (day.isPast) {
       this.ui.showToast('No es posible seleccionar una fecha pasada.');
       return;
@@ -376,8 +480,36 @@ export class GuideDetailPage implements OnInit {
       this.ui.showToast('Esta fecha está ocupada en la agenda del guía.');
       return;
     }
-    this.selectedDate.set(day.dateString);
-    this.ui.showToast(`Fecha ${day.dateString} seleccionada para tu actividad.`);
+
+    const start = this.selectedStartDate();
+    const end = this.selectedEndDate();
+
+    if (!start || (start && end)) {
+      this.selectedStartDate.set(day.dateString);
+      this.selectedEndDate.set('');
+      this.ui.showToast(`Inicio: ${day.dateString}. Toca otra fecha si deseas un rango.`);
+      return;
+    }
+
+    if (day.dateString < start) {
+      this.selectedStartDate.set(day.dateString);
+      this.ui.showToast(`Nueva fecha de inicio: ${day.dateString}`);
+      return;
+    }
+
+    if (day.dateString === start) {
+      this.selectedEndDate.set('');
+      this.ui.showToast(`Día único seleccionado: ${day.dateString}`);
+      return;
+    }
+
+    if (this.isRangeBlocked(start, day.dateString)) {
+      this.ui.showToast('El rango seleccionado incluye fechas no disponibles.');
+      return;
+    }
+
+    this.selectedEndDate.set(day.dateString);
+    this.ui.showToast(`Rango seleccionado: del ${start} al ${day.dateString}`);
   }
 
   /**
@@ -397,8 +529,14 @@ export class GuideDetailPage implements OnInit {
    * Envía la solicitud de reserva al guía a través de la plataforma.
    */
   async onSubmitBooking() {
+    if (this.isOwnProfile()) {
+      this.ui.showToast('Estás viendo tu propio perfil. No puedes reservar tus propios servicios.');
+      return;
+    }
+
     const guideId = this.guide()?.id;
-    const date = this.selectedDate();
+    const startDate = this.selectedStartDate();
+    const endDate = this.selectedEndDate();
     const activity = this.activityType();
     const phone = this.contactPhone();
     const email = this.contactEmail();
@@ -406,7 +544,7 @@ export class GuideDetailPage implements OnInit {
 
     if (!guideId) return;
 
-    if (!date) {
+    if (!startDate) {
       this.ui.showToast('Por favor selecciona una fecha disponible en el calendario.');
       return;
     }
@@ -417,9 +555,10 @@ export class GuideDetailPage implements OnInit {
     }
 
     const payload: ICreateBookingDto = {
-      bookingDate: date,
+      bookingDate: startDate,
+      endDate: endDate || undefined,
       activityType: activity,
-      message: msg,
+      message: msg || 'Solicitud de reserva de aviturismo',
       contactPhone: phone,
       contactEmail: email,
     };
@@ -431,13 +570,24 @@ export class GuideDetailPage implements OnInit {
       await this.bookingService.createBooking(guideId, payload);
       await this.ui.dismissLoading();
       this.ui.showToast('¡Solicitud de reserva enviada exitosamente al guía!');
-      this.selectedDate.set('');
+      this.selectedStartDate.set('');
+      this.selectedEndDate.set('');
       this.message.set('');
       await this.loadAvailability(guideId);
       await this.loadMyBookings(guideId);
-    } catch {
+    } catch (err: unknown) {
       await this.ui.dismissLoading();
-      this.ui.showToast('No fue posible enviar la reserva. Intenta de nuevo.');
+      let errDetail = 'No fue posible enviar la reserva. Intenta de nuevo.';
+      if (err instanceof HttpErrorResponse) {
+        if (typeof err.error?.message === 'string') {
+          errDetail = err.error.message;
+        } else if (Array.isArray(err.error?.message)) {
+          errDetail = err.error.message.join(', ');
+        }
+      } else if (err instanceof Error) {
+        errDetail = err.message;
+      }
+      this.ui.showToast(errDetail);
     } finally {
       this.isSubmitting.set(false);
     }

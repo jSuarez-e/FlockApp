@@ -5,6 +5,19 @@
  * @edge_cases Coordinates mapped to lat/lng instead of PostGIS Point object for Frontend compatibility.
  */
 
+/**
+ * Interfaz de coordenadas geográficas para sitios.
+ */
+export interface ISiteLocation {
+  /** Latitud */
+  lat: number;
+  /** Longitud */
+  lng: number;
+}
+
+/**
+ * Modelo de datos del guía turístico u ornitológico.
+ */
 export interface IGuide {
   /** Propiedad id: campo del modelo de dominio. */
   id: string;
@@ -40,12 +53,17 @@ export interface IGuide {
   rnt?: string;
   /** Propiedad isPublished: visibilidad en el directorio. */
   isPublished?: boolean;
+  /** Propiedad isVerified: indicador de verificación validada por el sistema. */
+  isVerified?: boolean;
   /** Propiedad last_modified: campo del modelo de dominio. */
   last_modified?: number;
   /** Propiedad sql_deleted: campo del modelo de dominio. */
   sql_deleted?: boolean;
 }
 
+/**
+ * Modelo de datos del sitio o reserva natural.
+ */
 export interface ISite {
   /** Propiedad id: campo del modelo de dominio. */
   id: string;
@@ -59,8 +77,8 @@ export interface ISite {
   description: string;
   /** Propiedad photoUrl: campo del modelo de dominio. */
   photoUrl?: string;
-  /** Propiedad location: campo del modelo de dominio. */
-  location: { lat: number; lng: number }; // Transformed from PostGIS
+  /** Propiedad location: coordenadas lat/lng del sitio. */
+  location: ISiteLocation; // Transformed from PostGIS
   /** Propiedad routeGeoJson: campo del modelo de dominio. */
   routeGeoJson: unknown;
   /** Propiedad expectedBirds: campo del modelo de dominio. */
@@ -89,6 +107,9 @@ export interface ISite {
   sql_deleted?: boolean;
 }
 
+/**
+ * Modelo del servicio o producto asociado a un sitio.
+ */
 export interface ISiteService {
   /** Propiedad id: campo del modelo de dominio. */
   id: string;
@@ -110,6 +131,9 @@ export interface ISiteService {
   sql_deleted?: boolean;
 }
 
+/**
+ * Modelo de calificación y reseña de un sitio.
+ */
 export interface ISiteRating {
   /** Propiedad id: campo del modelo de dominio. */
   id: string;
@@ -125,6 +149,9 @@ export interface ISiteRating {
   created_at?: number;
 }
 
+/**
+ * Modelo de catálogo de aves de Colombia.
+ */
 export interface IBirdCatalog {
   /** Propiedad id: campo del modelo de dominio. */
   id: number;
@@ -188,6 +215,45 @@ export interface IBirdCatalog {
   sql_deleted: boolean;
 }
 
+/**
+ * Asociación de ave en sitio para sincronización.
+ */
+export interface ISiteBirdSyncItem {
+  /** Identificador del sitio */
+  site_id: string;
+  /** Identificador del ave */
+  bird_id: string;
+}
+
+/**
+ * Departamento territorial para sincronización.
+ */
+export interface IDepartmentSyncItem {
+  /** Identificador numérico */
+  id: number;
+  /** Nombre del departamento */
+  name: string;
+  /** Borrado lógico */
+  sql_deleted?: boolean;
+}
+
+/**
+ * Municipio territorial para sincronización.
+ */
+export interface IMunicipalitySyncItem {
+  /** Identificador numérico */
+  id: number;
+  /** Identificador del departamento asociado */
+  department_id: number;
+  /** Nombre del municipio */
+  name: string;
+  /** Borrado lógico */
+  sql_deleted?: boolean;
+}
+
+/**
+ * Respuesta del endpoint de sincronización de catálogos offline.
+ */
 export interface ISyncCatalogsResponse {
   /** Propiedad guides: campo del modelo de dominio. */
   guides: IGuide[];
@@ -196,13 +262,13 @@ export interface ISyncCatalogsResponse {
   /** Propiedad site_services: campo del modelo de dominio. */
   site_services: ISiteService[];
   /** Propiedad site_birds: campo del modelo de dominio. */
-  site_birds: { site_id: string; bird_id: string }[];
+  site_birds: ISiteBirdSyncItem[];
   /** Propiedad timestamp: campo del modelo de dominio. */
   timestamp: number;
   /** Propiedad departments: campo del modelo de dominio. */
-  departments?: { id: number; name: string; sql_deleted?: boolean }[];
+  departments?: IDepartmentSyncItem[];
   /** Propiedad municipalities: campo del modelo de dominio. */
-  municipalities?: { id: number; department_id: number; name: string; sql_deleted?: boolean }[];
+  municipalities?: IMunicipalitySyncItem[];
   /** Propiedad birds: campo del modelo de dominio. */
   birds?: IBirdCatalog[];
 }

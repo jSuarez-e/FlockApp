@@ -19,12 +19,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import * as L from 'leaflet';
 import { Capacitor } from '@capacitor/core';
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
 import {
   IonContent,
   IonHeader,
   IonToolbar,
   IonButtons,
-  IonBackButton,
+  IonMenuButton,
   IonIcon,
   IonButton,
   IonSpinner,
@@ -42,6 +43,8 @@ import {
   IonSearchbar,
   IonList,
   IonItem,
+  ActionSheetController,
+  ActionSheetButton,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
@@ -67,6 +70,9 @@ import {
   pricetagOutline,
   eyeOutline,
   navigateOutline,
+  locationOutline,
+  leafOutline,
+  closeOutline,
 } from 'ionicons/icons';
 
 import { SiteProviderService } from '../../core/services/site-provider.service';
@@ -115,10 +121,11 @@ export interface SearchInputDetail {
     IonHeader,
     IonToolbar,
     IonButtons,
-    IonBackButton,
+    IonMenuButton,
     IonIcon,
     IonButton,
     IonSpinner,
+    LoadingComponent,
     IonSelect,
     IonSelectOption,
     IonSegment,
@@ -147,6 +154,8 @@ export class ProviderSitePage implements OnInit, OnDestroy {
   private readonly userService = inject(UserService);
   /** Servicio de geografía para departamentos y municipios */
   private readonly geoService = inject(GeographyService);
+  /** Controlador de menú de acciones tipo Action Sheet */
+  private readonly actionSheetCtrl = inject(ActionSheetController);
 
   /** Referencia al input file para portada */
   @ViewChild('coverFileInput') coverFileInput?: ElementRef<HTMLInputElement>;
@@ -165,6 +174,11 @@ export class ProviderSitePage implements OnInit, OnDestroy {
   public isLoading = signal<boolean>(true);
   /** Estado de guardado en proceso */
   public isSaving = signal<boolean>(false);
+
+  /** Estado de error al renderizar foto de portada */
+  public coverLoadError = signal<boolean>(false);
+  /** Estado de error al renderizar logotipo */
+  public logoLoadError = signal<boolean>(false);
 
   // --- Campos del Formulario de Datos ---
   /** Nombre del sitio */
@@ -272,6 +286,9 @@ export class ProviderSitePage implements OnInit, OnDestroy {
       pricetagOutline,
       eyeOutline,
       navigateOutline,
+      locationOutline,
+      leafOutline,
+      closeOutline,
     });
   }
 
@@ -393,10 +410,78 @@ export class ProviderSitePage implements OnInit, OnDestroy {
   }
 
   /**
-   * Abre selector de cámara o selector de archivos según la plataforma.
-   * @param type Tipo de foto a subir ('COVER' | 'LOGO').
+   * Abre menú de opciones para subir o eliminar foto de portada o logotipo,
+   * replicando el comportamiento estándar de Mi Perfil y Perfil de Guía.
+   * @param type Tipo de foto a gestionar ('COVER' | 'LOGO').
    */
   async changePhoto(type: 'COVER' | 'LOGO'): Promise<void> {
+    const hasCurrentPhoto =
+      type === 'COVER'
+        ? Boolean(this.coverUrl() && !this.coverLoadError())
+        : Boolean(this.logoUrl() && !this.logoLoadError());
+    const label = type === 'COVER' ? 'foto de portada' : 'logotipo';
+
+    const buttons: ActionSheetButton[] = [
+      {
+        text: `Subir nueva ${label}`,
+        icon: 'camera-outline',
+        /**
+         * Dispara la carga o captura de una nueva fotografía.
+         */
+        handler: () => {
+          this.executePhotoUpload(type);
+        },
+      },
+    ];
+
+    if (hasCurrentPhoto) {
+      buttons.push({
+        text: `Eliminar ${label}`,
+        role: 'destructive',
+        icon: 'trash-outline',
+        /**
+         * Elimina la fotografía actual y restablece el respaldo.
+         */
+        handler: () => {
+          this.removePhoto(type);
+        },
+      });
+    }
+
+    buttons.push({
+      text: 'Cancelar',
+      role: 'cancel',
+      icon: 'close-outline',
+    });
+
+    const sheet = await this.actionSheetCtrl.create({
+      header: `Opciones de ${label}`,
+      buttons,
+    });
+    await sheet.present();
+  }
+
+  /**
+   * Elimina la fotografía seleccionada y restablece el banner o icono de respaldo.
+   * @param type Tipo de foto ('COVER' | 'LOGO').
+   */
+  removePhoto(type: 'COVER' | 'LOGO'): void {
+    if (type === 'COVER') {
+      this.coverUrl.set('');
+      this.coverLoadError.set(false);
+      this.ui.showToast('Foto de portada eliminada.', 'success');
+    } else {
+      this.logoUrl.set('');
+      this.logoLoadError.set(false);
+      this.ui.showToast('Logotipo eliminado.', 'success');
+    }
+  }
+
+  /**
+   * Ejecuta la captura nativa o activa el selector de archivos web.
+   * @param type Tipo de foto a capturar o subir ('COVER' | 'LOGO').
+   */
+  private async executePhotoUpload(type: 'COVER' | 'LOGO'): Promise<void> {
     if (Capacitor.isNativePlatform()) {
       try {
         const image = await this.nativeBridge.getPhoto();
@@ -461,8 +546,10 @@ export class ProviderSitePage implements OnInit, OnDestroy {
       if (result && result.url) {
         if (type === 'COVER') {
           this.coverUrl.set(result.url);
+          this.coverLoadError.set(false);
         } else {
           this.logoUrl.set(result.url);
+          this.logoLoadError.set(false);
         }
         await this.ui.showToast(
           type === 'COVER' ? '¡Foto de portada actualizada!' : '¡Logotipo actualizado!',

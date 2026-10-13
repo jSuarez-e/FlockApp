@@ -211,9 +211,7 @@
       </div>
     </div>
   } @else {
-    <div class="ion-padding ion-text-center">
-      <ion-spinner name="crescent" color="primary"></ion-spinner>
-    </div>
+    <app-loading message="Cargando detalles de la reserva de aviturismo..." [fullHeight]="true"></app-loading>
   }
 
   <!-- Modal del Checklist -->

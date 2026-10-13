@@ -25,8 +25,10 @@ export interface IGuideBooking {
   guideId: string;
   /** Identificador del pajarero */
   birderId: string;
-  /** Fecha de la reserva (YYYY-MM-DD) */
+  /** Fecha de la reserva (YYYY-MM-DD) o fecha de inicio si es rango */
   bookingDate: string;
+  /** Fecha final de la reserva si es un rango de días (YYYY-MM-DD) */
+  endDate?: string;
   /** Tipo de actividad solicitada */
   activityType: string;
   /** Mensaje o detalles adicionales */
@@ -59,12 +61,14 @@ export interface IGuideBooking {
  * DTO para la creación de una solicitud de reserva / contacto hacia un guía.
  */
 export interface ICreateBookingDto {
-  /** Fecha de la reserva en formato YYYY-MM-DD */
+  /** Fecha de la reserva en formato YYYY-MM-DD o inicio del rango */
   bookingDate: string;
+  /** Fecha final de la reserva si es un rango de días (YYYY-MM-DD) */
+  endDate?: string;
   /** Tipo de actividad (ej: Aviturismo General, Fotografía, Senderismo) */
   activityType: string;
-  /** Mensaje explicativo o requerimientos */
-  message: string;
+  /** Mensaje explicativo o requerimientos opcionales */
+  message?: string;
   /** Teléfono de contacto del pajarero */
   contactPhone: string;
   /** Correo de contacto del pajarero */

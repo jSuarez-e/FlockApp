@@ -34,29 +34,21 @@ Actúa como el Ingeniero de Software Lead. Tienes la tarea de resolver las viola
     ]
   },
   {
-    "file": "frontend/src/app/pages/dashboard/components/feed-pajarero/components/post-replies/post-replies.component.ts",
+    "file": "frontend/src/app/pages/business-profile/business-profile.page.ts",
     "errors": [
-      "Línea 240: [jsdoc/require-jsdoc] Missing JSDoc comment.",
-      "Línea 267: [jsdoc/require-description] Missing JSDoc block description.",
-      "Línea 274: [jsdoc/require-description] Missing JSDoc block description.",
-      "Línea 283: [jsdoc/require-description] Missing JSDoc block description.",
-      "Línea 291: [jsdoc/require-description] Missing JSDoc block description.",
-      "Línea 302: [jsdoc/require-description] Missing JSDoc block description.",
-      "Línea 329: [jsdoc/require-description] Missing JSDoc block description."
+      "Línea 40: [@typescript-eslint/no-unused-vars] 'CalendarDay' is defined but never used."
+    ]
+  },
+  {
+    "file": "frontend/src/app/pages/business-profile/components/business-form-tab/business-form-tab.component.ts",
+    "errors": [
+      "Línea 45: [jsdoc/require-jsdoc] Missing JSDoc comment."
     ]
   },
   {
     "file": "frontend/src/app/pages/dashboard/components/feed-pajarero/components/sighting-card/sighting-card.component.spec.ts",
     "errors": [
       "Línea 5: [@typescript-eslint/no-unused-vars] '_component' is assigned a value but never used."
-    ]
-  },
-  {
-    "file": "frontend/src/app/pages/dashboard/components/feed-pajarero/components/sighting-card/sighting-card.component.ts",
-    "errors": [
-      "Línea 295: [jsdoc/require-description] Missing JSDoc block description.",
-      "Línea 310: [jsdoc/require-description] Missing JSDoc block description.",
-      "Línea 323: [jsdoc/require-description] Missing JSDoc block description."
     ]
   }
 ]

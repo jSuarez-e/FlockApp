@@ -22,10 +22,7 @@
 
 <ion-content [fullscreen]="true" class="public-profile-content">
   @if (isLoading()) {
-    <div class="loading-state ion-text-center ion-padding">
-      <ion-spinner name="crescent" color="primary"></ion-spinner>
-      <p class="loading-state__text">Cargando información del pajarero...</p>
-    </div>
+    <app-loading message="Cargando perfil del pajarero..." [fullHeight]="true"></app-loading>
   } @else if (errorMessage()) {
     <div class="error-state ion-text-center ion-padding">
       <ion-icon name="shield-checkmark-outline" class="error-state__icon"></ion-icon>

@@ -26,7 +26,6 @@ import {
   IonButton,
   IonChip,
   IonLabel,
-  IonSpinner,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
@@ -50,6 +49,7 @@ import { User } from '../../../core/models/auth.models';
 import { UserMedalsComponent } from '../components/user-medals/user-medals.component';
 import { logger } from '../../../core/utils/logger';
 import { environment } from '../../../../environments/environment';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
 
 /**
  * Componente de presentación de perfil público de usuarios en modo información.
@@ -69,7 +69,7 @@ import { environment } from '../../../../environments/environment';
     IonButton,
     IonChip,
     IonLabel,
-    IonSpinner,
+    LoadingComponent,
   ],
   templateUrl: './public-profile.page.html',
   styleUrls: ['./public-profile.page.scss'],
