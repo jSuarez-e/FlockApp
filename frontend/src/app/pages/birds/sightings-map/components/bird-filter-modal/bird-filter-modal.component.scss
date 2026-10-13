@@ -1,0 +1,39 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos BEM y tokens de diseño para el modal buscador de aves.
+ * [I/O - Reusabilidad]: Clases de lista .bird-results-list, .bird-results-item.
+ * [Edge Cases - UI]: Espaciado uniforme para scroll en dispositivos móviles.
+ */
+
+.bird-search-toolbar {
+  --background: var(--ion-background-color);
+
+  padding: 4px 10px;
+}
+
+.bird-results-list {
+  background: transparent;
+}
+
+.bird-results-item {
+  --padding-start: 14px;
+  --inner-padding-end: 14px;
+
+  &__scientific {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--flock-primary-light);
+    margin-bottom: 2px;
+  }
+
+  &__names {
+    font-size: 0.84rem;
+    color: var(--flock-muted-foreground);
+    margin: 0;
+  }
+}
+
+.bird-results-empty {
+  color: var(--flock-muted-foreground);
+  font-size: 0.9rem;
+}

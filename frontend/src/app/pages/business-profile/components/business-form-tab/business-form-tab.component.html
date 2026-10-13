@@ -1,0 +1,158 @@
+<form (ngSubmit)="onSubmit()" class="auth-form-profile">
+  <!-- Switch de Publicación en el Directorio -->
+  <div class="directory-status-card ion-margin-bottom">
+    <div class="directory-status-info">
+      <ion-icon name="eye-outline" color="primary"></ion-icon>
+      <div>
+        <h4 class="directory-status-title">Visible en Directorio</h4>
+        <p class="directory-status-sub">
+          Aparece reconocible para pajareros de todo el país
+        </p>
+      </div>
+    </div>
+    <ion-toggle
+      [checked]="store.isPublished()"
+      (ionChange)="store.updateField('isPublished', $event.detail.checked)"
+      color="success"
+    ></ion-toggle>
+  </div>
+
+  <app-auth-input
+    label="Nombre Comercial / Público *"
+    icon="business-outline"
+    [value]="store.username()"
+    (valueChange)="store.updateField('username', $event)"
+  ></app-auth-input>
+
+  <div class="contact-number-group ion-margin-top">
+    <app-auth-input
+      label="Número Celular de Contacto *"
+      icon="call-outline"
+      [value]="store.phone()"
+      (valueChange)="store.updateField('phone', $event)"
+    ></app-auth-input>
+
+    <div class="whatsapp-toggle-row">
+      <ion-icon class="whatsapp-toggle-row__icon" name="logo-whatsapp" color="success"></ion-icon>
+      <ion-label>¿Este número cuenta con WhatsApp?</ion-label>
+      <ion-toggle
+        [checked]="store.hasWhatsapp()"
+        (ionChange)="store.updateField('hasWhatsapp', $event.detail.checked)"
+        color="success"
+      ></ion-toggle>
+    </div>
+  </div>
+
+  <app-auth-input
+    label="Correo Electrónico de Contacto"
+    icon="mail-outline"
+    [value]="store.email()"
+    (valueChange)="store.updateField('email', $event)"
+  ></app-auth-input>
+
+  <div class="form-row">
+    <div class="form-field">
+      <app-auth-input
+        label="Instagram (@usuario o URL)"
+        icon="logo-instagram"
+        [value]="store.instagram()"
+        (valueChange)="store.updateField('instagram', $event)"
+      ></app-auth-input>
+    </div>
+    <div class="form-field">
+      <app-auth-input
+        label="Página Web"
+        icon="globe-outline"
+        [value]="store.website()"
+        (valueChange)="store.updateField('website', $event)"
+      ></app-auth-input>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-field">
+      <app-auth-input
+        label="Idiomas que maneja"
+        icon="chatbubble-ellipses-outline"
+        [value]="store.languages()"
+        (valueChange)="store.updateField('languages', $event)"
+      ></app-auth-input>
+    </div>
+    <div class="form-field">
+      <app-auth-input
+        label="Registro Nacional Turismo (RNT)"
+        icon="document-text-outline"
+        [value]="store.rnt()"
+        (valueChange)="store.updateField('rnt', $event)"
+      ></app-auth-input>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-field">
+      <label class="field-label">Departamento *</label>
+      <div class="input-wrapper select-box">
+        <ion-select
+          class="native-input"
+          [value]="store.department()"
+          interface="popover"
+          (ionChange)="onDepartmentChange($event)"
+        >
+          @for (dept of store.departmentsList(); track dept.id) {
+            <ion-select-option [value]="dept.name">
+              {{ dept.name }}
+            </ion-select-option>
+          }
+        </ion-select>
+      </div>
+    </div>
+    <div class="form-field">
+      <label class="field-label">Municipio *</label>
+      <div class="input-wrapper select-box">
+        <ion-select
+          class="native-input"
+          [value]="store.municipality()"
+          interface="popover"
+          (ionChange)="store.updateField('municipality', $event.detail.value)"
+        >
+          @for (muni of store.municipalitiesList(); track muni.id) {
+            <ion-select-option [value]="muni.name">
+              {{ muni.name }}
+            </ion-select-option>
+          }
+        </ion-select>
+      </div>
+    </div>
+  </div>
+
+  <app-auth-input
+    label="Especialidad (Ej: Aves Endémicas, Fotografía, Senderismo)"
+    icon="star-outline"
+    [value]="store.specialties()"
+    (valueChange)="store.updateField('specialties', $event)"
+  ></app-auth-input>
+
+  <div class="form-field ion-margin-top">
+    <label class="field-label">Detalles del Servicio y Biografía *</label>
+    <div class="input-wrapper textarea-box">
+      <ion-icon name="list-outline"></ion-icon>
+      <textarea
+        [ngModel]="store.bio()"
+        (ngModelChange)="store.updateField('bio', $event)"
+        name="details"
+        class="native-input"
+        rows="4"
+        placeholder="Describe tu experiencia, zonas de avistamiento que cubres, equipos disponibles..."
+      ></textarea>
+    </div>
+  </div>
+
+  <ion-button
+    expand="block"
+    type="submit"
+    class="primary-btn ion-margin-top"
+    [disabled]="isPristine()"
+  >
+    Actualizar Perfil de Proveedor
+  </ion-button>
+</form>

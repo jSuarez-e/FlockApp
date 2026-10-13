@@ -3,9 +3,9 @@
 
   background: transparent;
 
-  --color: var(--flock-primary-foreground, #fff);
+  --color: var(--flock-primary-foreground);
 
-  padding: 10px 16px 12px;
+  padding: 6px 16px 10px;
 
   .dashboard-header-content {
     display: flex;
@@ -22,7 +22,7 @@
 
   .header-menu-btn,
   .header-action-btn {
-    --color: var(--flock-primary-foreground, #fff);
+    --color: var(--flock-primary-foreground);
     --padding-start: 4px;
     --padding-end: 4px;
 
@@ -40,7 +40,7 @@
       font-size: 1.35rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: var(--flock-primary-foreground, #fff);
+      color: var(--flock-primary-foreground);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -49,7 +49,7 @@
     .dashboard-header-subtitle {
       margin: 4px 0 0;
       font-size: 0.8rem;
-      color: #a7f3d0;
+      color: var(--flock-verified-border);
       font-weight: 500;
       line-height: 1.35;
     }

@@ -1,0 +1,108 @@
+<!--
+/**
+ * @sdd
+ * [Objetivo]: Plantilla HTML del modal de detalle de un avistamiento seleccionado.
+ * [I/O - Reusabilidad]: Consume Inputs sighting, resolvedLocation, isResolvingLocation; Emite dismissModal, userProfileClick.
+ * [Edge Cases - UI]: Breakpoint dinámico de IonModal, skeleton/spinner para geocodificación territorial.
+ */
+-->
+<ion-modal
+  [isOpen]="sighting() !== null"
+  (didDismiss)="dismissModal.emit()"
+  [initialBreakpoint]="0.65"
+  [breakpoints]="[0, 0.65, 0.9]"
+  [handle]="true">
+  <ng-template>
+    <ion-content class="sighting-modal-content ion-padding">
+      @if (sighting(); as s) {
+        <div class="sighting-details">
+          <!-- Badge de Validación -->
+          <div class="sighting-details__badge-row">
+            <ion-badge class="sighting-details__badge">
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
+              <span>Avistamiento Registrado</span>
+            </ion-badge>
+          </div>
+
+          <!-- Taxonomía del Ave -->
+          <div class="sighting-details__bird-info">
+            <h2 class="sighting-details__scientific-name">
+              <i>{{ s.scientificName || s.birdName }}</i>
+            </h2>
+
+            <div class="sighting-details__names-row">
+              @if (s.englishName) {
+                <span class="sighting-details__english-name">{{ s.englishName }}</span>
+              }
+              @if (s.commonName && s.commonName !== s.englishName) {
+                <span class="sighting-details__common-name">• {{ s.commonName }}</span>
+              }
+            </div>
+          </div>
+
+          <!-- Card de Ubicación Territorial con Geocodificación Inversa -->
+          <div class="location-card">
+            <div class="location-card__icon-wrap">
+              <ion-icon name="location-outline"></ion-icon>
+            </div>
+            <div class="location-card__content">
+              <span class="location-card__tag">Ubicación Territorial</span>
+              @if (isResolvingLocation()) {
+                <div class="location-card__loading">
+                  <ion-spinner name="crescent" color="primary"></ion-spinner>
+                  <span>Identificando departamento y municipio...</span>
+                </div>
+              } @else if (resolvedLocation()?.municipalityName || resolvedLocation()?.departmentName) {
+                <h3 class="location-card__place">
+                  {{ resolvedLocation()?.municipalityName || 'Municipio' }},
+                  <strong>{{ resolvedLocation()?.departmentName || 'Colombia' }}</strong>
+                </h3>
+              } @else {
+                <h3 class="location-card__place">Territorio Colombiano</h3>
+              }
+              <p class="location-card__coords">
+                Lat: {{ s.location?.coordinates?.[1] | number:'1.4-4' }}°, Lng: {{ s.location?.coordinates?.[0] | number:'1.4-4' }}°
+              </p>
+            </div>
+          </div>
+
+          <!-- Card de Usuario Observador -->
+          <div
+            class="user-card"
+            (click)="s.user?.id ? userProfileClick.emit(s.user!.id!) : null"
+            [class.clickable]="!!s.user?.id">
+            <div class="user-card__avatar-wrap">
+              <img
+                [src]="getUserAvatarUrl(s.user?.photoUrl, s.user?.name)"
+                [alt]="s.user?.name || 'Observador'"
+                class="user-card__avatar"
+                (error)="onAvatarError($event, s.user?.name)" />
+            </div>
+            <div class="user-card__info">
+              <span class="user-card__tag">Registrado por</span>
+              <h4 class="user-card__name">{{ s.user?.name || 'Observador de Campo' }}</h4>
+              <p class="user-card__date">
+                <ion-icon name="calendar-outline"></ion-icon>
+                <span>{{ formatDate(s.date, s.time) }}</span>
+              </p>
+            </div>
+            @if (s.user?.id) {
+              <ion-icon name="chevron-forward-outline" class="user-card__arrow"></ion-icon>
+            }
+          </div>
+
+          <!-- Acciones -->
+          <div class="sighting-actions">
+            <ion-button
+              expand="block"
+              class="sighting-actions__btn"
+              (click)="openGoogleMaps(s)">
+              <ion-icon slot="start" name="map"></ion-icon>
+              <span>Ver en Google Maps</span>
+            </ion-button>
+          </div>
+        </div>
+      }
+    </ion-content>
+  </ng-template>
+</ion-modal>

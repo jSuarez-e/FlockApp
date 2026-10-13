@@ -3,7 +3,6 @@
  * @sdd Smart Component contenedor. Configura el layout dividido y orquesta la conexión con ActiveRouteStore.
  */
 import { Component, inject, signal } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { IBirdSearch } from '../../../core/models/birds.interfaces';
 import {
@@ -72,6 +71,20 @@ import { NetworkService } from '../../../core/services/network.service';
 import { AppPermissionsService } from '../../../core/services/app-permissions.service';
 import { environment } from '../../../../environments/environment';
 import { logger } from '../../../core/utils/logger';
+
+/**
+ * Payload de cambio de ubicación territorial de la ruta.
+ */
+export interface RouteLocationChangePayload {
+  /** Identificador numérico del departamento. */
+  departmentId: number | null;
+  /** Nombre del departamento. */
+  departmentName: string;
+  /** Identificador numérico del municipio. */
+  municipalityId: number | null;
+  /** Nombre del municipio. */
+  municipalityName: string;
+}
 
 /**
  *
@@ -204,28 +217,16 @@ export class RouteWorkspacePage implements ViewWillEnter, ViewWillLeave {
    */
   selectedMunicipalityId: number | null = null;
 
+
   /**
    * Sincroniza la ubicación territorial seleccionada desde GeoSelectorComponent.
-   * @param loc Ubicación resuelta.
-   * @param loc.departmentId Identificador del departamento.
-   * @param loc.departmentName Nombre del departamento.
-   * @param loc.municipalityId Identificador del municipio.
-   * @param loc.municipalityName Nombre del municipio.
+   * @param loc Ubicación resuelta con departamento y municipio.
    */
-  onRouteLocationChange(loc: {
-    departmentId: number | null;
-    departmentName: string;
-    municipalityId: number | null;
-    municipalityName: string;
-  }): void {
+  onRouteLocationChange(loc: RouteLocationChangePayload): void {
     this.selectedDepartmentId = loc.departmentId;
     this.selectedMunicipalityId = loc.municipalityId;
   }
 
-  /**
-   *
-   */
-  private routeSub?: Subscription;
 
   // New UI states
   /**
@@ -283,22 +284,21 @@ export class RouteWorkspacePage implements ViewWillEnter, ViewWillLeave {
    * Carga la ruta activa o inicia una nueva sesión de tracking al entrar a la vista.
    */
   async ionViewWillEnter(): Promise<void> {
-    this.routeSub = this.route.queryParams.subscribe(async (params) => {
-      const routeId = params['id'];
-      const readonlyParam = params['readonly'];
-      this.isReadonly = readonlyParam === 'true' || readonlyParam === true;
+    const params = this.route.snapshot.queryParams;
+    const routeId = params['id'];
+    const readonlyParam = params['readonly'];
+    this.isReadonly = readonlyParam === 'true' || readonlyParam === true;
 
-      await this.loadOrInitializeRoute(routeId);
+    await this.loadOrInitializeRoute(routeId);
 
-      if (!this.isReadonly) {
-        try {
-          await this.store.loadDepartments();
-        } catch (err) {
-          logger.error('Error cargando departamentos', err);
-        }
-        await this.initGpsTracking();
+    if (!this.isReadonly) {
+      try {
+        await this.store.loadDepartments();
+      } catch (err) {
+        logger.error('Error cargando departamentos', err);
       }
-    });
+      await this.initGpsTracking();
+    }
   }
 
   /**
@@ -716,12 +716,9 @@ export class RouteWorkspacePage implements ViewWillEnter, ViewWillLeave {
   }
 
   /**
-   * Limpia la suscripción de queryParams y detiene el GPS al salir de la vista.
+   * Detiene el GPS al salir de la vista.
    */
   async ionViewWillLeave() {
-    if (this.routeSub) {
-      this.routeSub.unsubscribe();
-    }
     if (this.watchId) {
       await Geolocation.clearWatch({ id: this.watchId });
       this.watchId = null;

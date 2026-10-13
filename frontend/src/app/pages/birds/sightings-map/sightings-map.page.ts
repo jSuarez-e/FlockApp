@@ -2,7 +2,6 @@ import {
   Component,
   signal,
   inject,
-  computed,
   OnInit,
   ChangeDetectionStrategy,
 } from '@angular/core';
@@ -59,47 +58,34 @@ import { CommonModule } from '@angular/common';
 import {
   IonHeader,
   IonToolbar,
-  IonTitle,
   IonButtons,
   IonMenuButton,
   IonContent,
-  IonItem,
-  IonLabel,
   IonSelect,
   IonSelectOption,
   IonButton,
-  IonModal,
   IonIcon,
-  IonSearchbar,
-  IonList,
-  IonBadge,
   IonSpinner,
   ModalController,
 } from '@ionic/angular';
 import { SearchMapComponent } from '../bird-search/components/search-map/search-map.component';
+import { SightingDetailModalComponent } from './components/sighting-detail-modal/sighting-detail-modal.component';
+import { BirdFilterModalComponent } from './components/bird-filter-modal/bird-filter-modal.component';
 import { SightingsMapStore } from '../../../core/stores/sightings-map.store';
 import { ActiveRouteStore } from '../../../core/stores/active-route.store';
 import { BirdSearchStore } from '../../../core/stores/bird-search.store';
 import { UiService } from '../../../core/services/ui.service';
 import { GeographyService, ResolvedLocation } from '../../../core/services/geography.service';
-import { environment } from '../../../../environments/environment';
 import { PublicProfilePage } from '../../profile/public-profile/public-profile.page';
 import { IBirdSearch } from '../../../core/models/birds.interfaces';
 import { addIcons } from 'ionicons';
 import {
   chevronDownOutline,
-  calendarOutline,
-  map,
   locationOutline,
-  personOutline,
   closeCircleOutline,
   searchOutline,
-  checkmarkCircleOutline,
   compassOutline,
   sparklesOutline,
-  timeOutline,
-  chevronForwardOutline,
-  bookOutline,
 } from 'ionicons/icons';
 
 /**
@@ -113,22 +99,17 @@ import {
   imports: [
     CommonModule,
     SearchMapComponent,
+    SightingDetailModalComponent,
+    BirdFilterModalComponent,
     IonHeader,
     IonToolbar,
-    IonTitle,
     IonButtons,
     IonMenuButton,
     IonContent,
-    IonItem,
-    IonLabel,
     IonSelect,
     IonSelectOption,
     IonButton,
-    IonModal,
     IonIcon,
-    IonSearchbar,
-    IonList,
-    IonBadge,
     IonSpinner,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -194,51 +175,23 @@ export class SightingsMapPage implements OnInit {
    * Modal de búsqueda de aves
    */
   public isBirdModalOpen = signal<boolean>(false);
-  /**
-   * Término de búsqueda
-   */
-  public birdSearchTerm = signal<string>('');
-  /**
-   * Aves filtradas
-   */
-  public filteredBirds = computed(() => {
-    const term = this.birdSearchTerm().toLowerCase();
-    const allBirds = this.birdStore.birds() || [];
-    if (!term) return allBirds.slice(0, 50); // Mostrar max 50 por defecto
-    return allBirds
-      .filter(
-        (b) =>
-          (b.common_name && b.common_name.toLowerCase().includes(term)) ||
-          (b.scientific_name && b.scientific_name.toLowerCase().includes(term)) ||
-          (b.english_name && b.english_name.toLowerCase().includes(term)),
-      )
-      .slice(0, 50);
-  });
 
-  // sightingsSignal ya no es necesario, usamos el store
   /**
    * Señal de avistamientos encontrados
    */
   public sightingsSignal = this.sightingsMapStore.sightings;
 
   /**
-   * Registra los iconos usados en el HTML
+   * Registra los iconos usados en el HTML principal
    */
   constructor() {
     addIcons({
       chevronDownOutline,
-      calendarOutline,
-      map,
       locationOutline,
-      personOutline,
       closeCircleOutline,
       searchOutline,
-      checkmarkCircleOutline,
       compassOutline,
       sparklesOutline,
-      timeOutline,
-      chevronForwardOutline,
-      bookOutline,
     });
   }
 
@@ -361,38 +314,6 @@ export class SightingsMapPage implements OnInit {
   }
 
   /**
-   * Resuelve la URL de la foto de perfil o genera un avatar elegante con iniciales
-   * @param photoUrl URL previa del usuario
-   * @param userName Nombre del usuario
-   * @returns URL válida y segura para renderizar
-   */
-  getUserAvatarUrl(photoUrl?: string, userName?: string): string {
-    if (photoUrl && photoUrl.trim() && !photoUrl.includes('general-error.png')) {
-      if (photoUrl.startsWith('http')) {
-        return photoUrl;
-      }
-      const baseUrl = environment.apiUrl.replace(/\/api\/?$/, '');
-      const cleanPath = photoUrl.startsWith('/') ? photoUrl : `/${photoUrl}`;
-      return `${baseUrl}${cleanPath}`;
-    }
-    const safeName = encodeURIComponent(userName?.trim() || 'Pajarero');
-    return `https://ui-avatars.com/api/?name=${safeName}&background=1b5e20&color=fff&bold=true`;
-  }
-
-  /**
-   * Maneja el error de carga de avatar aplicando fallback automático
-   * @param event Evento de error
-   * @param userName Nombre del usuario para iniciales
-   */
-  onAvatarError(event: Event, userName?: string) {
-    const target = event.target as HTMLImageElement;
-    if (target) {
-      const safeName = encodeURIComponent(userName?.trim() || 'Pajarero');
-      target.src = `https://ui-avatars.com/api/?name=${safeName}&background=1b5e20&color=fff&bold=true`;
-    }
-  }
-
-  /**
    * Abre el perfil público del usuario en un modal interactivo
    * @param userId Identificador del usuario
    */
@@ -408,52 +329,5 @@ export class SightingsMapPage implements OnInit {
       handle: true,
     });
     await modal.present();
-  }
-
-  /**
-   * Abre en Google Maps
-   * @param sighting El avistamiento
-   */
-  openGoogleMaps(sighting: ISightingMapMarker) {
-    const loc = sighting['location'] as { /**
-     *
-     */
-    coordinates?: [number, number] } | undefined;
-    if (loc?.coordinates) {
-      const [lng, lat] = loc.coordinates;
-      window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`, '_blank');
-    }
-  }
-
-  /**
-   * Formatea la fecha y hora a un formato legible: "28 de Septiembre de 2026 - 04:29"
-   * @param dateString Fecha inicial
-   * @param timeString Hora inicial
-   * @returns La cadena de texto de la fecha formateada
-   */
-  formatDate(dateString: string, timeString: string): string {
-    if (!dateString) return '';
-    try {
-      // Intentamos parsear la fecha, asumiendo "YYYY-MM-DD"
-      const dateParts = dateString.split('-');
-      if (dateParts.length !== 3) return `${dateString} - ${timeString}`;
-      
-      const year = parseInt(dateParts[0], 10);
-      const month = parseInt(dateParts[1], 10) - 1; // Meses en JS son 0-11
-      const day = parseInt(dateParts[2], 10);
-      
-      const date = new Date(year, month, day);
-      const dayFormatted = date.getDate();
-      const monthNames = [
-        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-      ];
-      const monthName = monthNames[date.getMonth()];
-      const yearFormatted = date.getFullYear();
-
-      return `${dayFormatted} de ${monthName} de ${yearFormatted} - ${timeString || '00:00'}`;
-    } catch {
-      return `${dateString} - ${timeString}`;
-    }
   }
 }

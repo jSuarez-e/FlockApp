@@ -10,73 +10,9 @@ import { NgClass } from '@angular/common';
   selector: 'app-password-meter',
   standalone: true,
   imports: [NgClass],
+  templateUrl: './password-meter.component.html',
+  styleUrl: './password-meter.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    @if (score() > 0) {
-      <div class="strength-meter-wrapper">
-        <div class="strength-bars">
-          <div class="bar" [ngClass]="score() >= 1 ? cssClass() : ''"></div>
-          <div class="bar" [ngClass]="score() >= 2 ? cssClass() : ''"></div>
-          <div class="bar" [ngClass]="score() >= 3 ? cssClass() : ''"></div>
-          <div class="bar" [ngClass]="score() >= 4 ? cssClass() : ''"></div>
-        </div>
-        <div class="strength-text" [ngClass]="cssClass()">
-          Nivel de seguridad: <strong>{{ text() }}</strong>
-        </div>
-      </div>
-    }
-  `,
-  styles: [
-    `
-      .strength-meter-wrapper {
-        margin-top: 8px;
-        padding: 0 6px;
-      }
-      .strength-bars {
-        display: flex;
-        gap: 6px;
-        height: 6px;
-      }
-      .bar {
-        flex: 1;
-        background: var(--avitour-border);
-        border-radius: 4px;
-        transition: background 0.3s ease-in-out;
-      }
-
-      .bar.weak {
-        background: var(--ion-color-danger);
-      }
-      .bar.medium {
-        background: var(--ion-color-warning);
-      }
-      .bar.good {
-        background: var(--ion-color-success);
-      }
-      .bar.excellent {
-        background: var(--avitour-primary);
-      }
-
-      .strength-text {
-        font-size: 0.75rem;
-        text-align: right;
-        margin-top: 6px;
-        transition: color 0.3s ease-in-out;
-      }
-      .strength-text.weak {
-        color: var(--ion-color-danger);
-      }
-      .strength-text.medium {
-        color: var(--ion-color-warning);
-      }
-      .strength-text.good {
-        color: var(--ion-color-success);
-      }
-      .strength-text.excellent {
-        color: var(--avitour-primary);
-      }
-    `,
-  ],
 })
 export class PasswordMeterComponent {
   /** * @description Contraseña a evaluar, recibida dinámicamente desde el componente padre.

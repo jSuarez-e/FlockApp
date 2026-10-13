@@ -11,7 +11,7 @@
 
 .hero-image {
   position: relative;
-  background-color: var(--ion-color-step-100, #f4f5f8);
+  background-color: var(--ion-color-step-100, var(--flock-background));
 
   &::after {
     content: '';
@@ -20,7 +20,7 @@
     left: 0;
     width: 100%;
     height: 44px;
-    background: linear-gradient(to top, var(--ion-background-color, #fff) 0%, transparent 100%);
+    background: linear-gradient(to top, var(--ion-background-color) 0%, transparent 100%);
   }
 
   &__img {
@@ -33,7 +33,7 @@
   &__fallback-banner {
     width: 100%;
     height: 240px;
-    background: linear-gradient(135deg, var(--ion-color-primary, #3880ff) 0%, #2f6f4e 50%, #1e3c72 100%);
+    background: linear-gradient(135deg, var(--ion-color-primary, var(--ion-color-primary)) 0%, var(--flock-primary-dark) 50%, var(--ion-color-secondary) 100%);
   }
 
   &__avatar-circle {
@@ -43,9 +43,9 @@
     width: 82px;
     height: 82px;
     border-radius: 50%;
-    border: 3px solid var(--ion-background-color, #fff);
+    border: 3px solid var(--ion-background-color, var(--flock-card));
     box-shadow: 0 4px 14px rgb(0 0 0 / 22%);
-    background: var(--ion-background-color, #fff);
+    background: var(--ion-background-color);
     overflow: hidden;
     z-index: 5;
     display: flex;
@@ -63,19 +63,19 @@
 .content-wrapper {
   position: relative;
   top: -20px;
-  background: var(--ion-background-color, #fff);
+  background: var(--ion-background-color);
   border-radius: 24px 24px 0 0;
 }
 
 .title {
   font-size: 1.6rem;
   font-weight: 800;
-  color: var(--ion-color-dark, #222);
+  color: var(--ion-color-dark, var(--flock-foreground));
   margin-bottom: 5px;
 }
 
 .text-muted {
-  color: var(--ion-color-medium, #92949c);
+  color: var(--ion-color-medium, var(--flock-muted-foreground));
   display: flex;
   align-items: center;
   gap: 5px;
@@ -118,13 +118,13 @@
     &-score {
       font-size: 1.25rem;
       font-weight: 800;
-      color: var(--ion-color-dark, #222);
+      color: var(--ion-color-dark, var(--flock-foreground));
     }
 
     &-badge {
       font-size: 0.85rem;
       font-weight: 600;
-      color: var(--ion-color-primary, #3880ff);
+      color: var(--ion-color-primary, var(--ion-color-primary));
       background: rgb(var(--ion-color-primary-rgb, 56 128 255) / 10%);
       padding: 3px 8px;
       border-radius: 8px;
@@ -137,7 +137,7 @@
 
   p {
     line-height: 1.6;
-    color: var(--ion-color-dark, #222);
+    color: var(--ion-color-dark, var(--flock-foreground));
     opacity: 0.9;
     font-size: 0.95rem;
   }
@@ -149,7 +149,7 @@
   h3 {
     font-size: 1.15rem;
     font-weight: 700;
-    color: var(--ion-color-primary, #3880ff);
+    color: var(--ion-color-primary, var(--ion-color-primary));
     margin-bottom: 12px;
     border-bottom: 2px solid rgb(var(--ion-color-primary-rgb, 56 128 255) / 10%);
     padding-bottom: 6px;
@@ -171,7 +171,7 @@
 }
 
 .stat-card {
-  background: var(--ion-color-step-50, #f8f9fa);
+  background: var(--ion-color-step-50, var(--flock-background));
   border: 1px solid rgb(var(--ion-color-medium-rgb, 146 148 156) / 12%);
   border-radius: 16px;
   padding: 12px 8px;
@@ -192,17 +192,17 @@
 
     &--species {
       background: rgb(var(--ion-color-success-rgb, 45 211 111) / 15%);
-      color: var(--ion-color-success, #2dd36f);
+      color: var(--ion-color-success);
     }
 
     &--sightings {
       background: rgb(var(--ion-color-primary-rgb, 56 128 255) / 15%);
-      color: var(--ion-color-primary, #3880ff);
+      color: var(--ion-color-primary, var(--ion-color-primary));
     }
 
     &--medals {
       background: rgb(var(--ion-color-warning-rgb, 255 196 9) / 15%);
-      color: var(--ion-color-warning-shade, #e0a800);
+      color: var(--flock-accent-gold);
     }
   }
 
@@ -214,13 +214,13 @@
   &__value {
     font-size: 1.25rem;
     font-weight: 800;
-    color: var(--ion-color-dark, #222);
+    color: var(--ion-color-dark, var(--flock-foreground));
   }
 
   &__label {
     font-size: 0.75rem;
     font-weight: 600;
-    color: var(--ion-color-medium, #92949c);
+    color: var(--ion-color-medium, var(--flock-muted-foreground));
     text-transform: uppercase;
   }
 
@@ -244,25 +244,25 @@
 
   &__icon {
     font-size: 54px;
-    color: var(--ion-color-medium, #92949c);
+    color: var(--ion-color-medium, var(--flock-muted-foreground));
     margin-bottom: 12px;
   }
 
   &__title {
     font-size: 1.3rem;
     font-weight: 700;
-    color: var(--ion-color-dark, #222);
+    color: var(--ion-color-dark, var(--flock-foreground));
     margin: 0 0 6px;
   }
 
   &__desc {
-    color: var(--ion-color-medium, #92949c);
+    color: var(--ion-color-medium, var(--flock-muted-foreground));
     max-width: 320px;
     margin: 0;
   }
 
   &__text {
     margin-top: 12px;
-    color: var(--ion-color-medium, #92949c);
+    color: var(--ion-color-medium, var(--flock-muted-foreground));
   }
 }

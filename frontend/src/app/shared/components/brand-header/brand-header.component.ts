@@ -14,41 +14,13 @@ import { leafOutline } from 'ionicons/icons';
   selector: 'app-brand-header',
   standalone: true,
   imports: [IonIcon],
-  template: `
-    <div class="brand-wrapper ion-text-center">
-      <ion-icon name="leaf-outline" color="primary" class="brand-logo"></ion-icon>
-      <h1 class="brand-text">FlockApp</h1>
-    </div>
-  `,
-  styles: [
-    `
-      .brand-wrapper {
-        margin-bottom: 35px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        .brand-logo {
-          font-size: 62px;
-          --ion-color-primary: #108346;
-        }
-
-        .brand-text {
-          margin: 8px 0 0 0;
-          font-size: 2.5rem;
-          font-weight: 800;
-          color: var(--avitour-primary);
-          letter-spacing: -1.5px;
-        }
-      }
-    `,
-  ],
+  templateUrl: './brand-header.component.html',
+  styleUrl: './brand-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BrandHeaderComponent {
   /**
-   * @constructor
-   * @description Inicializa el componente y registra los iconos institucionales.
+   * Inicializa el componente y registra los iconos institucionales.
    */
   constructor() {
     addIcons({ leafOutline });

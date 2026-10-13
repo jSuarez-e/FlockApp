@@ -12,6 +12,7 @@
 .flock-header-seamless {
   background: var(--flock-gradient-header);
   box-shadow: var(--flock-shadow-header);
+  padding-top: max(var(--ion-safe-area-top, 0px), env(safe-area-inset-top, 0px));
   padding-bottom: 14px;
 
   .section-header-toolbar {
@@ -21,7 +22,7 @@
 
     --color: var(--flock-primary-foreground);
 
-    padding: 10px 16px 8px;
+    padding: 6px 16px 8px;
 
     .section-header-content {
       display: flex;
@@ -36,7 +37,7 @@
     }
 
     .header-menu-btn {
-      --color: var(--flock-primary-foreground, #fff);
+      --color: var(--flock-primary-foreground);
       --padding-start: 4px;
       --padding-end: 4px;
 
@@ -70,7 +71,7 @@
       .section-header-subtitle {
         margin: 4px 0 0;
         font-size: 0.8rem;
-        color: #a7f3d0;
+        color: var(--flock-verified-border);
         font-weight: 500;
         line-height: 1.35;
       }
@@ -94,11 +95,11 @@
 
     .searchbar-wrapper {
       .flock-searchbar {
-        --background: #fff;
-        --color: #0f172a;
-        --placeholder-color: #64748b;
+        --background: var(--flock-card);
+        --color: var(--flock-foreground);
+        --placeholder-color: var(--flock-muted-foreground);
         --icon-color: var(--flock-primary-light);
-        --clear-button-color: #94a3b8;
+        --clear-button-color: var(--flock-subtle-foreground);
         --border-radius: var(--flock-radius-input);
         --box-shadow: 0 4px 14px rgb(0 0 0 / 14%);
 

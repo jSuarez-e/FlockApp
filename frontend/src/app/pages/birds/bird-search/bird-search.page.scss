@@ -13,7 +13,7 @@
 
   background: transparent;
 
-  --color: var(--flock-primary-foreground, #fff);
+  --color: var(--flock-primary-foreground);
 
   padding: 10px 16px 8px;
 
@@ -31,7 +31,7 @@
   }
 
   .header-menu-btn {
-    --color: var(--flock-primary-foreground, #fff);
+    --color: var(--flock-primary-foreground);
     --padding-start: 4px;
     --padding-end: 4px;
 
@@ -49,7 +49,7 @@
       font-size: 1.35rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: var(--flock-primary-foreground, #fff);
+      color: var(--flock-primary-foreground);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -58,7 +58,7 @@
     .bird-header-subtitle {
       margin: 4px 0 0;
       font-size: 0.8rem;
-      color: #a7f3d0;
+      color: var(--flock-verified-border);
       font-weight: 500;
       line-height: 1.35;
     }
@@ -99,7 +99,7 @@
       flex-shrink: 0;
 
       --background: rgb(255 255 255 / 18%);
-      --color: #fff;
+      --color: var(--flock-primary-foreground);
 
       border: 1px solid rgb(255 255 255 / 25%);
       margin: 0;
@@ -130,14 +130,14 @@
       margin: 0;
 
       --background: rgb(255 255 255 / 28%);
-      --color: #fff;
+      --color: var(--flock-primary-foreground);
 
       border: 1px solid rgb(255 255 255 / 35%);
       font-size: 0.78rem;
       font-weight: 600;
 
       ion-icon {
-        color: #fff;
+        color: var(--flock-primary-foreground);
         font-size: 1rem;
       }
     }
@@ -150,9 +150,9 @@
 
   ion-searchbar {
     --border-radius: var(--flock-radius-input, 14px);
-    --background: #fff;
-    --color: #0f172a;
-    --placeholder-color: #64748b;
+    --background: var(--flock-card);
+    --color: var(--flock-foreground);
+    --placeholder-color: var(--flock-muted-foreground);
     --box-shadow: 0 4px 14px rgb(0 0 0 / 14%);
 
     padding: 0;
@@ -164,7 +164,7 @@
   justify-content: space-between;
   align-items: center;
   background: var(--ion-color-light);
-  border-bottom: 1px solid var(--flock-border, #e0e0e0);
+  border-bottom: 1px solid var(--flock-border, var(--flock-border));
   padding: 10px;
 
   ion-label {
@@ -198,7 +198,7 @@
   left: 0;
   right: 0;
   z-index: 200;
-  background: var(--ion-color-step-100, #f1f5f9);
+  background: var(--ion-color-step-100, var(--flock-surface-subtle));
   color: var(--ion-color-primary);
   padding: 12px 16px;
   font-size: 0.88rem;
@@ -212,18 +212,18 @@
 /* Marcador de posición del encabezado dentro de las filas del scroll virtual */
 .group-header-card-placeholder {
   height: 45px;
-  background: #fafbfd;
+  background: var(--flock-background);
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 20px;
   box-sizing: border-box;
-  border-bottom: 1px dashed #cbd5e1;
+  border-bottom: 1px dashed var(--flock-border-medium);
 
   .family-badge {
     font-size: 0.65rem;
     font-weight: 900;
-    color: #94a3b8;
+    color: var(--flock-subtle-foreground);
     letter-spacing: 0.1em;
     margin-bottom: 4px;
   }
@@ -259,7 +259,7 @@
   z-index: 10;
 
   .icon-shape-badge {
-    background: #f1f5f9;
+    background: var(--flock-surface-subtle);
     border-radius: 50%;
     width: 72px;
     height: 72px;
@@ -271,14 +271,14 @@
     /* stylelint-disable-next-line no-descending-specificity */
     ion-icon {
       font-size: 34px;
-      color: #94a3b8;
+      color: var(--flock-subtle-foreground);
     }
   }
 
   h3 {
     font-size: 1.15rem;
     font-weight: 800;
-    color: #334155;
+    color: var(--flock-foreground);
     margin: 0 0 6px;
   }
 
@@ -286,6 +286,6 @@
     font-size: 0.88rem;
     line-height: 1.45;
     margin: 0 0 18px;
-    color: #64748b;
+    color: var(--flock-muted-foreground);
   }
 }

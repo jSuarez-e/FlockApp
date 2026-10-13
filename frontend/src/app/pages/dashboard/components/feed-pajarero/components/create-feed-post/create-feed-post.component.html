@@ -1,0 +1,139 @@
+<!--
+  @sdd
+  [Objetivo]: Estructura HTML del modal de creación y publicación en el feed de avistamientos.
+  [I/O - Reusabilidad]: Consume Signals user(), content(), selectedImage(), selectedLocation(), needsIdentification().
+  [Edge Cases - UI]: Soporte de modo oscuro, previsualización y eliminación de imágenes/GPS adjuntos.
+-->
+<ion-header class="ion-no-border flock-modal-header">
+  <ion-toolbar>
+    <ion-title>Crear Publicación</ion-title>
+    <ion-buttons slot="end">
+      <button type="button" (click)="close()" class="flock-header-pill-btn" aria-label="Cerrar modal">
+        <ion-icon [icon]="icons.closeOutline"></ion-icon>
+        <span>Cerrar</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="flock-composer-content">
+  <div class="composer-container">
+    <!-- Encabezado de Identidad del Autor -->
+    @if (user(); as u) {
+      <div class="author-banner">
+        <div class="author-avatar-wrap">
+          @if (u.avatarUrl) {
+            <img
+              [src]="resolveAvatarUrl(u.avatarUrl)"
+              (error)="handleAvatarError($event, u)"
+              class="author-avatar-img"
+              alt="Avatar"
+            />
+          } @else {
+            <div class="author-avatar-fallback">
+              <ion-icon [icon]="icons.person"></ion-icon>
+            </div>
+          }
+        </div>
+        <div class="author-meta">
+          <span class="author-name">{{ u.firstName }} {{ u.lastName }}</span>
+          <span class="author-visibility-pill">
+            <ion-icon [icon]="icons.globeOutline"></ion-icon>
+            <span>Público en Feed</span>
+          </span>
+        </div>
+      </div>
+    }
+
+    <!-- Tarjeta Principal del Compositor -->
+    <div class="composer-editor-card">
+      <ion-textarea
+        placeholder="¿Qué pajareaste hoy, o en qué necesitas ayuda de la comunidad?"
+        [autoGrow]="true"
+        rows="3"
+        class="composer-textarea"
+        (ionInput)="updateContent($event)"
+      ></ion-textarea>
+
+      <!-- Previsualización de Imagen Adjunta -->
+      @if (selectedImage()) {
+        <div class="media-preview-container">
+          <img [src]="selectedImage()" class="media-preview-img" alt="Foto adjunta" />
+          <button class="remove-preview-btn" (click)="selectedImage.set(null)" aria-label="Quitar foto">
+            <ion-icon [icon]="icons.closeOutline"></ion-icon>
+          </button>
+        </div>
+      }
+
+      <!-- Chip de Ubicación Adjunta -->
+      @if (selectedLocation(); as loc) {
+        <div class="location-chip-preview">
+          <div class="location-chip-info">
+            <ion-icon [icon]="icons.locationOutline"></ion-icon>
+            <span>Lat: {{ loc.lat | number : '1.4-4' }}, Lng: {{ loc.lng | number : '1.4-4' }}</span>
+          </div>
+          <button class="location-chip-remove" (click)="selectedLocation.set(null)" aria-label="Quitar ubicación">
+            <ion-icon [icon]="icons.closeOutline"></ion-icon>
+          </button>
+        </div>
+      }
+
+      <!-- Barra de Herramientas Multimedia -->
+      <div class="composer-actions-bar">
+        <div class="actions-group">
+          <button type="button" class="tool-btn" (click)="pickImage('GALLERY')" title="Adjuntar foto de galería">
+            <ion-icon [icon]="icons.imageOutline"></ion-icon>
+            <span>Galería</span>
+          </button>
+          <button type="button" class="tool-btn" (click)="pickImage('CAMERA')" title="Tomar foto con cámara">
+            <ion-icon [icon]="icons.cameraOutline"></ion-icon>
+            <span>Cámara</span>
+          </button>
+          <button
+            type="button"
+            class="tool-btn"
+            [class.tool-btn--active]="selectedLocation()"
+            (click)="getLocation()"
+            title="Adjuntar ubicación GPS"
+          >
+            <ion-icon [icon]="icons.locationOutline"></ion-icon>
+            <span>{{ selectedLocation() ? 'Ubicación lista' : 'Ubicación' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Opción Social: Pedir Identificación -->
+    <div class="composer-subcard">
+      <div class="subcard-info">
+        <div class="subcard-icon-wrap">
+          <ion-icon [icon]="icons.helpBuoyOutline"></ion-icon>
+        </div>
+        <div class="subcard-texts">
+          <h4 class="subcard-title">Pedir Identificación</h4>
+          <p class="subcard-desc">La comunidad te ayudará a identificar el ave</p>
+        </div>
+      </div>
+      <ion-toggle
+        [checked]="needsIdentification()"
+        (ionChange)="toggleIdentification($event)"
+        class="flock-toggle"
+      ></ion-toggle>
+    </div>
+  </div>
+</ion-content>
+
+<!-- Barra Inferior de Publicación -->
+<ion-footer class="ion-no-border flock-composer-footer">
+  <ion-toolbar>
+    <button
+      type="button"
+      class="flock-publish-btn"
+      (click)="publish()"
+      [disabled]="content().trim().length === 0 && !selectedImage()"
+    >
+      <ion-icon [icon]="icons.paperPlaneOutline"></ion-icon>
+      <span>Compartir en el Feed</span>
+    </button>
+  </ion-toolbar>
+</ion-footer>

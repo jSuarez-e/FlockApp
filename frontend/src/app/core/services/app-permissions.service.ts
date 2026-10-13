@@ -24,11 +24,11 @@ export type AppPermissionState = 'prompt' | 'granted' | 'denied';
   providedIn: 'root',
 })
 export class AppPermissionsService {
-  /** Controlador modal de Ionic */
-  private readonly modalCtrl = inject(ModalController);
+  /** Controlador modal de Ionic opcional para evitar fallos de inyección */
+  private readonly modalCtrl = inject(ModalController, { optional: true });
 
-  /** Controlador de alertas de Ionic */
-  private readonly alertCtrl = inject(AlertController);
+  /** Controlador de alertas de Ionic opcional para evitar fallos de inyección */
+  private readonly alertCtrl = inject(AlertController, { optional: true });
 
   /** Estado reactivo del permiso de cámara */
   public readonly cameraStatus = signal<AppPermissionState>('prompt');
@@ -170,6 +170,9 @@ export class AppPermissionsService {
    * @returns Promise<boolean> true si el usuario confirmó continuar
    */
   private async presentRationaleModal(type: PermissionRationaleType): Promise<boolean> {
+    if (!this.modalCtrl) {
+      return true;
+    }
     const modal = await this.modalCtrl.create({
       component: PermissionRationaleModalComponent,
       componentProps: { permissionType: type },
@@ -178,7 +181,11 @@ export class AppPermissionsService {
     });
 
     await modal.present();
-    const { data } = await modal.onDidDismiss<{ confirmed?: boolean }>();
+    interface DismissPayload {
+      /** Indicador de confirmación */
+      confirmed?: boolean;
+    }
+    const { data } = await modal.onDidDismiss<DismissPayload>();
     return Boolean(data?.confirmed);
   }
 
@@ -187,6 +194,9 @@ export class AppPermissionsService {
    * @param type Tipo de permiso denegado
    */
   async showDeviceSettingsGuide(type: PermissionRationaleType): Promise<void> {
+    if (!this.alertCtrl) {
+      return;
+    }
     const nameMap: Record<PermissionRationaleType, string> = {
       camera: 'Cámara',
       location: 'Ubicación (GPS)',

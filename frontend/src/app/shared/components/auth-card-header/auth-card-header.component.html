@@ -1,0 +1,12 @@
+<!--
+  @sdd
+  [Objetivo]: Estructura HTML semántica del encabezado de tarjetas de autenticación.
+  [I/O - Reusabilidad]: Consume Signals title() y subtitle().
+  [Edge Cases - UI]: Control flow @if para renderizado condicional del subtítulo.
+-->
+<div class="auth-card-header">
+  <h2 class="auth-card-header__title">{{ title() }}</h2>
+  @if (subtitle()) {
+    <p class="auth-card-header__subtitle">{{ subtitle() }}</p>
+  }
+</div>

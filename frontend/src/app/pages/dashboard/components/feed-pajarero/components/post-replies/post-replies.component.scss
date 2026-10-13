@@ -1,0 +1,126 @@
+/**
+ * @sdd
+ * [Objetivo]: BEM Styles for feed post replies modal, handling spacing, avatars, list formatting, and dark mode.
+ * [I/O - Reusabilidad]: Exported BEM block .flock-replies and modifiers for comments thread.
+ * [Edge Cases - UI]: Responsive text wrapping, dark mode background and text token adjustments.
+ */
+
+.flock-replies {
+  &__center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  &__empty-state {
+    text-align: center;
+    margin-top: 60px;
+    color: var(--ion-color-medium);
+  }
+
+  &__empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  &__empty-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  &__empty-text {
+    font-size: 14px;
+    margin: 0;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__item {
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    align-items: flex-start;
+  }
+
+  &__avatar {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    margin-top: 4px;
+  }
+
+  &__item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  &__author-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ion-color-dark);
+  }
+
+  &__date {
+    font-size: 12px;
+    color: var(--ion-color-medium);
+  }
+
+  &__content {
+    font-size: 14px;
+    color: var(--ion-text-color);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  &__chat-toolbar {
+    padding-top: 8px;
+    padding-bottom: 12px;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  &__chat-avatar {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+    margin-bottom: 4px;
+  }
+
+  &__chat-input {
+    --background: var(--flock-chat-input-bg, var(--flock-surface-subtle));
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    --border-radius: 20px;
+    font-size: 15px;
+    margin: 0;
+  }
+
+  &__send-btn {
+    margin-bottom: 4px;
+    margin-left: 8px;
+  }
+}
+
+:host-context(body.dark) {
+  .flock-replies__content {
+    color: var(--flock-border);
+  }
+
+  .flock-replies__author-name {
+    color: var(--flock-background);
+  }
+
+  .flock-replies__chat-input {
+    --background: var(--flock-surface-dark);
+  }
+}

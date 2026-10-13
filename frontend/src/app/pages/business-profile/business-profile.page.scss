@@ -3,7 +3,7 @@
    ========================================================================== */
 
 .business-profile-content {
-  --background: var(--flock-background, #f8fafc);
+  --background: var(--flock-background, var(--flock-background));
   --padding-top: 0;
   --padding-bottom: 0;
   --padding-start: 0;
@@ -19,7 +19,7 @@
    -------------------------------------------------------------------------- */
 .hero-image {
   position: relative;
-  background-color: var(--ion-color-step-100, #f4f5f8);
+  background-color: var(--ion-color-step-100, var(--flock-background));
   width: 100%;
   margin: 0;
 
@@ -33,16 +33,18 @@
   &__fallback-banner {
     width: 100%;
     height: 240px;
-    background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #10b981 100%);
+    background: linear-gradient(135deg, var(--flock-primary) 0%, var(--flock-primary-light) 50%, var(--flock-primary-tint) 100%);
   }
 
   .btn-edit-cover {
     position: absolute;
     top: 14px;
     right: 14px;
+
     --background: rgb(0 0 0 / 45%);
-    --color: #fff;
+    --color: var(--flock-primary-foreground);
     --border-radius: 50%;
+
     backdrop-filter: blur(6px);
     width: 40px;
     height: 40px;
@@ -60,9 +62,9 @@
     width: 82px;
     height: 82px;
     border-radius: 50%;
-    border: 3px solid var(--ion-background-color, #fff);
+    border: 3px solid var(--ion-background-color, var(--flock-card));
     box-shadow: 0 4px 14px rgb(0 0 0 / 22%);
-    background: var(--ion-background-color, #fff);
+    background: var(--ion-background-color);
     z-index: 5;
     display: flex;
     align-items: center;
@@ -79,11 +81,15 @@
       position: absolute;
       bottom: -4px;
       right: -4px;
-      --background: #fff;
-      --color: var(--avitour-primary, #047857);
+
+      --background: var(--flock-card);
+      --color: var(--avitour-primary, var(--flock-primary-light));
+
       width: 30px;
       height: 30px;
+
       --border-radius: 50%;
+
       border-radius: 50%;
       box-shadow: 0 2px 8px rgb(0 0 0 / 25%);
       z-index: 8;
@@ -102,14 +108,14 @@
 .content-wrapper {
   position: relative;
   top: -20px;
-  background: var(--ion-background-color, #fff);
+  background: var(--ion-background-color);
   border-radius: 24px 24px 0 0;
   padding-bottom: calc(24px + env(safe-area-inset-bottom));
 
   .title {
     font-size: 1.55rem;
     font-weight: 800;
-    color: var(--ion-color-dark, #1e293b);
+    color: var(--ion-color-dark, var(--flock-surface-dark));
     margin-top: 4px;
     margin-bottom: 4px;
     letter-spacing: -0.02em;
@@ -127,254 +133,6 @@
 }
 
 /* --------------------------------------------------------------------------
-   3. DASHBOARD WIDGETS
-   -------------------------------------------------------------------------- */
-.widgets-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-
-  .stat-widget {
-    background: #fff;
-    border: 1px solid var(--avitour-border);
-    border-radius: 16px;
-    padding: 12px 6px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 4px 12px rgb(0 0 0 / 3%);
-
-    .icon-circle {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      &.species {
-        background: rgb(16 131 70 / 10%);
-        color: var(--avitour-primary);
-      }
-
-      &.sightings {
-        background: rgb(56 128 255 / 10%);
-        color: #3880ff;
-      }
-
-      &.medals {
-        background: rgb(255 196 9 / 10%);
-        color: #ffc409;
-      }
-    }
-
-    .stat-info {
-      text-align: center;
-
-      .v {
-        display: block;
-        font-size: 1.15rem;
-        font-weight: 800;
-        color: #333;
-      }
-
-      .l {
-        font-size: 0.65rem;
-        color: #666;
-        font-weight: 600;
-        text-transform: uppercase;
-      }
-    }
-  }
-}
-
-/* --------------------------------------------------------------------------
-   4. FORMULARIO GRID (Blindaje de Alineación)
-   -------------------------------------------------------------------------- */
-.auth-form-profile {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 25px;
-}
-
-.form-row {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  width: 100%;
-}
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
-  label {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: #666;
-    margin-left: 4px;
-  }
-}
-
-.input-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 16px;
-  height: 52px;
-  background: #fff;
-  border: 1px solid var(--avitour-border);
-  border-radius: 14px;
-  transition: all 0.2s ease;
-
-  /* stylelint-disable-next-line no-descending-specificity */
-  ion-icon {
-    color: var(--avitour-primary);
-    font-size: 1.2rem;
-  }
-
-  &.invalid {
-    border-color: var(--ion-color-danger) !important;
-    background: rgb(var(--ion-color-danger-rgb), 0.04);
-  }
-
-  .native-input {
-    border: none;
-    background: transparent;
-    width: 100%;
-    outline: none;
-    font-size: 0.95rem;
-    color: #333;
-  }
-}
-
-.select-box {
-  padding: 0 12px !important;
-  border: 2px solid var(--avitour-border);
-
-  ion-select {
-    width: 100%;
-    font-size: 0.9rem;
-
-    --placeholder-color: #999;
-    --placeholder-opacity: 1;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   5. SEGURIDAD Y VISITANTE
-   -------------------------------------------------------------------------- */
-.security-panel {
-  background: rgb(var(--avitour-primary-rgb, 16, 131, 70), 0.05);
-  border: 1px solid var(--avitour-border);
-  border-radius: 14px;
-  padding: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-
-  .panel-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-weight: 700;
-    color: #333;
-
-    .panel-icon {
-      color: var(--avitour-primary);
-      font-size: 1.25rem;
-    }
-  }
-}
-
-.visitor-view {
-  .bio-box-visit {
-    background: #f8f9fa;
-    padding: 16px;
-    border-radius: 14px;
-    margin-bottom: 20px;
-    border-left: 4px solid var(--avitour-primary);
-
-    p {
-      color: #444;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      font-style: italic;
-    }
-  }
-}
-
-.profile-identity {
-  .display-name {
-    font-size: 1.55rem;
-    font-weight: 800;
-    color: #333;
-  }
-
-  .role-badge-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--avitour-primary);
-    color: #fff;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 800;
-  }
-}
-
-.textarea-box {
-  height: auto !important;
-  padding: 12px 16px !important;
-  border: 2px solid var(--avitour-border);
-
-  textarea {
-    width: 100%;
-    border: none;
-    background: transparent;
-    outline: none;
-    resize: none;
-  }
-}
-
-.readonly-field {
-  background: #f4f5f8;
-  opacity: 0.7;
-}
-
-.primary-btn {
-  --border-radius: 16px;
-
-  height: 52px;
-  font-weight: 800;
-  margin-top: 10px;
-}
-
-.profile-loader {
-  display: flex;
-  justify-content: center;
-  padding: 30px 0;
-
-  ion-spinner {
-    color: var(--avitour-primary);
-  }
-}
-
-.cover-photo--business {
-  background-color: var(--ion-color-primary);
-
-  &.has-cover {
-    background-size: cover;
-    background-position: center;
-  }
-}
-
-/* --------------------------------------------------------------------------
    3. SEGMENT NAVIGATION
    -------------------------------------------------------------------------- */
 .provider-segment-container {
@@ -382,20 +140,21 @@
 }
 
 .provider-segment {
-  --background: #f0f4f8;
+  --background: var(--flock-background);
 
   border-radius: 14px;
   padding: 4px;
 
   ion-segment-button {
-    --indicator-color: #fff;
-    --color: #64748b;
+    --indicator-color: var(--flock-primary-foreground);
+    --color: var(--flock-muted-foreground);
     --color-checked: var(--avitour-primary);
 
     font-weight: 700;
     border-radius: 10px;
     min-height: 42px;
 
+    /* stylelint-disable-next-line no-descending-specificity */
     ion-icon {
       font-size: 18px;
       margin-bottom: 2px;
@@ -409,362 +168,3 @@
     }
   }
 }
-
-/* --------------------------------------------------------------------------
-   4. DIRECTORY TOGGLE & CONTACT ROW
-   -------------------------------------------------------------------------- */
-.directory-status-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #f1f9f7;
-  border: 1.5px solid #88dccc;
-  border-radius: 14px;
-  padding: 12px 16px;
-
-  .directory-status-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    ion-icon {
-      font-size: 26px;
-    }
-
-    .directory-status-title {
-      margin: 0;
-      font-size: 15px;
-      font-weight: 800;
-      color: #1e293b;
-    }
-
-    .directory-status-sub {
-      margin: 2px 0 0;
-      font-size: 12px;
-      color: #64748b;
-    }
-  }
-}
-
-.whatsapp-toggle-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-  padding: 8px 12px;
-  background: #f8fafc;
-  border-radius: 10px;
-
-  &__icon {
-    font-size: 22px;
-  }
-
-  ion-label {
-    flex: 1;
-    font-size: 13px;
-    font-weight: 600;
-    color: #334155;
-  }
-}
-
-.field-label {
-  display: block;
-  font-size: 13px;
-  font-weight: 700;
-  color: #475569;
-  margin-bottom: 6px;
-}
-
-/* --------------------------------------------------------------------------
-   5. INTERACTIVE CALENDAR GRID
-   -------------------------------------------------------------------------- */
-.calendar-panel {
-  padding: 8px 0;
-
-  .calendar-header-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-
-    .calendar-month-title {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 800;
-      text-transform: capitalize;
-      color: #1e293b;
-    }
-  }
-
-  .calendar-instructions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #eef2ff;
-    padding: 8px 12px;
-    border-radius: 10px;
-
-    p {
-      margin: 0;
-      font-size: 12px;
-      color: #3730a3;
-    }
-  }
-
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
-  }
-
-  .calendar-day-cell {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 2px;
-    border-radius: 10px;
-    border: 1.5px solid #e2e8f0;
-    background: #fff;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    min-height: 56px;
-
-    .day-number {
-      font-size: 14px;
-      font-weight: 800;
-      color: #1e293b;
-    }
-
-    &--blocked {
-      background: #fef2f2;
-      border-color: #f87171;
-    }
-
-    .day-status-pill {
-      font-size: 9px;
-      font-weight: 700;
-      padding: 1px 4px;
-      border-radius: 6px;
-      margin-top: 4px;
-
-      &--free {
-        background: #dcfce7;
-        color: #15803d;
-      }
-
-      &--blocked {
-        background: #fee2e2;
-        color: #b91c1c;
-      }
-    }
-
-    &--today {
-      border: 2px solid var(--avitour-primary);
-      box-shadow: 0 0 0 2px rgb(136 220 204 / 30%);
-    }
-
-    &--past {
-      opacity: 0.4;
-      cursor: not-allowed;
-      background: #f1f5f9;
-    }
-
-    &:active:not(:disabled) {
-      transform: scale(0.95);
-    }
-  }
-
-  .calendar-legend {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #64748b;
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .legend-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-
-      &--free {
-        background: #22c55e;
-      }
-
-      &--blocked {
-        background: #ef4444;
-      }
-    }
-  }
-}
-
-/* --------------------------------------------------------------------------
-   6. BOOKINGS LIST & CARDS
-   -------------------------------------------------------------------------- */
-.bookings-panel {
-  .bookings-panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-
-    .panel-title {
-      margin: 0;
-      font-size: 18px;
-      font-weight: 800;
-      color: #1e293b;
-    }
-
-    .panel-count {
-      font-size: 13px;
-      color: #64748b;
-      font-weight: 600;
-    }
-  }
-
-  .empty-bookings-box {
-    background: #f8fafc;
-    border-radius: 16px;
-    border: 1px dashed #cbd5e1;
-
-    .empty-icon {
-      font-size: 48px;
-      color: #94a3b8;
-      margin-bottom: 8px;
-    }
-
-    h4 {
-      margin: 0;
-      font-weight: 700;
-      color: #334155;
-    }
-
-    p {
-      margin: 6px 0 0;
-      font-size: 13px;
-      color: #64748b;
-    }
-  }
-
-  .booking-card {
-    margin: 0 0 16px;
-    border-radius: 14px;
-    box-shadow: 0 4px 14px rgb(0 0 0 / 6%);
-    border: 1px solid #e2e8f0;
-
-    .booking-card-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .birder-profile-mini {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-
-        .birder-mini-avatar {
-          width: 44px;
-          height: 44px;
-          border-radius: 50%;
-          object-fit: cover;
-          border: 2px solid #88dccc;
-        }
-
-        .birder-name {
-          font-size: 16px;
-          font-weight: 800;
-          color: #0f172a;
-        }
-
-        .booking-activity {
-          font-size: 12px;
-          font-weight: 600;
-          color: #64748b;
-        }
-      }
-    }
-
-    .booking-details-grid {
-      .detail-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-        color: #334155;
-        margin-bottom: 6px;
-
-        ion-icon {
-          font-size: 18px;
-        }
-
-        .btn-whatsapp-chat {
-          margin: 0;
-
-          --padding-start: 4px;
-          --padding-end: 4px;
-
-          height: 28px;
-        }
-      }
-
-      .booking-user-message {
-        background: #f8fafc;
-        border-left: 3px solid #88dccc;
-        padding: 8px 12px;
-        border-radius: 0 8px 8px 0;
-        font-style: italic;
-        font-size: 13px;
-        color: #475569;
-        margin: 8px 0;
-      }
-
-      .rating-display {
-        background: #fefce8;
-        border: 1px solid #fef08a;
-        border-radius: 8px;
-        padding: 8px 12px;
-
-        .rating-label {
-          font-size: 12px;
-          font-weight: 700;
-          color: #854d0e;
-          display: block;
-        }
-
-        .rating-stars {
-          font-size: 14px;
-          font-weight: 800;
-          color: #a16207;
-        }
-
-        .rating-review {
-          margin: 4px 0 0;
-          font-size: 12px;
-          font-style: italic;
-          color: #713f12;
-        }
-      }
-    }
-
-    .booking-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-
-      ion-button {
-        margin: 0;
-        font-weight: 700;
-
-        --border-radius: 10px;
-      }
-    }
-  }
-}
-

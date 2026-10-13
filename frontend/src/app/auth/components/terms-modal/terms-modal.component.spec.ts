@@ -1,26 +1,31 @@
-import { Component, inject } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ModalController } from '@ionic/angular';
+import { TermsModalComponent } from './terms-modal.component';
 
-/**
- * Componente de Modal para Términos y Condiciones.
- * Se presenta como un componente Standalone e independiente.
- */
-@Component({
-  selector: 'app-terms-modal',
-  templateUrl: './terms-modal.component.html',
-  styleUrls: ['./terms-modal.component.scss'],
-  standalone: true,
-  imports: [IonicModule],
-})
-export class TermsModalComponent {
-  /** Inyección del controlador de modales de Ionic */
-  private modalCtrl = inject(ModalController);
+describe('TermsModalComponent', () => {
+  let component: TermsModalComponent;
+  let fixture: ComponentFixture<TermsModalComponent>;
+  let modalCtrlSpy: jasmine.SpyObj<ModalController>;
 
-  /**
-   * Cierra el modal actual.
-   * Se define como async siguiendo las recomendaciones de Ionic 8+.
-   */
-  async dismiss(): Promise<void> {
-    await this.modalCtrl.dismiss();
-  }
-}
+  beforeEach(async () => {
+    modalCtrlSpy = jasmine.createSpyObj('ModalController', ['dismiss']);
+
+    await TestBed.configureTestingModule({
+      imports: [TermsModalComponent],
+      providers: [{ provide: ModalController, useValue: modalCtrlSpy }],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(TermsModalComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should call dismiss on modal controller', async () => {
+    await component.dismiss();
+    expect(modalCtrlSpy.dismiss).toHaveBeenCalled();
+  });
+});

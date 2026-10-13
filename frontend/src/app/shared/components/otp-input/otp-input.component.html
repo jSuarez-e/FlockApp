@@ -1,0 +1,21 @@
+<!--
+  @sdd
+  [Objetivo]: Estructura HTML para captura segmentada de código OTP de 6 dígitos.
+  [I/O - Reusabilidad]: Formulario reactivo otpForm, evento output codeCompleted.
+  [Edge Cases - UI]: Navegación entre casillas con teclado, soporte autocomplete one-time-code.
+-->
+<form [formGroup]="otpForm" class="otp-input">
+  @for (input of inputs; track $index) {
+    <input
+      #otpBox
+      type="number"
+      [formControlName]="'d' + ($index + 1)"
+      class="otp-input__cell"
+      maxlength="1"
+      (input)="handleInput($event, $index)"
+      (keydown)="handleBackspace($event, $index)"
+      inputmode="numeric"
+      autocomplete="one-time-code"
+    />
+  }
+</form>

@@ -5,7 +5,7 @@
  */
 
 ion-content {
-  --background: #f8fafc;
+  --background: var(--flock-background);
 }
 
 .categorical-filter__scrollable-tabs {
@@ -35,7 +35,7 @@ ion-content {
   cursor: pointer;
 
   --background: rgb(255 255 255 / 18%);
-  --color: #fff;
+  --color: var(--flock-primary-foreground);
 
   border: 1px solid rgb(255 255 255 / 25%);
 
@@ -44,17 +44,17 @@ ion-content {
   }
 
   &--active {
-    --background: #fff;
-    --color: #064e3b;
+    --background: var(--flock-card);
+    --color: var(--flock-primary);
 
-    background: #fff;
-    color: #064e3b;
-    border-color: #fff;
+    background: var(--flock-card);
+    color: var(--flock-primary);
+    border-color: var(--flock-primary-foreground);
     box-shadow: 0 4px 12px rgb(0 0 0 / 18%);
 
     ion-label {
       font-weight: 800;
-      color: #064e3b;
+      color: var(--flock-primary);
     }
   }
 }
@@ -72,10 +72,10 @@ ion-content {
   align-items: center;
   justify-content: center;
   text-align: center;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--flock-border);
   border-radius: 14px;
   padding: 16px 12px;
-  background: #fff;
+  background: var(--flock-card);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 5%),
     0 2px 4px -1px rgb(0 0 0 / 3%);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -84,7 +84,7 @@ ion-content {
   .label {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--flock-surface-dark);
     text-transform: uppercase;
     transition: color 0.2s ease;
   }
@@ -139,10 +139,10 @@ ion-content {
 
 .category-group {
   margin-bottom: 20px;
-  background: #fff;
+  background: var(--flock-card);
   border-radius: 14px;
   padding: 14px 16px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--flock-border);
   box-shadow: 0 2px 4px rgb(0 0 0 / 2%);
 }
 
@@ -159,7 +159,7 @@ ion-content {
 .group-count {
   font-size: 0.72rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--flock-muted-foreground);
   display: block;
   margin-bottom: 12px;
 }
@@ -175,36 +175,36 @@ ion-content {
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--flock-border);
   border-radius: 20px;
-  background: #f8fafc;
+  background: var(--flock-background);
   font-size: 0.8rem;
   font-weight: 700;
-  color: #334155;
+  color: var(--flock-foreground);
   transition: all 0.2s ease;
   cursor: pointer;
 
   ion-icon {
     font-size: 14px;
-    color: #64748b;
+    color: var(--flock-muted-foreground);
     transition: color 0.2s ease;
   }
 
   &.active {
     background: var(--ion-color-primary);
-    color: #fff;
+    color: var(--flock-primary-foreground);
     border-color: var(--ion-color-primary);
     box-shadow: 0 4px 6px -1px rgb(var(--ion-color-primary-rgb), 0.2);
 
     ion-icon {
-      color: #fff;
+      color: var(--flock-primary-foreground);
     }
   }
 }
 
 ion-footer {
-  background: #fff;
-  border-top: 1px solid #e2e8f0;
+  background: var(--flock-card);
+  border-top: 1px solid var(--flock-border);
 
   ion-button {
     --border-radius: 12px;

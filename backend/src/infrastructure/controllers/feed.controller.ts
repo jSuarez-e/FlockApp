@@ -68,8 +68,18 @@ export class FeedController {
         },
       }),
       fileFilter: (req, file, cb) => {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-          return cb(new BadRequestException('Solo JPG, JPEG y PNG'), false);
+        const allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
+        const allowedExts = /\.(jpg|jpeg|png|webp)$/i;
+        if (
+          !allowedMimes.includes(file.mimetype) ||
+          !file.originalname.match(allowedExts)
+        ) {
+          return cb(
+            new BadRequestException(
+              'Solo se permiten imágenes válidas en formato JPG, JPEG, PNG o WEBP',
+            ),
+            false,
+          );
         }
         cb(null, true);
       },
@@ -85,9 +95,14 @@ export class FeedController {
     @Body('metadata') metadataString: string,
     @CurrentUser() activeUser: ActiveUserInterface,
   ) {
-    const metadata = JSON.parse(
-      metadataString || '{}',
-    ) as unknown as CreateFeedPostDto;
+    let metadata: CreateFeedPostDto;
+    try {
+      metadata = JSON.parse(metadataString || '{}') as CreateFeedPostDto;
+    } catch {
+      throw new BadRequestException(
+        'El campo metadata contiene formato JSON inválido.',
+      );
+    }
 
     let fileUrl: string | null = null;
     if (file) {

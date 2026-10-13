@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, DestroyRef, inject, Input, OnInit, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, ChangeDetectionStrategy, inject, Input, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { firstValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import {
   ModalController,
@@ -48,184 +48,18 @@ import { logger } from '../../../../../../core/utils/logger';
     IonTextarea,
     IonSpinner,
   ],
-  template: `
-    <ion-header class="ion-no-border flock-modal-header">
-      <ion-toolbar>
-        <ion-title>Respuestas</ion-title>
-        <ion-buttons slot="end">
-          <button type="button" (click)="close()" class="flock-header-pill-btn" aria-label="Cerrar modal">
-            <ion-icon [icon]="icons.closeOutline"></ion-icon>
-            <span>Cerrar</span>
-          </button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      @if (isLoading()) {
-        <div class="center-content">
-          <ion-spinner name="crescent"></ion-spinner>
-        </div>
-      } @else if (replies().length === 0) {
-        <div class="empty-state">
-          <ion-icon [icon]="icons.chatbubblesOutline"></ion-icon>
-          <h3>Aún no hay respuestas</h3>
-          <p>Sé el primero en iniciar la conversación sobre este avistamiento.</p>
-        </div>
-      } @else {
-        <div class="replies-list">
-          @for (reply of replies(); track reply.id) {
-            <ion-item lines="none" class="reply-item">
-              <ion-avatar slot="start" class="reply-avatar">
-                <img
-                  [src]="
-                    reply.authorAvatarUrl ||
-                    'https://ui-avatars.com/api/?name=' +
-                      reply.authorName +
-                      '&background=random&color=fff'
-                  "
-                />
-              </ion-avatar>
-              <ion-label class="ion-text-wrap">
-                <div class="reply-header">
-                  <span class="author-name">{{ reply.authorName }}</span>
-                  <span class="reply-date">{{ reply.createdAt | date: 'short' }}</span>
-                </div>
-                <p class="reply-content">{{ reply.content }}</p>
-              </ion-label>
-            </ion-item>
-          }
-        </div>
-      }
-    </ion-content>
-    <ion-footer class="ion-no-border">
-      <ion-toolbar class="ion-padding-horizontal chat-toolbar">
-        <ion-avatar slot="start" class="chat-avatar">
-          <img src="https://ui-avatars.com/api/?name=Yo&background=random" />
-        </ion-avatar>
-        <ion-textarea
-          placeholder="Añadir una respuesta..."
-          [autoGrow]="true"
-          rows="1"
-          class="chat-input"
-          [(ngModel)]="newReplyContent"
-        ></ion-textarea>
-        <ion-button
-          slot="end"
-          fill="clear"
-          color="primary"
-          class="send-btn"
-          [disabled]="!newReplyContent.trim() || isSending()"
-          (click)="sendReply()"
-        >
-          <ion-icon [icon]="icons.sendOutline" slot="icon-only"></ion-icon>
-        </ion-button>
-      </ion-toolbar>
-    </ion-footer>
-  `,
-  styles: [
-    `
-      .center-content {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-      }
-      .empty-state {
-        text-align: center;
-        margin-top: 60px;
-        color: var(--ion-color-medium);
-      }
-      .empty-state ion-icon {
-        font-size: 48px;
-        margin-bottom: 16px;
-        opacity: 0.5;
-      }
-
-      .replies-list {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-      .reply-item {
-        --padding-start: 0;
-        --inner-padding-end: 0;
-        align-items: flex-start;
-      }
-      .reply-avatar {
-        width: 32px;
-        height: 32px;
-        margin-right: 12px;
-        margin-top: 4px;
-      }
-      .reply-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 4px;
-      }
-      .author-name {
-        font-weight: 600;
-        font-size: 14px;
-        color: var(--ion-color-dark);
-      }
-      .reply-date {
-        font-size: 12px;
-        color: var(--ion-color-medium);
-      }
-      .reply-content {
-        font-size: 14px;
-        color: var(--ion-text-color, #333);
-        margin: 0;
-        line-height: 1.4;
-      }
-      :host-context(body.dark) .reply-content {
-        color: #e2e8f0;
-      }
-      :host-context(body.dark) .author-name {
-        color: #f8fafc;
-      }
-
-      .chat-toolbar {
-        padding-top: 8px;
-        padding-bottom: 12px;
-        display: flex;
-        align-items: flex-end;
-      }
-      .chat-avatar {
-        width: 36px;
-        height: 36px;
-        margin-right: 12px;
-        margin-bottom: 4px;
-      }
-      .chat-input {
-        --background: #f1f5f9;
-        --padding-start: 16px;
-        --padding-end: 16px;
-        --padding-top: 12px;
-        --padding-bottom: 12px;
-        --border-radius: 20px;
-        font-size: 15px;
-        margin: 0;
-      }
-      :host-context(body.dark) .chat-input {
-        --background: #1e293b;
-      }
-      .send-btn {
-        margin-bottom: 4px;
-        margin-left: 8px;
-      }
-    `,
-  ],
+  templateUrl: './post-replies.component.html',
+  styleUrl: './post-replies.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostRepliesComponent implements OnInit {
   /**
-   *
+   * Post to which replies belong.
    */
   @Input() post!: FeedPost;
 
   /**
-   *
+   * Icons used in the template.
    */
   readonly icons = {
     closeOutline,
@@ -233,74 +67,66 @@ export class PostRepliesComponent implements OnInit {
     chatbubblesOutline,
   };
 
+
   /**
-   *
+   * Controller for managing modal dismissal.
    */
-  private destroyRef = inject(DestroyRef);
   private modalCtrl = inject(ModalController);
+
   /**
-   *
+   * Feed service for interacting with post comments.
    */
   private feedService = inject(FeedService);
+
   /**
-   *
+   * Global feed reactive store.
    */
   private feedStore = inject(FeedStore);
 
   /**
-   *
+   * List of replies for the current post.
    */
   replies = signal<FeedReply[]>([]);
+
   /**
-   *
+   * Loading state while fetching replies.
    */
   isLoading = signal<boolean>(true);
+
   /**
-   *
+   * Indicates whether a reply is currently being sent.
    */
   isSending = signal<boolean>(false);
+
   /**
-   *
+   * Draft content of the new reply input.
    */
   newReplyContent = '';
 
   /**
-   *
+   * Lifecycle hook to trigger loading of replies.
    */
   ngOnInit() {
     this.loadReplies();
   }
 
   /**
-   *
+   * Loads replies for the current post.
    */
-  loadReplies() {
+  async loadReplies(): Promise<void> {
     this.isLoading.set(true);
-    this.feedService
-      .getReplies(this.post.id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-      /**
-       *
-       * @param data
-       */
-      next: (data) => {
-        this.replies.set(data);
-        this.isLoading.set(false);
-      },
-      /**
-       *
-       * @param err
-       */
-      error: (err) => {
-        logger.error('Error fetching replies', err);
-        this.isLoading.set(false);
-      },
-    });
+    try {
+      const data = await firstValueFrom(this.feedService.getReplies(this.post.id));
+      this.replies.set(data);
+    } catch (err) {
+      logger.error('Error fetching replies', err);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   /**
-   *
+   * Sends a new reply and updates the feed store.
    */
   sendReply() {
     if (!this.newReplyContent.trim()) return;
@@ -327,7 +153,7 @@ export class PostRepliesComponent implements OnInit {
   }
 
   /**
-   *
+   * Closes the reply modal.
    */
   close() {
     this.modalCtrl.dismiss();

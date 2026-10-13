@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Get,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { AuthService } from '../../application/services/auth.service';
 import { RsaService } from '../security/rsa.service';
 import {
@@ -14,12 +15,16 @@ import {
 } from '../../application/interfaces/auth-response.interface';
 import { RegisterUserDto } from '../dtos/register-user.dto';
 import { LoginDto } from '../dtos/login.dto';
+import { ForgotPasswordDto } from '../dtos/forgot-password.dto';
+import { VerifyOtpDto } from '../dtos/verify-otp.dto';
+import { ResetPasswordDto } from '../dtos/reset-password.dto';
 
 /**
  * @class AuthController
- * @description Expone los servicios de autenticación y gestión de credenciales.
+ * @description Expone los servicios de autenticación y gestión de credenciales con protección de tasa (Rate Limiting).
  */
 @Controller('auth')
+@Throttle({ default: { limit: 10, ttl: 60000 } })
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
@@ -51,42 +56,40 @@ export class AuthController {
   @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
   async forgotPassword(
-    @Body('email') email: string,
+    @Body() dto: ForgotPasswordDto,
   ): Promise<{ success: boolean }> {
-    return await this.authService.forgotPassword(email);
+    return await this.authService.forgotPassword(dto.email);
   }
 
   /**
    * @method verifyOtp
    * @description Fase 2: Valida el código OTP y entrega un token de recuperación.
-   * @param {string} email - Correo del solicitante.
-   * @param {string} otp - Código de 6 dígitos.
+   * @param {VerifyOtpDto} dto - Correo del solicitante y código OTP de 6 dígitos.
    * @returns {Promise<{ recoveryToken: string }>} Token para autorizar el paso 3.
    */
   @Post('verify-otp')
   @HttpCode(HttpStatus.OK)
   async verifyOtp(
-    @Body('email') email: string,
-    @Body('otp') otp: string,
+    @Body() dto: VerifyOtpDto,
   ): Promise<{ recoveryToken: string }> {
-    return await this.authService.verifyOtp(email, otp);
+    return await this.authService.verifyOtp(dto.email, dto.otp);
   }
 
   /**
    * @method resetPassword
    * @description Fase 3: Ejecuta el cambio de contraseña utilizando el token de recuperación.
-   * @param {string} email - Correo asociado.
-   * @param {string} password - Nueva credencial.
-   * @param {string} recoveryToken - Token de autorización obtenido en fase 2.
+   * @param {ResetPasswordDto} dto - Correo, nueva credencial y token firmado.
    * @returns {Promise<{ message: string }>} Confirmación de éxito.
    */
   @Post('reset-password')
   @HttpCode(HttpStatus.OK)
   async resetPassword(
-    @Body('email') email: string,
-    @Body('password') password: string,
-    @Body('recoveryToken') recoveryToken: string,
+    @Body() dto: ResetPasswordDto,
   ): Promise<{ message: string }> {
-    return await this.authService.resetPassword(email, password, recoveryToken);
+    return await this.authService.resetPassword(
+      dto.email,
+      dto.password,
+      dto.recoveryToken,
+    );
   }
 }

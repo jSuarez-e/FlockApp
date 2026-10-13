@@ -6,7 +6,7 @@
 
 /* Fondo general unificado de alta fidelidad */
 ion-content {
-  --background: #f8fafc;
+  --background: var(--flock-background);
 }
 
 /* Encabezados de sección estilizados y consistentes */
@@ -42,10 +42,10 @@ ion-content {
   min-width: 108px;
   max-width: 114px;
   text-align: center;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--flock-border);
   border-radius: 14px;
   padding: 14px 10px;
-  background: #fff;
+  background: var(--flock-card);
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 5%),
     0 2px 4px -1px rgb(0 0 0 / 3%);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -92,14 +92,14 @@ ion-content {
 .chip-title {
   font-size: 0.82rem;
   font-weight: 800;
-  color: #1e293b;
+  color: var(--flock-surface-dark);
   transition: color 0.2s ease;
 }
 
 .chip-subtitle {
   font-size: 0.68rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--flock-muted-foreground);
   line-height: 1.2;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -126,21 +126,21 @@ ion-range {
   padding-top: 0;
   padding-bottom: 0;
 
-  --bar-background: #e2e8f0;
+  --bar-background: var(--flock-border);
   --bar-background-active: var(--ion-color-primary);
   --knob-background: var(--ion-color-primary);
 
   ion-label {
     font-size: 0.8rem;
     font-weight: 700;
-    color: #64748b;
+    color: var(--flock-muted-foreground);
   }
 }
 
 .range-info {
   font-size: 0.85rem;
   font-weight: 700;
-  color: #475569;
+  color: var(--flock-muted-foreground);
   text-align: center;
   margin: 8px 0 0;
 }
@@ -155,7 +155,7 @@ ion-range {
 /* stylelint-disable selector-no-qualifying-type */
 .eye-rating-container ion-icon {
   font-size: 13px;
-  color: #cbd5e1;
+  color: var(--flock-border-medium);
   transition: color 0.2s ease;
 
   &.active-eye {

@@ -35,6 +35,6 @@ describe('PasswordInputComponent', () => {
     componentRef.setInput('isInvalid', true);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.password-input__wrapper--invalid')).toBeTruthy();
+    expect(compiled.querySelector('.auth-input__wrapper--invalid')).toBeTruthy();
   });
 });

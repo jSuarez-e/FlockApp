@@ -54,7 +54,7 @@ describe('GeographyService', () => {
       of({ departmentName: 'Santander', municipalityName: 'Güepsa' }),
     );
 
-    dbSpy.query.and.callFake((query: string, params: unknown[] = []) => {
+    (dbSpy.query as jasmine.Spy).and.callFake((query: string, params: unknown[] = []) => {
       if (query.includes('FROM departments')) {
         return Promise.resolve(mockDepartments);
       }
@@ -80,7 +80,7 @@ describe('GeographyService', () => {
       of({ departmentName: 'Norte de Santander', municipalityName: 'Cúcuta' }),
     );
 
-    dbSpy.query.and.callFake((query: string, params: unknown[] = []) => {
+    (dbSpy.query as jasmine.Spy).and.callFake((query: string, params: unknown[] = []) => {
       if (query.includes('FROM departments')) {
         return Promise.resolve(mockDepartments);
       }

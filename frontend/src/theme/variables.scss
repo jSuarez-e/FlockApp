@@ -20,7 +20,10 @@
   /* Superficies y Fondos */
   --flock-background: #f8fafc;
   --flock-card: #fff;
+  --flock-surface-subtle: #f1f5f9;
+  --flock-surface-dark: #1e293b;
   --flock-border: #e2e8f0;
+  --flock-border-medium: #cbd5e1;
   --flock-border-subtle: rgb(226 232 240 / 80%);
 
   /* Tipografía y Textos */
@@ -55,6 +58,12 @@
   --flock-whatsapp: #25d366;
   --flock-whatsapp-bg: #ecfdf5;
   --flock-whatsapp-border: #a7f3d0;
+
+  /* Medallas y Gamificación */
+  --flock-medal-gold: linear-gradient(135deg, #f59e0b, #d97706);
+  --flock-medal-silver: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  --flock-medal-bronze: linear-gradient(135deg, #f97316, #ea580c);
+  --flock-medal-platinum: linear-gradient(135deg, #a855f7, #ec4899);
 
   /* Geometría y Radios de Borde */
   --flock-radius-card: 20px;

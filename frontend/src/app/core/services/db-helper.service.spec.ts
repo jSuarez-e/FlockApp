@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { DbHelperService } from './db-helper.service';
-import { User } from '../models/auth.models';
+import { User, UserRole } from '../models/auth.models';
 
 describe('DbHelperService', () => {
   let service: DbHelperService;
@@ -19,6 +19,9 @@ describe('DbHelperService', () => {
       id: 1,
       email: 'test@test.com',
       firstName: 'Jaime',
+      lastName: 'Suarez',
+      username: 'jaimesuarez',
+      role: UserRole.PAJARERO,
     };
 
     await service.saveSession(mockToken, mockUser);

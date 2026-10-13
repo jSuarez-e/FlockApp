@@ -1,0 +1,18 @@
+<!--
+  @sdd
+  [Objetivo]: Estructura HTML semántica para widget de estadísticas rápidas.
+  [I/O - Reusabilidad]: Consume Inputs icon, value, label, colorClass.
+  [Edge Cases - UI]: Clases BEM dinámicas en círculo de icono según colorClass.
+-->
+<div class="stat-widget">
+  <div
+    class="stat-widget__icon-circle"
+    [ngClass]="colorClass() ? 'stat-widget__icon-circle--' + colorClass() : ''"
+  >
+    <ion-icon [name]="icon()"></ion-icon>
+  </div>
+  <div class="stat-widget__info">
+    <span class="stat-widget__value">{{ value() }}</span>
+    <span class="stat-widget__label">{{ label() }}</span>
+  </div>
+</div>

@@ -10,22 +10,28 @@ import { environment } from '../../../environments/environment';
  * [Objetivo]: Bóveda asimétrica RSA en el lado del cliente. Obtiene la llave pública
  * del backend y encripta datos sensibles antes de transmitirlos.
  * [I/O]: Depende de HttpClient. Expone: encryptRSA(plainText), getPublicKey().
- * [Edge Cases]: Caché en memoria para evitar peticiones redundantes al endpoint /public-key.
- * Si la encriptación falla, retorna el texto plano como fallback silencioso.
+ * [Edge Cases]: Caché en memoria para evitar peticiones redundantes. Falla cerrada si el cifrado falla.
+ */
+
+/**
+ * @class CryptoService
+ * @description Bóveda criptográfica asimétrica RSA en el cliente para transmisión segura de credenciales.
  */
 @Injectable({
   providedIn: 'root',
 })
 export class CryptoService {
+  /** @description Cliente HTTP para solicitudes a la API. */
   private readonly http = inject(HttpClient);
+  /** @description URL base para endpoints de autenticación. */
   private readonly API_URL = environment.authUrl;
+  /** @description Caché en memoria para la llave pública PEM. */
   private publicKey: string | null = null;
 
   /**
-   * @method getPublicKey
-   * @description Obtiene la llave pública RSA del backend.
+   * Obtiene la llave pública RSA del backend.
    * Utiliza caché en memoria para evitar peticiones redundantes.
-   * @returns {Promise<string>} Llave pública en formato PEM.
+   * @returns Llave pública en formato PEM.
    */
   async getPublicKey(): Promise<string> {
     if (this.publicKey) return this.publicKey;
@@ -43,10 +49,10 @@ export class CryptoService {
   }
 
   /**
-   * @method encryptRSA
-   * @description Encripta un texto plano usando RSA (PKCS1 v1.5).
-   * @param {string} plainText - Texto a encriptar (ej. contraseña).
-   * @returns {Promise<string>} Texto encriptado en Base64 o texto original si falla.
+   * Encripta un texto plano usando RSA. En caso de fallo, aborta para prevenir fuga en texto claro.
+   * @param plainText - Texto a encriptar (ej. contraseña).
+   * @returns Texto encriptado en Base64.
+   * @throws {Error} Si la encriptación falla o la llave pública es inválida.
    */
   async encryptRSA(plainText: string): Promise<string> {
     try {
@@ -54,10 +60,13 @@ export class CryptoService {
       const encryptor = new JSEncrypt();
       encryptor.setPublicKey(pubKey);
       const encrypted = encryptor.encrypt(plainText);
-      return encrypted || plainText;
-    } catch (_error) {
-      logger.warn('Fallo en la encriptación RSA. Enviando en crudo como fallback.');
-      return plainText;
+      if (!encrypted) {
+        throw new Error('El motor criptográfico no pudo cifrar el texto.');
+      }
+      return encrypted;
+    } catch (error) {
+      logger.error('Fallo en la bóveda criptográfica RSA. Abortando transmisión insegura.', error);
+      throw new Error('No fue posible asegurar las credenciales para la transmisión.');
     }
   }
 }

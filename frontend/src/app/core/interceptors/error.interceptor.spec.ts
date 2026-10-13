@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { errorInterceptor } from './error.interceptor';
 import { UiService } from '../services/ui.service';
@@ -13,9 +13,9 @@ describe('errorInterceptor', () => {
     uiServiceSpy = jasmine.createSpyObj('UiService', ['showToast', 'dismissLoading']);
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
         provideHttpClient(withInterceptors([errorInterceptor])),
+        provideHttpClientTesting(),
         { provide: UiService, useValue: uiServiceSpy },
       ],
     });
@@ -24,14 +24,12 @@ describe('errorInterceptor', () => {
     httpClient = TestBed.inject(HttpClient);
   });
 
+  afterEach(() => {
+    httpMock.verify();
+  });
+
   it('debería cerrar el loader y mostrar toast en caso de error 400', () => {
     httpClient.get('/test').subscribe({
-      /**
-       * Elemento documentado.
-       */
-      /**
-       * Elemento documentado.
-       */
       error: () => {
         expect(uiServiceSpy.dismissLoading).toHaveBeenCalled();
         expect(uiServiceSpy.showToast).toHaveBeenCalled();

@@ -1,0 +1,27 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos BEM para el encabezado de tarjetas de autenticación.
+ * [I/O - Reusabilidad]: Exporta bloque .auth-card-header con elementos __title y __subtitle.
+ * [Edge Cases - UI]: Uso de variables CSS semánticas de color y tipografía.
+ */
+.auth-card-header {
+  text-align: center;
+  padding: 24px 20px 10px;
+
+  &__title {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--flock-primary, var(--ion-color-primary, var(--flock-primary)));
+    letter-spacing: -0.025em;
+    margin: 0 0 6px;
+    line-height: 1.2;
+  }
+
+  &__subtitle {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--flock-muted-foreground, var(--ion-color-medium, var(--flock-muted-foreground)));
+    line-height: 1.4;
+    margin: 0;
+  }
+}

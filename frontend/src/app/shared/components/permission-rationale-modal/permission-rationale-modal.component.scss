@@ -6,7 +6,7 @@
  */
 .rationale-header {
   &__toolbar {
-    --background: var(--avitour-card, #fff);
+    --background: var(--flock-card);
     --border-color: transparent;
 
     padding-inline: 8px;
@@ -15,16 +15,16 @@
   &__title {
     font-size: 1.05rem;
     font-weight: 700;
-    color: var(--avitour-foreground, #333);
+    color: var(--avitour-foreground, var(--flock-foreground));
   }
 
   &__close-btn {
-    --color: var(--avitour-muted-foreground, #666);
+    --color: var(--avitour-muted-foreground, var(--flock-muted-foreground));
   }
 }
 
 .rationale-content {
-  --background: var(--avitour-background, #f8fafc);
+  --background: var(--avitour-background, var(--flock-background));
 }
 
 .rationale-card {
@@ -49,7 +49,7 @@
 
   &__icon {
     font-size: 2.75rem;
-    color: var(--avitour-primary, #108346);
+    color: var(--avitour-primary, var(--flock-primary-light));
   }
 
   &__badge {
@@ -59,8 +59,8 @@
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    background: var(--avitour-primary, #108346);
-    color: #fff;
+    background: var(--avitour-primary, var(--flock-primary-light));
+    color: var(--flock-primary-foreground);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -72,7 +72,7 @@
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.08em;
-    color: var(--avitour-primary, #108346);
+    color: var(--avitour-primary, var(--flock-primary-light));
     background: rgb(16 131 70 / 10%);
     padding: 4px 10px;
     border-radius: 12px;
@@ -82,7 +82,7 @@
   &__title {
     font-size: 1.35rem;
     font-weight: 800;
-    color: var(--avitour-foreground, #1e293b);
+    color: var(--avitour-foreground, var(--flock-surface-dark));
     text-align: center;
     margin: 0 0 0.25rem;
   }
@@ -90,7 +90,7 @@
   &__subtitle {
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--avitour-muted-foreground, #64748b);
+    color: var(--avitour-muted-foreground, var(--flock-muted-foreground));
     text-align: center;
     margin: 0 0 1rem;
   }
@@ -98,21 +98,21 @@
   &__description {
     font-size: 0.92rem;
     line-height: 1.5;
-    color: var(--avitour-foreground, #334155);
+    color: var(--avitour-foreground, var(--flock-foreground));
     text-align: center;
     margin: 0 0 1.25rem;
-    background: var(--avitour-card, #fff);
+    background: var(--flock-card);
     padding: 1rem;
     border-radius: 12px;
-    border: 1px solid var(--avitour-border, #e2e8f0);
+    border: 1px solid var(--avitour-border, var(--flock-border));
     box-shadow: 0 1px 3px rgb(0 0 0 / 3%);
   }
 }
 
 .rationale-guarantees {
   width: 100%;
-  background: var(--avitour-card, #fff);
-  border: 1px solid var(--avitour-border, #e2e8f0);
+  background: var(--flock-card);
+  border: 1px solid var(--avitour-border, var(--flock-border));
   border-radius: 12px;
   padding: 1rem 1.25rem;
   margin-bottom: 1.5rem;
@@ -120,7 +120,7 @@
   &__heading {
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--avitour-primary, #108346);
+    color: var(--avitour-primary, var(--flock-primary-light));
     margin: 0 0 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
@@ -143,7 +143,7 @@
 
   &__check {
     font-size: 1.15rem;
-    color: var(--avitour-primary, #108346);
+    color: var(--avitour-primary, var(--flock-primary-light));
     flex-shrink: 0;
     margin-top: 1px;
   }
@@ -151,7 +151,7 @@
   &__text {
     font-size: 0.84rem;
     line-height: 1.4;
-    color: var(--avitour-foreground, #475569);
+    color: var(--avitour-foreground, var(--flock-muted-foreground));
   }
 }
 
@@ -162,8 +162,8 @@
   gap: 0.5rem;
 
   &__btn-confirm {
-    --background: var(--avitour-primary, #108346);
-    --background-hover: var(--avitour-primary-shade, #0e733e);
+    --background: var(--avitour-primary, var(--flock-primary-light));
+    --background-hover: var(--flock-primary);
     --border-radius: 10px;
 
     font-weight: 700;
@@ -173,7 +173,7 @@
   }
 
   &__btn-cancel {
-    --color: var(--avitour-muted-foreground, #64748b);
+    --color: var(--avitour-muted-foreground, var(--flock-muted-foreground));
 
     font-weight: 600;
     font-size: 0.9rem;

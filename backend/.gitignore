@@ -42,6 +42,11 @@ lerna-debug.log*
 .env.production.local
 .env.local
 
+# Claves criptográficas locales
+*.pem
+*.key
+.rsa-keys.json
+
 # temp directory
 .temp
 .tmp

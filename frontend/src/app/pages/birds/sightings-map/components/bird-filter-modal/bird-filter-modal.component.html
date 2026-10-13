@@ -1,0 +1,58 @@
+<!--
+/**
+ * @sdd
+ * [Objetivo]: Plantilla HTML del modal buscador de especies de aves.
+ * [I/O - Reusabilidad]: Consume Inputs isOpen, birds; Emite birdSelected, closeModal.
+ * [Edge Cases - UI]: Debounce en ion-searchbar para evitar bloqueos en el hilo principal con miles de aves.
+ */
+-->
+<ion-modal
+  [isOpen]="isOpen()"
+  (didDismiss)="onClose()"
+  [initialBreakpoint]="0.85"
+  [breakpoints]="[0, 0.85, 1]"
+  [handle]="true">
+  <ng-template>
+    <ion-header class="ion-no-border flock-modal-header">
+      <ion-toolbar>
+        <ion-title>Buscar Especie</ion-title>
+        <ion-buttons slot="end">
+          <button type="button" (click)="onClose()" class="flock-header-pill-btn" aria-label="Cerrar modal">
+            <ion-icon name="close-outline"></ion-icon>
+            <span>Cerrar</span>
+          </button>
+        </ion-buttons>
+      </ion-toolbar>
+      <ion-toolbar class="bird-search-toolbar">
+        <ion-searchbar
+          placeholder="Nombre común o científico..."
+          [value]="searchTerm()"
+          (ionInput)="searchTerm.set($event.detail.value || '')"
+          [debounce]="250">
+        </ion-searchbar>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list lines="inset" class="bird-results-list">
+        @for (bird of filteredBirds(); track bird.id) {
+          <ion-item button (click)="onSelect(bird)" detail="true" class="bird-results-item">
+            <ion-icon slot="start" name="sparkles-outline" color="primary"></ion-icon>
+            <ion-label>
+              <h2 class="bird-results-item__scientific"><i>{{ bird.scientific_name }}</i></h2>
+              <p class="bird-results-item__names">
+                {{ bird.english_name }}
+                @if (bird.common_name) {
+                  <span>• {{ bird.common_name }}</span>
+                }
+              </p>
+            </ion-label>
+          </ion-item>
+        } @empty {
+          <div class="ion-padding ion-text-center bird-results-empty">
+            <p>No se encontraron especies con ese criterio.</p>
+          </div>
+        }
+      </ion-list>
+    </ion-content>
+  </ng-template>
+</ion-modal>

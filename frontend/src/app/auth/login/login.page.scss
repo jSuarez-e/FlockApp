@@ -9,20 +9,20 @@
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .options-row {
-  margin: 8px;
+  margin: 6px 4px 8px;
 
   ion-checkbox {
-    --size: 20px;
+    --size: 19px;
     --border-radius: 6px;
-    --checkbox-background-checked: var(--avitour-primary);
+    --checkbox-background-checked: var(--flock-primary, var(--flock-primary));
 
     font-weight: 700;
     font-size: 0.85rem;
-    color: var(--avitour-muted-foreground);
+    color: var(--flock-muted-foreground, var(--flock-muted-foreground));
 
     &::part(label) {
       margin-left: 8px;
@@ -31,42 +31,46 @@
 }
 
 .primary-btn {
-  --border-radius: 18px;
+  --border-radius: 16px;
 
-  height: 56px;
+  height: 52px;
 
-  --background: var(--avitour-primary);
-  --color: #fff;
+  --background: var(--flock-primary, var(--flock-primary));
+  --color: var(--flock-primary-foreground);
 
   font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 14px rgb(6 78 59 / 25%);
+  margin-top: 4px;
 }
 
 .recovery-link {
-  --color: var(--avitour-primary);
+  --color: var(--flock-primary-light, var(--flock-primary-light));
 
   font-size: 14px !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   text-transform: none !important;
   margin: 0;
 }
 
 .registration-footer {
-  padding: 10px 0;
+  padding: 12px 0 20px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 
   .footer-question {
     font-size: 0.85rem;
     font-weight: 700;
-    color: var(--avitour-muted-foreground);
+    color: var(--flock-muted-foreground, var(--flock-muted-foreground));
     margin: 0;
   }
 
   .footer-link {
-    color: var(--avitour-primary);
+    color: var(--flock-primary, var(--flock-primary));
     font-weight: 800;
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     text-decoration: none;
   }
 }

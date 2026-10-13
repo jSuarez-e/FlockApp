@@ -1,5 +1,4 @@
-// src/app/shared/components/auth-card-header/auth-card-header.component.ts
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * @sdd
@@ -10,14 +9,9 @@ import { Component, input } from '@angular/core';
 @Component({
   selector: 'app-auth-card-header',
   standalone: true,
-  template: `
-    <div class="auth-card-header u-text-center">
-      <h2 class="auth-card-header__title">{{ title() }}</h2>
-      @if (subtitle()) {
-        <p class="auth-card-header__subtitle">{{ subtitle() }}</p>
-      }
-    </div>
-  `,
+  templateUrl: './auth-card-header.component.html',
+  styleUrl: './auth-card-header.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthCardHeaderComponent {
   /** Título principal del encabezado */

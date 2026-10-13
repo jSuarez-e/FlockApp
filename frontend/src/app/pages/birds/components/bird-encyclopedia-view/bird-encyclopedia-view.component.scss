@@ -11,8 +11,8 @@
 }
 
 .detail-toolbar {
-  --background: var(--ion-color-primary, #4caf50);
-  --color: #fff;
+  --background: var(--ion-color-primary, var(--ion-color-success));
+  --color: var(--flock-primary-foreground);
 }
 
 .detail-title {
@@ -21,14 +21,14 @@
 }
 
 .encyclopedia-segments {
-  background: #fff;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--flock-card);
+  border-bottom: 1px solid var(--flock-border);
   width: 100%;
 
   ion-segment-button {
-    --color: #64748b;
-    --color-checked: var(--ion-color-primary, #2563eb);
-    --indicator-color: var(--ion-color-primary, #2563eb);
+    --color: var(--flock-muted-foreground);
+    --color-checked: var(--ion-color-primary, var(--ion-color-secondary));
+    --indicator-color: var(--ion-color-primary, var(--ion-color-secondary));
 
     font-weight: 700;
     font-size: 0.82rem;
@@ -47,14 +47,14 @@
 }
 
 .detail-content {
-  --background: #f8fafc;
+  --background: var(--flock-background);
 }
 
 /* ==========================================================================
    PESTAÑA 1: INFORMACIÓN BÁSICA
    ========================================================================== */
 .tab-basic {
-  background: #fff;
+  background: var(--flock-card);
   padding-bottom: 32px;
 }
 
@@ -62,7 +62,7 @@
   position: relative;
   width: 100%;
   height: 230px;
-  background: #1e293b;
+  background: var(--flock-surface-dark);
   overflow: hidden;
 }
 
@@ -79,7 +79,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f1f5f9;
+  background: var(--flock-surface-subtle);
 }
 
 .hero-placeholder-img {
@@ -95,7 +95,7 @@
   right: 0;
   background: rgb(0 0 0 / 65%);
   padding: 6px 14px;
-  color: #fff;
+  color: var(--flock-primary-foreground);
   font-size: 0.82rem;
   font-weight: 500;
 }
@@ -112,7 +112,7 @@
     margin: 0;
     font-size: 1.35rem;
     font-weight: 800;
-    color: #0f172a;
+    color: var(--flock-foreground);
     letter-spacing: -0.01em;
   }
 
@@ -121,7 +121,7 @@
     font-size: 0.95rem;
     font-weight: 500;
     font-style: italic;
-    color: #64748b;
+    color: var(--flock-muted-foreground);
   }
 }
 
@@ -130,39 +130,39 @@
   border-radius: 6px;
   font-size: 0.72rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--flock-primary-foreground);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   flex-shrink: 0;
 
   &--lc {
-    background-color: #22c55e;
+    background-color: var(--ion-color-success);
   }
 
   &--nt {
-    background-color: #84cc16;
+    background-color: var(--flock-primary-tint);
   }
 
   &--vu {
-    background-color: #eab308;
+    background-color: var(--flock-accent-gold);
   }
 
   &--en {
-    background-color: #f97316;
+    background-color: var(--flock-accent-gold);
   }
 
   &--cr {
-    background-color: #ef4444;
+    background-color: var(--ion-color-danger);
   }
 
   &--default {
-    background-color: #64748b;
+    background-color: var(--flock-muted-foreground);
   }
 }
 
 .specs-divider {
   height: 1px;
-  background: #e2e8f0;
+  background: var(--flock-border);
   margin: 16px 16px 0;
 }
 
@@ -172,11 +172,11 @@
 
 .specs-row {
   display: flex;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--flock-surface-subtle);
   padding: 12px 0;
 
   &--single {
-    border-bottom: 1px solid #f1f5f9;
+    border-bottom: 1px solid var(--flock-surface-subtle);
   }
 }
 
@@ -186,7 +186,7 @@
   padding-right: 8px;
 
   &:last-child {
-    border-left: 1px solid #f1f5f9;
+    border-left: 1px solid var(--flock-surface-subtle);
     padding-left: 14px;
     padding-right: 0;
   }
@@ -200,14 +200,14 @@
     display: block;
     font-size: 0.88rem;
     font-weight: 800;
-    color: #1e293b;
+    color: var(--flock-surface-dark);
     margin-bottom: 4px;
   }
 
   &__value {
     display: block;
     font-size: 0.85rem;
-    color: #475569;
+    color: var(--flock-muted-foreground);
     font-weight: 500;
   }
 
@@ -215,7 +215,7 @@
     margin: 4px 0 0;
     font-size: 0.85rem;
     line-height: 1.5;
-    color: #475569;
+    color: var(--flock-muted-foreground);
   }
 }
 
@@ -226,10 +226,10 @@
 
   ion-icon {
     font-size: 1.15rem;
-    color: #cbd5e1;
+    color: var(--flock-border-medium);
 
     &.filled {
-      color: #0f172a;
+      color: var(--flock-foreground);
     }
   }
 }
@@ -244,8 +244,8 @@
 }
 
 .records-toggle-wrapper {
-  background: #fff;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--flock-card);
+  border-bottom: 1px solid var(--flock-border);
 }
 
 .records-mode-segment {
@@ -256,7 +256,7 @@
 .records-subtitle {
   margin: 8px 0 0;
   font-size: 0.78rem;
-  color: #64748b;
+  color: var(--flock-muted-foreground);
   text-align: center;
 }
 
@@ -264,7 +264,7 @@
   flex: 1;
   min-height: 380px;
   position: relative;
-  background: #e2e8f0;
+  background: var(--flock-border);
 
   app-search-map {
     display: block;
@@ -281,7 +281,7 @@
   justify-content: center;
   height: 100%;
   min-height: 300px;
-  color: #64748b;
+  color: var(--flock-muted-foreground);
 
   p {
     margin-top: 10px;
@@ -295,7 +295,7 @@
   left: 50%;
   transform: translateX(-50%);
   background: rgb(15 23 42 / 85%);
-  color: #fff;
+  color: var(--flock-primary-foreground);
   padding: 8px 16px;
   border-radius: 20px;
   display: flex;
@@ -307,7 +307,7 @@
 
   ion-icon {
     font-size: 1rem;
-    color: #f59e0b;
+    color: var(--flock-accent-gold);
   }
 }
 
@@ -321,10 +321,10 @@
 }
 
 .morph-card {
-  background: #fff;
+  background: var(--flock-card);
   border-radius: 12px;
   padding: 16px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--flock-border);
   box-shadow: 0 1px 3px rgb(0 0 0 / 4%);
 
   &__header {
@@ -335,21 +335,21 @@
 
     ion-icon {
       font-size: 1.2rem;
-      color: var(--ion-color-primary, #4caf50);
+      color: var(--ion-color-primary, var(--ion-color-success));
     }
 
     h3 {
       margin: 0;
       font-size: 1rem;
       font-weight: 700;
-      color: #1e293b;
+      color: var(--flock-surface-dark);
     }
   }
 
   p {
     margin: 0;
     font-size: 0.88rem;
-    color: #475569;
+    color: var(--flock-muted-foreground);
     line-height: 1.45;
   }
 }
@@ -358,9 +358,9 @@
    PESTAÑA 4: ENLACES
    ========================================================================== */
 .links-list {
-  background: #fff;
+  background: var(--flock-card);
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--flock-border);
   overflow: hidden;
 }
 
@@ -369,7 +369,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 14px 16px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--flock-surface-subtle);
 
   &:last-child {
     border-bottom: none;
@@ -378,16 +378,16 @@
   &__label {
     font-size: 0.92rem;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--flock-surface-dark);
   }
 
   &__value {
     font-size: 0.88rem;
-    color: #64748b;
+    color: var(--flock-muted-foreground);
   }
 
   &__action {
-    color: #2563eb;
+    color: var(--ion-color-secondary);
     font-weight: 600;
     font-size: 0.88rem;
     text-decoration: none;

@@ -31,16 +31,16 @@
 .empty-title {
   font-weight: 800;
   font-size: 20px;
-  color: #1a202c;
+  color: var(--flock-surface-dark);
   margin: 0 0 8px;
 }
 
 :host-context(body.dark) .empty-title {
-  color: #f7fafc;
+  color: var(--flock-background);
 }
 
 .empty-desc {
-  color: #718096;
+  color: var(--flock-muted-foreground);
   font-size: 15px;
   line-height: 1.5;
   margin: 0 0 24px;
@@ -48,7 +48,7 @@
 }
 
 :host-context(body.dark) .empty-desc {
-  color: #a0aec0;
+  color: var(--flock-subtle-foreground);
 }
 
 .empty-btn {
@@ -70,8 +70,8 @@
   margin: 0;
 
   .feed-fab-btn {
-    --background: var(--flock-gradient-header, linear-gradient(135deg, #064e3b 0%, #047857 50%, #065f46 100%));
-    --color: #ffffff;
+    --background: var(--flock-gradient-header, linear-gradient(135deg, var(--flock-primary) 0%, var(--flock-primary-light) 50%, var(--flock-primary-light) 100%));
+    --color: var(--flock-primary-foreground);
     --box-shadow: 0 4px 18px rgba(4, 120, 87, 0.45);
     width: 58px;
     height: 58px;

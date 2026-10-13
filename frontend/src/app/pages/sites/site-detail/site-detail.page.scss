@@ -1,12 +1,12 @@
 .site-detail-toolbar {
   --background: transparent;
   background: transparent;
-  --color: var(--flock-primary-foreground, #fff);
+  --color: var(--flock-primary-foreground);
   padding: 10px 16px 12px;
 }
 
 .site-detail-content {
-  --background: var(--flock-background, #f8fafc);
+  --background: var(--flock-background, var(--flock-background));
   --padding-top: 0;
   --padding-bottom: 0;
   --padding-start: 0;
@@ -21,20 +21,20 @@
   margin: 0 0 10px;
   font-size: 0.98rem;
   font-weight: 700;
-  color: var(--flock-primary, #064e3b);
+  color: var(--flock-primary, var(--flock-primary));
   display: flex;
   align-items: center;
   gap: 8px;
 
   ion-icon {
     font-size: 1.15rem;
-    color: var(--flock-primary-light, #047857);
+    color: var(--flock-primary-light, var(--flock-primary-light));
   }
 }
 
 .desc-text {
   line-height: 1.6;
-  color: var(--flock-foreground, #0f172a);
+  color: var(--flock-foreground, var(--flock-foreground));
   font-size: 0.92rem;
   margin: 0;
 }
@@ -43,7 +43,7 @@
   border: 1px solid var(--flock-border-subtle, rgb(226 232 240 / 80%));
   border-radius: 14px;
   overflow: hidden;
-  background: #f8fafc;
+  background: var(--flock-background);
   margin-bottom: 12px;
 
   &:last-child {
@@ -65,14 +65,14 @@
       margin: 0;
       font-size: 0.98rem;
       font-weight: 700;
-      color: #0f172a;
+      color: var(--flock-foreground);
     }
   }
 
   .service-desc {
     margin: 0 0 8px;
     font-size: 0.85rem;
-    color: #64748b;
+    color: var(--flock-muted-foreground);
     line-height: 1.45;
   }
 }
@@ -81,7 +81,7 @@
   position: relative;
   width: 100%;
   margin: 0;
-  background-color: var(--ion-color-step-100, #f4f5f8);
+  background-color: var(--ion-color-step-100, var(--flock-background));
 
   &__img {
     width: 100%;
@@ -93,7 +93,7 @@
   &__fallback-banner {
     width: 100%;
     height: 230px;
-    background: linear-gradient(135deg, var(--flock-primary, #064e3b) 0%, #047857 55%, #065f46 100%);
+    background: linear-gradient(135deg, var(--flock-primary, var(--flock-primary)) 0%, var(--flock-primary-light) 55%, var(--flock-primary-light) 100%);
   }
 
   &__logo-circle {
@@ -103,9 +103,9 @@
     width: 88px;
     height: 88px;
     border-radius: 50%;
-    border: 3px solid #fff;
+    border: 3px solid var(--flock-card);
     box-shadow: 0 4px 14px rgb(0 0 0 / 18%);
-    background: #fff;
+    background: var(--flock-card);
     z-index: 10;
     display: flex;
     align-items: center;
@@ -122,7 +122,7 @@
 
 .content-wrapper {
   position: relative;
-  background: #fff;
+  background: var(--flock-card);
   border-radius: 0 0 20px 20px;
   padding: 16px 18px 24px;
 }
@@ -130,12 +130,12 @@
 .title {
   font-size: 1.55rem;
   font-weight: 800;
-  color: var(--flock-foreground, #0f172a);
+  color: var(--flock-foreground, var(--flock-foreground));
   margin-bottom: 5px;
 }
 
 .text-muted { 
-  color: var(--flock-muted-foreground, #64748b); 
+  color: var(--flock-muted-foreground, var(--flock-muted-foreground)); 
   display: flex;
   align-items: center;
   gap: 5px;
@@ -193,7 +193,7 @@
 
   &--active {
     background: rgb(var(--ion-color-success-rgb, 45 211 111) / 12%);
-    color: var(--ion-color-success-shade, #28ba62);
+    color: var(--ion-color-success);
   }
 
   &--inactive {

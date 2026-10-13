@@ -1,4 +1,6 @@
 import { Module, Logger } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -37,6 +39,14 @@ import { DatabaseBootstrapService } from './infrastructure/database/database-boo
       isGlobal: true,
       envFilePath: '.env',
     }),
+
+    // 1.1 Rate Limiting Global (Protección contra DDoS y fuerza bruta)
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
 
     // 2. Conexión Global a PostgreSQL + PostGIS
     TypeOrmModule.forRootAsync({
@@ -107,6 +117,13 @@ import { DatabaseBootstrapService } from './infrastructure/database/database-boo
     RoutesModule,
   ],
   controllers: [AppController],
-  providers: [AppService, DatabaseBootstrapService],
+  providers: [
+    AppService,
+    DatabaseBootstrapService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

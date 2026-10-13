@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AuthService } from './auth.service';
 import { DbHelperService } from './db-helper.service';
+import { CryptoService } from './crypto.service';
 import { AuthResponse, User, UserRole } from '../models/auth.models';
 import { environment } from '../../../environments/environment';
 
@@ -13,16 +14,23 @@ describe('AuthService', () => {
   let service: AuthService;
   let httpMock: HttpTestingController;
   let dbHelperSpy: jasmine.SpyObj<DbHelperService>;
+  let cryptoSpy: jasmine.SpyObj<CryptoService>;
 
   beforeEach(() => {
     const spy = jasmine.createSpyObj<DbHelperService>('DbHelperService', [
       'saveSession',
       'clearSession',
     ]);
+    cryptoSpy = jasmine.createSpyObj<CryptoService>('CryptoService', ['encryptRSA']);
+    cryptoSpy.encryptRSA.and.resolveTo('encrypted-pass');
 
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [AuthService, { provide: DbHelperService, useValue: spy }],
+      providers: [
+        AuthService,
+        { provide: DbHelperService, useValue: spy },
+        { provide: CryptoService, useValue: cryptoSpy },
+      ],
     });
 
     service = TestBed.inject(AuthService);
@@ -58,6 +66,7 @@ describe('AuthService', () => {
 
     // PASO CLAVE: El tercer argumento 'true' activa la lógica de guardado en el servicio
     const loginPromise = service.login('user@test.com', '123', true);
+    await Promise.resolve();
 
     // Ajustamos la URL para que coincida con: API_URL + '/login'
     const req = httpMock.expectOne(`${environment.authUrl}/login`);
@@ -89,6 +98,7 @@ describe('AuthService', () => {
 
     // Si pasamos false (o nada), no debe llamar a DbHelper
     const loginPromise = service.login('no-remember@test.com', '123', false);
+    await Promise.resolve();
 
     const req = httpMock.expectOne(`${environment.authUrl}/login`);
     req.flush(mockRes);

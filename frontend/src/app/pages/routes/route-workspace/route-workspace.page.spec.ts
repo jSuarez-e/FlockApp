@@ -4,6 +4,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouteWorkspacePage } from './route-workspace.page';
 import { ActivatedRoute } from '@angular/router';
+import { ModalController } from '@ionic/angular';
 import { of } from 'rxjs';
 import { ActiveRouteStore } from '../../../core/stores/active-route.store';
 import { DbHelperService } from '../../../core/services/db-helper.service';
@@ -19,8 +20,12 @@ describe('RouteWorkspacePage', () => {
       loadRoute: jasmine.createSpy('loadRoute'),
       startTracking: jasmine.createSpy('startTracking'),
       isTracking: jasmine.createSpy('isTracking').and.returnValue(false),
+      currentPath: jasmine.createSpy('currentPath').and.returnValue([]),
+      totalDistance: jasmine.createSpy('totalDistance').and.returnValue(0),
+      currentRouteId: jasmine.createSpy('currentRouteId').and.returnValue(null),
       addPosition: jasmine.createSpy('addPosition'),
       startTime: jasmine.createSpy('startTime').and.returnValue(new Date().toISOString()),
+      endTime: jasmine.createSpy('endTime').and.returnValue(null),
       sightingsLog: jasmine.createSpy('sightingsLog').and.returnValue([]),
     };
 
@@ -49,6 +54,7 @@ describe('RouteWorkspacePage', () => {
         { provide: UiService, useValue: uiMock },
         { provide: GeographyService, useValue: geoMock },
         { provide: ActivatedRoute, useValue: activatedRouteMock },
+        { provide: ModalController, useValue: jasmine.createSpyObj('ModalController', ['create', 'dismiss']) },
       ],
     }).compileComponents();
 

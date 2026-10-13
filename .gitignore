@@ -27,6 +27,12 @@ lerna-debug.log*
 .env.test.local
 .env.production.local
 
+# Claves criptográficas y secretos locales
+*.pem
+*.key
+.rsa-keys.json
+backend/.rsa-keys.json
+
 # Bases de datos locales
 *.sqlite
 *.sqlite3

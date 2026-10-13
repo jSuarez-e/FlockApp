@@ -1,0 +1,13 @@
+<!--
+  @sdd
+  [Objetivo]: Estructura HTML para visualización de mapa Leaflet y HUD de métricas de ruta.
+  [I/O - Reusabilidad]: Consume Signals path() y sightings().
+  [Edge Cases - UI]: Contenedor de mapa responsive que llena el viewport disponible.
+-->
+<div class="map-placeholder">
+  <div class="hud">
+    <div class="metric">📍 {{ path().length || 0 }} Puntos</div>
+    <div class="metric">🦅 {{ sightings().length || 0 }} Avistamientos</div>
+  </div>
+  <div class="map-canvas" #mapContainer></div>
+</div>

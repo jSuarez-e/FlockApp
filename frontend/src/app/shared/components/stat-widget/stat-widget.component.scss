@@ -1,0 +1,81 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos BEM para el widget de estadísticas rápidas.
+ * [I/O - Reusabilidad]: Bloque .stat-widget con icono circular y valores numéricos responsivos.
+ * [Edge Cases - UI]: Truncado de etiqueta larga con ellipsis para evitar desbordes en móviles.
+ */
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.stat-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px;
+  background: var(--flock-card);
+  padding: 10px 4px;
+  border-radius: 14px;
+  border: 1px solid var(--flock-border-subtle, var(--ion-color-step-150, var(--flock-border)));
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+
+  &__icon-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--flock-primary-foreground);
+    flex-shrink: 0;
+    background: var(--flock-primary, var(--ion-color-primary, var(--flock-primary-light)));
+
+    &--species {
+      background: var(--flock-primary, var(--ion-color-primary, var(--ion-color-success)));
+    }
+
+    &--sightings {
+      background: var(--flock-secondary, var(--ion-color-secondary, var(--ion-color-secondary)));
+    }
+
+    &--medals {
+      background: var(--ion-color-warning, var(--flock-accent-gold));
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+  }
+
+  &__value {
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--flock-foreground, var(--ion-text-color, var(--flock-foreground)));
+    line-height: 1.1;
+  }
+
+  &__label {
+    font-size: 0.72rem;
+    color: var(--flock-muted-foreground, var(--ion-color-medium, var(--flock-muted-foreground)));
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    margin-top: 2px;
+  }
+}

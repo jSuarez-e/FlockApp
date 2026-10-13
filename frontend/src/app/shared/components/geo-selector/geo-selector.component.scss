@@ -32,7 +32,7 @@
 
   &__icon {
     font-size: 1.15rem;
-    color: var(--flock-primary-light, #047857);
+    color: var(--flock-primary-light, var(--flock-primary-light));
     flex-shrink: 0;
   }
 
@@ -40,13 +40,13 @@
     flex: 1;
     font-size: 0.92rem;
     font-weight: 600;
-    color: var(--flock-foreground, #0f172a);
+    color: var(--flock-foreground, var(--flock-foreground));
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 
     &--placeholder {
-      color: var(--flock-subtle-foreground, #94a3b8);
+      color: var(--flock-subtle-foreground, var(--flock-subtle-foreground));
       font-weight: 400;
     }
   }
@@ -54,7 +54,7 @@
 
 /* Modal Bottom-Sheet de Selección */
 .geo-picker-modal {
-  --background: #ffffff;
+  --background: var(--flock-card);
   --border-radius: 20px 20px 0 0;
 
   &::part(content) {
@@ -66,11 +66,11 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #ffffff;
+  background: var(--flock-card);
 
   &__header {
     padding: 18px 18px 12px;
-    border-bottom: 1px solid var(--flock-border, #e2e8f0);
+    border-bottom: 1px solid var(--flock-border, var(--flock-border));
     flex-shrink: 0;
   }
 
@@ -89,19 +89,19 @@
 
   &__title-icon {
     font-size: 1.25rem;
-    color: var(--flock-primary-light, #047857);
+    color: var(--flock-primary-light, var(--flock-primary-light));
   }
 
   &__title {
     margin: 0;
     font-size: 1.05rem;
     font-weight: 700;
-    color: var(--flock-foreground, #0f172a);
+    color: var(--flock-foreground, var(--flock-foreground));
     letter-spacing: -0.01em;
   }
 
   &__close-btn {
-    background: #f1f5f9;
+    background: var(--flock-surface-subtle);
     border: none;
     border-radius: 50%;
     width: 34px;
@@ -109,37 +109,37 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #64748b;
+    color: var(--flock-muted-foreground);
     cursor: pointer;
     font-size: 1.2rem;
     transition: background 0.15s ease, color 0.15s ease;
 
     &:hover {
-      background: #e2e8f0;
-      color: #0f172a;
+      background: var(--flock-border);
+      color: var(--flock-foreground);
     }
   }
 
   &__search-box {
     display: flex;
     align-items: center;
-    background: #f8fafc;
-    border: 1.5px solid #e2e8f0;
+    background: var(--flock-background);
+    border: 1.5px solid var(--flock-border);
     border-radius: 12px;
     padding: 8px 12px;
     gap: 8px;
     transition: border-color 0.2s ease, background 0.2s ease;
 
     &:focus-within {
-      border-color: var(--flock-primary-light, #047857);
-      background: #ffffff;
+      border-color: var(--flock-primary-light, var(--flock-primary-light));
+      background: var(--flock-card);
       box-shadow: 0 0 0 3px rgba(4, 120, 87, 0.08);
     }
   }
 
   &__search-icon {
     font-size: 1.1rem;
-    color: #94a3b8;
+    color: var(--flock-subtle-foreground);
     flex-shrink: 0;
   }
 
@@ -149,19 +149,19 @@
     background: transparent;
     font-size: 0.92rem;
     font-weight: 500;
-    color: #0f172a;
+    color: var(--flock-foreground);
     width: 100%;
     font-family: inherit;
 
     &::placeholder {
-      color: #94a3b8;
+      color: var(--flock-subtle-foreground);
     }
   }
 
   &__search-clear {
     background: transparent;
     border: none;
-    color: #94a3b8;
+    color: var(--flock-subtle-foreground);
     font-size: 1.15rem;
     cursor: pointer;
     display: flex;
@@ -170,7 +170,7 @@
     padding: 0;
 
     &:hover {
-      color: #64748b;
+      color: var(--flock-muted-foreground);
     }
   }
 
@@ -203,19 +203,19 @@
 
     &:hover,
     &:focus-visible {
-      background: #f1f5f9;
+      background: var(--flock-surface-subtle);
     }
 
     &:active {
-      background: #e2e8f0;
+      background: var(--flock-border);
     }
 
     &--selected {
-      background: #ecfdf5;
+      background: var(--flock-verified-bg);
 
       &:hover,
       &:focus-visible {
-        background: #d1fae5;
+        background: var(--flock-verified-bg);
       }
     }
   }
@@ -223,12 +223,12 @@
   &__item-name {
     font-size: 0.94rem;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--flock-surface-dark);
   }
 
   &__item-check {
     font-size: 1.25rem;
-    color: var(--flock-primary-light, #047857);
+    color: var(--flock-primary-light, var(--flock-primary-light));
     flex-shrink: 0;
   }
 
@@ -243,7 +243,7 @@
 
   &__empty-icon {
     font-size: 2.5rem;
-    color: #cbd5e1;
+    color: var(--flock-border-medium);
     margin-bottom: 10px;
   }
 
@@ -251,12 +251,12 @@
     margin: 0 0 4px;
     font-size: 0.98rem;
     font-weight: 700;
-    color: #334155;
+    color: var(--flock-foreground);
   }
 
   &__empty-desc {
     margin: 0;
     font-size: 0.86rem;
-    color: #64748b;
+    color: var(--flock-muted-foreground);
   }
 }

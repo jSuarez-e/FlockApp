@@ -1,0 +1,166 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos modulares para la pestaña de solicitudes de reserva recibidas por el guía.
+ * [I/O - Reusabilidad]: Clases BEM: .bookings-panel, .empty-bookings-box, .booking-card, .birder-profile-mini.
+ * [Edge Cases - UI]: Responsive card layout, estado vacío con borde discontinuo, badge semántico de estado.
+ */
+
+.bookings-panel {
+  .bookings-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    .panel-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--flock-surface-dark);
+    }
+
+    .panel-count {
+      font-size: 13px;
+      color: var(--flock-muted-foreground);
+      font-weight: 600;
+    }
+  }
+
+  .empty-bookings-box {
+    background: var(--flock-background);
+    border-radius: 16px;
+    border: 1px dashed var(--flock-border-medium);
+
+    .empty-icon {
+      font-size: 48px;
+      color: var(--flock-subtle-foreground);
+      margin-bottom: 8px;
+    }
+
+    h4 {
+      margin: 0;
+      font-weight: 700;
+      color: var(--flock-foreground);
+    }
+
+    p {
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: var(--flock-muted-foreground);
+    }
+  }
+
+  .booking-card {
+    margin: 0 0 16px;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgb(0 0 0 / 6%);
+    border: 1px solid var(--flock-border);
+
+    .booking-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .birder-profile-mini {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .birder-mini-avatar {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 2px solid var(--flock-primary-tint);
+        }
+
+        .birder-name {
+          font-size: 16px;
+          font-weight: 800;
+          color: var(--flock-foreground);
+        }
+
+        .booking-activity {
+          font-size: 12px;
+          font-weight: 600;
+          color: var(--flock-muted-foreground);
+        }
+      }
+    }
+
+    .booking-details-grid {
+      .detail-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: var(--flock-foreground);
+        margin-bottom: 6px;
+
+        ion-icon {
+          font-size: 18px;
+        }
+
+        .btn-whatsapp-chat {
+          margin: 0;
+
+          --padding-start: 4px;
+          --padding-end: 4px;
+
+          height: 28px;
+        }
+      }
+
+      .booking-user-message {
+        background: var(--flock-background);
+        border-left: 3px solid var(--flock-primary-tint);
+        padding: 8px 12px;
+        border-radius: 0 8px 8px 0;
+        font-style: italic;
+        font-size: 13px;
+        color: var(--flock-muted-foreground);
+        margin: 8px 0;
+      }
+
+      .rating-display {
+        background: var(--flock-accent-gold-bg);
+        border: 1px solid var(--flock-accent-gold-border);
+        border-radius: 8px;
+        padding: 8px 12px;
+
+        .rating-label {
+          font-size: 12px;
+          font-weight: 700;
+          color: var(--flock-accent-gold-text);
+          display: block;
+        }
+
+        .rating-stars {
+          font-size: 14px;
+          font-weight: 800;
+          color: var(--flock-accent-gold-text);
+        }
+
+        .rating-review {
+          margin: 4px 0 0;
+          font-size: 12px;
+          font-style: italic;
+          color: var(--flock-accent-gold-text);
+        }
+      }
+    }
+
+    .booking-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      ion-button {
+        margin: 0;
+        font-weight: 700;
+
+        --border-radius: 10px;
+      }
+    }
+  }
+}

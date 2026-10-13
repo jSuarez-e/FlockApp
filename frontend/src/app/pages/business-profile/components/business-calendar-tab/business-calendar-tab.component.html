@@ -1,0 +1,48 @@
+<div class="calendar-panel">
+  <div class="calendar-header-nav">
+    <ion-button fill="clear" (click)="prevMonth()" aria-label="Mes anterior">
+      <ion-icon name="chevron-back-outline"></ion-icon>
+    </ion-button>
+    <h3 class="calendar-month-title">{{ currentMonthLabel() }}</h3>
+    <ion-button fill="clear" (click)="nextMonth()" aria-label="Mes siguiente">
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+    </ion-button>
+  </div>
+
+  <div class="calendar-instructions ion-margin-bottom">
+    <ion-icon name="time-outline" color="primary"></ion-icon>
+    <p>Toca cualquier fecha para marcarla como <strong>Día Ocupado</strong> o <strong>Día Libre</strong>.</p>
+  </div>
+
+  <div class="calendar-grid">
+    @for (day of calendarDays(); track day.dateString) {
+      <button
+        type="button"
+        class="calendar-day-cell"
+        [class.calendar-day-cell--blocked]="day.isBlocked"
+        [class.calendar-day-cell--past]="day.isPast"
+        [class.calendar-day-cell--today]="day.isToday"
+        [disabled]="day.isPast"
+        (click)="toggleCalendarDay(day)"
+      >
+        <span class="day-number">{{ day.dayNumber }}</span>
+        @if (day.isBlocked) {
+          <span class="day-status-pill day-status-pill--blocked">Ocupado</span>
+        } @else if (!day.isPast) {
+          <span class="day-status-pill day-status-pill--free">Libre</span>
+        }
+      </button>
+    }
+  </div>
+
+  <div class="calendar-legend ion-margin-top">
+    <div class="legend-item">
+      <span class="legend-dot legend-dot--free"></span>
+      <span>Disponible</span>
+    </div>
+    <div class="legend-item">
+      <span class="legend-dot legend-dot--blocked"></span>
+      <span>Ocupado / Bloqueado</span>
+    </div>
+  </div>
+</div>

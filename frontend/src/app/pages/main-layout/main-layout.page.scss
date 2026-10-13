@@ -3,13 +3,13 @@
    ========================================================================== */
 
 ion-menu.flock-side-menu {
-  --ion-background-color: var(--flock-background, #f8fafc);
-  --width: 290px;
-  --max-width: 85%;
+  --ion-background-color: var(--flock-background, var(--flock-background));
+  --width: 335px;
+  --max-width: 88vw;
 }
 
 .flock-menu-content {
-  --background: var(--flock-background, #f8fafc);
+  --background: var(--flock-background, var(--flock-background));
   --padding-top: 0;
   --padding-bottom: 24px;
   --padding-start: 0;
@@ -19,7 +19,7 @@ ion-menu.flock-side-menu {
 /* 1. SECCIÓN HERO DE PERFIL Y BRANDING UNIFICADA (SIN CORTE NI LÍNEA DURA) */
 .menu-profile-hero {
   background: var(--flock-gradient-header);
-  padding: calc(var(--ion-safe-area-top, 0px) + 24px) 20px 24px;
+  padding: calc(max(var(--ion-safe-area-top, 0px), env(safe-area-inset-top, 0px)) + 20px) 20px 24px;
   box-shadow: 0 4px 18px -2px rgb(6 78 59 / 30%);
   display: flex;
   flex-direction: column;
@@ -56,7 +56,7 @@ ion-menu.flock-side-menu {
       font-size: 1.35rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: #fff;
+      color: var(--flock-primary-foreground);
       margin: 0;
       line-height: 1;
     }
@@ -64,7 +64,7 @@ ion-menu.flock-side-menu {
     .menu-brand-pill {
       font-size: 0.72rem;
       font-weight: 700;
-      color: #a7f3d0;
+      color: var(--flock-verified-border);
       background: rgb(255 255 255 / 16%);
       border: 1px solid rgb(255 255 255 / 28%);
       border-radius: var(--flock-radius-pill, 9999px);
@@ -89,10 +89,10 @@ ion-menu.flock-side-menu {
       width: 72px;
       height: 72px;
       border-radius: 50%;
-      border: 3px solid #fff;
+      border: 3px solid var(--flock-card);
       box-shadow: 0 4px 14px rgb(0 0 0 / 18%);
       overflow: hidden;
-      background: #fff;
+      background: var(--flock-card);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -110,7 +110,7 @@ ion-menu.flock-side-menu {
       margin: 0 0 2px;
       font-size: 1.15rem;
       font-weight: 800;
-      color: #fff;
+      color: var(--flock-primary-foreground);
       letter-spacing: -0.02em;
       line-height: 1.25;
     }
@@ -119,7 +119,7 @@ ion-menu.flock-side-menu {
       margin: 0 0 10px;
       font-size: 0.82rem;
       font-weight: 500;
-      color: #a7f3d0;
+      color: var(--flock-verified-border);
       line-height: 1.35;
       word-break: break-all;
     }
@@ -132,7 +132,7 @@ ion-menu.flock-side-menu {
     background: rgb(255 255 255 / 18%);
     border: 1px solid rgb(255 255 255 / 32%);
     backdrop-filter: blur(8px);
-    color: #fff;
+    color: var(--flock-primary-foreground);
     padding: 5px 12px;
     border-radius: var(--flock-radius-pill, 9999px);
     font-size: 0.72rem;
@@ -143,11 +143,11 @@ ion-menu.flock-side-menu {
 
     ion-icon {
       font-size: 13px;
-      color: #fff;
+      color: var(--flock-primary-foreground);
     }
 
     span {
-      color: #fff;
+      color: var(--flock-primary-foreground);
       font-weight: 800;
     }
   }
@@ -156,59 +156,68 @@ ion-menu.flock-side-menu {
 /* 2. LISTADO DE MENÚ */
 .menu-list {
   background: transparent;
-  padding: 8px 10px;
+  padding: 10px 14px;
 
   ion-list-header {
-    --color: var(--flock-muted-foreground, #64748b);
+    --color: var(--flock-muted-foreground, var(--flock-muted-foreground));
 
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 0.8px;
-    margin-top: 16px;
-    margin-bottom: 4px;
+    margin-top: 18px;
+    margin-bottom: 6px;
     padding-inline-start: 12px;
   }
 }
 
 .menu-item {
   --background: transparent;
-  --color: var(--flock-foreground, #0f172a);
+  --color: var(--flock-foreground, var(--flock-foreground));
   --padding-start: 14px;
-  --border-radius: 12px;
+  --padding-end: 14px;
+  --min-height: 48px;
+  --border-radius: 14px;
 
-  margin: 3px 0;
+  margin: 4px 0;
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 0.94rem;
   transition: all var(--flock-transition-fast, 0.2s ease);
 
   &.selected {
     --background: rgb(6 78 59 / 8%);
-    --color: var(--flock-primary, #064e3b);
+    --color: var(--flock-primary, var(--flock-primary));
+
     font-weight: 800;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  & > ion-icon {
+    color: var(--flock-primary-light, var(--flock-primary-light));
+    font-size: 21px;
+    margin-right: 14px;
+  }
+
+  &.selected > ion-icon {
+    color: var(--flock-primary, var(--flock-primary));
+  }
+
+  ion-label {
+    white-space: normal;
+    line-height: 1.35;
   }
 }
 
-/* Ion-icon overrides */
-.logout-item ion-icon {
-  color: #eb445a;
-}
-
-.menu-item ion-icon {
-  color: var(--flock-primary-light, #047857);
-  font-size: 21px;
-  margin-right: 14px;
-}
-
-.menu-item.selected ion-icon {
-  color: var(--flock-primary, #064e3b);
-}
-
 .logout-item {
-  margin: 12px 10px;
+  margin: 16px 14px 20px;
 
-  --color: #eb445a;
+  --color: var(--ion-color-danger);
 
   font-weight: 800;
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  & > ion-icon {
+    color: var(--ion-color-danger);
+  }
 }
 
 /* 3. TABS INFERIORES */
@@ -216,13 +225,13 @@ ion-menu.flock-side-menu {
   border-top: 1px solid var(--flock-border-subtle, rgb(226 232 240 / 80%));
   height: 65px;
 
-  --background: #fff;
+  --background: var(--flock-card);
 
   box-shadow: 0 -4px 12px rgb(0 0 0 / 3%);
 
   ion-tab-button {
-    --color-selected: var(--flock-primary-light, #047857);
-    --color: var(--flock-muted-foreground, #64748b);
+    --color-selected: var(--flock-primary-light, var(--flock-primary-light));
+    --color: var(--flock-muted-foreground, var(--flock-muted-foreground));
 
     ion-label {
       font-weight: 800;

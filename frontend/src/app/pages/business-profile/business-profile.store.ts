@@ -6,6 +6,7 @@ import { GeographyService, GeoLocation } from '../../core/services/geography.ser
 import { UiService } from '../../core/services/ui.service';
 import { UserService } from '../../core/services/user.service';
 import { IUpdateGuideProfileDto } from '../../../../../shared/models/guide-profile.interface';
+export { IGuideBooking, BookingStatus } from '../../../../../shared/models/guide-booking.interface';
 import { IGuideBooking, BookingStatus } from '../../../../../shared/models/guide-booking.interface';
 import { logger } from '../../core/utils/logger';
 

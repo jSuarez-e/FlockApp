@@ -1,0 +1,130 @@
+<div class="bookings-panel">
+  <div class="bookings-panel-header">
+    <h3 class="panel-title">Solicitudes y Contactos</h3>
+    <span class="panel-count">{{ store.incomingBookings().length }} registradas</span>
+  </div>
+
+  @if (store.isLoadingBookings()) {
+    <div class="ion-text-center ion-padding">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando solicitudes...</p>
+    </div>
+  } @else if (store.incomingBookings().length === 0) {
+    <div class="empty-bookings-box ion-text-center ion-padding">
+      <ion-icon name="document-text-outline" class="empty-icon"></ion-icon>
+      <h4>Sin solicitudes pendientes</h4>
+      <p>Cuando un pajarero solicite tus servicios desde el directorio, aparecerá aquí para establecer negocio.</p>
+    </div>
+  } @else {
+    <div class="bookings-list">
+      @for (booking of store.incomingBookings(); track booking.id) {
+        <ion-card class="booking-card">
+          <ion-card-header>
+            <div class="booking-card-top">
+              <div class="birder-profile-mini">
+                <img
+                  [src]="booking.birderPhotoUrl || 'assets/imgs/commons/general-error.png'"
+                  (error)="$event.target.src = 'assets/imgs/commons/general-error.png'"
+                  alt="Foto del pajarero"
+                  class="birder-mini-avatar"
+                />
+                <div>
+                  <ion-card-title class="birder-name">
+                    {{ booking.birderName || 'Pajarero Interesado' }}
+                  </ion-card-title>
+                  <ion-card-subtitle class="booking-activity">
+                    {{ booking.activityType }}
+                  </ion-card-subtitle>
+                </div>
+              </div>
+
+              <ion-badge
+                [color]="
+                  booking.status === 'CONFIRMED'
+                    ? 'success'
+                    : booking.status === 'PENDING'
+                    ? 'warning'
+                    : booking.status === 'COMPLETED'
+                    ? 'tertiary'
+                    : 'medium'
+                "
+              >
+                {{ booking.status }}
+              </ion-badge>
+            </div>
+          </ion-card-header>
+
+          <ion-card-content>
+            <div class="booking-details-grid">
+              <div class="detail-row">
+                <ion-icon name="calendar-outline" color="primary"></ion-icon>
+                <span>Fecha agendada: <strong>{{ booking.bookingDate }}</strong></span>
+              </div>
+              @if (booking.contactPhone) {
+                <div class="detail-row">
+                  <ion-icon name="call-outline" color="primary"></ion-icon>
+                  <span>{{ booking.contactPhone }}</span>
+                  <ion-button
+                    fill="clear"
+                    size="small"
+                    class="btn-whatsapp-chat"
+                    (click)="openWhatsAppChat(booking.contactPhone)"
+                  >
+                    <ion-icon name="logo-whatsapp" slot="icon-only" color="success"></ion-icon>
+                  </ion-button>
+                </div>
+              }
+              @if (booking.message) {
+                <p class="booking-user-message">
+                  "{{ booking.message }}"
+                </p>
+              }
+              @if (booking.rating) {
+                <div class="rating-display ion-margin-top">
+                  <span class="rating-label">Calificación recibida:</span>
+                  <span class="rating-stars">⭐ {{ booking.rating }} / 5</span>
+                  @if (booking.review) {
+                    <p class="rating-review">"{{ booking.review }}"</p>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="booking-actions ion-margin-top">
+              @if (booking.status === 'PENDING') {
+                <ion-button
+                  expand="block"
+                  color="success"
+                  (click)="onUpdateStatus(booking.id, 'CONFIRMED')"
+                >
+                  <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+                  Aceptar Reserva
+                </ion-button>
+                <ion-button
+                  expand="block"
+                  fill="outline"
+                  color="danger"
+                  (click)="onUpdateStatus(booking.id, 'REJECTED')"
+                >
+                  <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+                  Rechazar
+                </ion-button>
+              }
+              @if (booking.status === 'CONFIRMED') {
+                <ion-button
+                  expand="block"
+                  color="tertiary"
+                  (click)="onUpdateStatus(booking.id, 'COMPLETED')"
+                >
+                  <ion-icon name="checkmark-done-outline" slot="start"></ion-icon>
+                  Marcar Servicio Finalizado
+                </ion-button>
+              }
+            </div>
+          </ion-card-content>
+        </ion-card>
+      }
+    </div>
+  }
+</div>

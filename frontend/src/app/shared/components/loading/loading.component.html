@@ -1,0 +1,12 @@
+<!--
+  @sdd
+  [Objetivo]: Estructura HTML para estado de carga con spinner y mensaje accesible.
+  [I/O - Reusabilidad]: Consume Inputs message, fullHeight, spinnerName.
+  [Edge Cases - UI]: Control flow @if para mensaje opcional y modificador BEM condicional.
+-->
+<div class="loading" [class.loading--full-height]="fullHeight()">
+  <ion-spinner [name]="spinnerName()" color="primary" class="loading__spinner"></ion-spinner>
+  @if (message()) {
+    <p class="loading__message">{{ message() }}</p>
+  }
+</div>

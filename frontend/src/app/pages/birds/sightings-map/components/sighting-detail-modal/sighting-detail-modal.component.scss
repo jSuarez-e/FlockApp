@@ -1,0 +1,236 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos BEM y tokens semánticos para el modal de detalle de avistamiento.
+ * [I/O - Reusabilidad]: Exporta clases BEM .sighting-details, .location-card, .user-card, .sighting-actions.
+ * [Edge Cases - UI]: Soporte responsive y modo oscuro con variables CSS FlockApp.
+ */
+
+.sighting-modal-content {
+  --background: var(--ion-background-color);
+}
+
+.sighting-details {
+  &__badge-row {
+    margin-bottom: 8px;
+  }
+
+  &__badge {
+    --background: rgb(27 94 32 / 12%);
+    --color: var(--flock-primary-light);
+
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    letter-spacing: 0.3px;
+
+    ion-icon {
+      font-size: 0.9rem;
+    }
+  }
+
+  &__bird-info {
+    margin-bottom: 14px;
+  }
+
+  &__scientific-name {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--flock-primary-light);
+    margin: 0 0 4px;
+    font-style: italic;
+    line-height: 1.25;
+  }
+
+  &__names-row {
+    font-size: 0.95rem;
+    color: var(--flock-muted-foreground);
+    font-weight: 500;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  &__english-name {
+    font-weight: 600;
+    color: var(--flock-surface-dark);
+  }
+
+  &__common-name {
+    color: var(--flock-muted-foreground);
+  }
+}
+
+.location-card {
+  background: var(--flock-background);
+  border: 1px solid var(--flock-border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 2%);
+
+  &__icon-wrap {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgb(27 94 32 / 12%);
+    color: var(--flock-primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__tag {
+    display: block;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--flock-muted-foreground);
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  &__place {
+    font-size: 1rem;
+    color: var(--flock-foreground);
+    margin: 0 0 3px;
+    font-weight: 600;
+    line-height: 1.3;
+
+    strong {
+      color: var(--flock-primary-light);
+      font-weight: 700;
+    }
+  }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--flock-muted-foreground);
+    margin: 4px 0;
+
+    ion-spinner {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &__coords {
+    font-size: 0.8rem;
+    color: var(--flock-muted-foreground);
+    font-family: monospace;
+    margin: 0;
+    letter-spacing: 0.2px;
+  }
+}
+
+.user-card {
+  background: var(--flock-background);
+  border: 1px solid var(--flock-border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  transition: all 0.2s ease;
+
+  &.clickable {
+    cursor: pointer;
+
+    &:hover {
+      background: var(--flock-surface-subtle);
+      border-color: var(--flock-primary-light);
+    }
+  }
+
+  &__avatar-wrap {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid var(--flock-primary-light);
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 8%);
+    background: var(--flock-surface-subtle);
+  }
+
+  &__avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__tag {
+    display: block;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--flock-muted-foreground);
+    font-weight: 700;
+  }
+
+  &__name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--flock-foreground);
+    margin: 2px 0 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__date {
+    font-size: 0.8rem;
+    color: var(--flock-muted-foreground);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    ion-icon {
+      font-size: 0.95rem;
+      color: var(--flock-primary-light);
+    }
+  }
+
+  &__arrow {
+    font-size: 1.15rem;
+    color: var(--flock-subtle-foreground);
+    flex-shrink: 0;
+  }
+}
+
+.sighting-actions {
+  &__btn {
+    --background: linear-gradient(135deg, var(--flock-primary-light) 0%, var(--flock-primary) 100%);
+    --border-radius: 12px;
+    --box-shadow: 0 4px 14px rgb(27 94 32 / 25%);
+
+    height: 46px;
+    font-weight: 700;
+    font-size: 0.94rem;
+    letter-spacing: 0.3px;
+  }
+}

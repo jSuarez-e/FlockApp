@@ -5,7 +5,7 @@ import { DashboardStore } from '../../core/stores/dashboard.store';
 describe('DashboardPage (Orquestador)', () => {
   let component: DashboardPage;
   let fixture: ComponentFixture<DashboardPage>;
-  let dashboardStore: typeof DashboardStore;
+  let dashboardStore: InstanceType<typeof DashboardStore>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -20,8 +20,7 @@ describe('DashboardPage (Orquestador)', () => {
   });
 
   it('debe cambiar la vista al recibir el evento del RoleSelector', () => {
-    // Assuming DashboardStore has setMode
-    const spy = spyOn(dashboardStore as Record<string, unknown>, 'setMode');
+    const spy = spyOn(dashboardStore, 'setMode');
     component.handleRoleSelection('PAJARERO');
     expect(spy).toHaveBeenCalledWith('PAJARERO');
   });

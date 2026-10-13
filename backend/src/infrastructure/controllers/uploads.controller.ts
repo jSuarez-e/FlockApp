@@ -72,11 +72,16 @@ export class UploadsController {
         },
       }),
       fileFilter: (req, file, cb) => {
-        // R2: Validación de tipos MIME mediante extensión
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+        const allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
+        const allowedExts = /\.(jpg|jpeg|png|webp)$/i;
+
+        if (
+          !allowedMimes.includes(file.mimetype) ||
+          !file.originalname.match(allowedExts)
+        ) {
           return cb(
             new BadRequestException(
-              'Solo se permiten formatos JPG, JPEG y PNG',
+              'Solo se permiten imágenes válidas en formato JPG, JPEG, PNG o WEBP',
             ),
             false,
           );

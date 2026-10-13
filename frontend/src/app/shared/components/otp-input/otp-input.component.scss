@@ -1,0 +1,40 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos BEM para el formulario de entrada de código OTP.
+ * [I/O - Reusabilidad]: Bloque .otp-input con celdas cuadradas .otp-input__cell.
+ * [Edge Cases - UI]: Deshabilitar flechas de incremento/decremento nativas de input numérico.
+ */
+.otp-input {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 10px 0 20px 0;
+
+  &__cell {
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 50px;
+    height: 55px;
+    border: 2px solid var(--flock-border, var(--ion-color-step-200, var(--flock-border-medium)));
+    border-radius: 12px;
+    background: var(--flock-background, var(--ion-background-color, var(--flock-background)));
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--flock-primary, var(--ion-color-primary, var(--flock-primary)));
+    transition: all 0.2s ease;
+    outline: none;
+
+    &:focus {
+      border-color: var(--flock-primary, var(--ion-color-primary, var(--flock-primary)));
+      box-shadow: 0 0 0 4px rgba(6, 78, 59, 0.12);
+      background: var(--flock-card);
+    }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}

@@ -1,0 +1,25 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos BEM para identidad corporativa de FlockApp.
+ * [I/O - Reusabilidad]: Exporta bloque .brand-header con elementos __logo y __title.
+ * [Edge Cases - UI]: Uso estricto de variables CSS corporativas de tema.
+ */
+.brand-header {
+  margin-bottom: 35px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__logo {
+    font-size: 62px;
+    --ion-color-primary: var(--flock-primary, var(--ion-color-primary, var(--flock-primary)));
+  }
+
+  &__title {
+    margin: 8px 0 0 0;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--flock-primary, var(--ion-color-primary, var(--flock-primary)));
+    letter-spacing: -1.5px;
+  }
+}

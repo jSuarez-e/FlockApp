@@ -1,0 +1,163 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos modulares para la pestaña de formulario de perfil de negocio.
+ * [I/O - Reusabilidad]: Clases BEM: .auth-form-profile, .directory-status-card, .form-row, .form-field.
+ * [Edge Cases - UI]: Responsive flex wrapping, estados de inputs e integración con tokens semánticos.
+ */
+
+.auth-form-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.directory-status-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--flock-verified-bg);
+  border: 1.5px solid var(--flock-primary-tint);
+  border-radius: 14px;
+  padding: 12px 16px;
+
+  .directory-status-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    ion-icon {
+      font-size: 26px;
+    }
+
+    .directory-status-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--flock-surface-dark);
+    }
+
+    .directory-status-sub {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: var(--flock-muted-foreground);
+    }
+  }
+}
+
+.contact-number-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.whatsapp-toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: var(--flock-background);
+  border-radius: 10px;
+
+  &__icon {
+    font-size: 22px;
+  }
+
+  ion-label {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--flock-foreground);
+  }
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  .field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--flock-muted-foreground);
+    margin-bottom: 6px;
+    margin-left: 4px;
+  }
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  height: 52px;
+  background: var(--flock-card);
+  border: 1px solid var(--avitour-border);
+  border-radius: 14px;
+  transition: all 0.2s ease;
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  ion-icon {
+    color: var(--avitour-primary);
+    font-size: 1.2rem;
+  }
+
+  &.invalid {
+    border-color: var(--ion-color-danger) !important;
+    background: rgb(var(--ion-color-danger-rgb), 0.04);
+  }
+
+  .native-input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    outline: none;
+    font-size: 0.95rem;
+    color: var(--flock-foreground);
+  }
+}
+
+.select-box {
+  padding: 0 12px !important;
+  border: 2px solid var(--avitour-border);
+
+  ion-select {
+    width: 100%;
+    font-size: 0.9rem;
+
+    --placeholder-color: var(--flock-muted-foreground);
+    --placeholder-opacity: 1;
+  }
+}
+
+.textarea-box {
+  height: auto !important;
+  padding: 12px 16px !important;
+  border: 2px solid var(--avitour-border);
+
+  textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    outline: none;
+    resize: none;
+    color: var(--flock-foreground);
+    font-size: 0.95rem;
+  }
+}
+
+.primary-btn {
+  --border-radius: 16px;
+
+  height: 52px;
+  font-weight: 800;
+  margin-top: 10px;
+}

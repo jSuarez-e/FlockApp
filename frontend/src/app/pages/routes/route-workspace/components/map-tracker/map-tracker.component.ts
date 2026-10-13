@@ -1,6 +1,6 @@
 /**
  * @file map-tracker.component.ts
- * @sdd Dumb component que renderiza el trazo Polyline y los pines de observación.
+ * @sdd Dumb component que renderiza el trazo Polyline y los pines de observación en mapa Leaflet.
  */
 import {
   Component,
@@ -17,78 +17,68 @@ import { IRouteSighting } from '../../../../../../../../shared/models/routes.int
 import * as L from 'leaflet';
 
 /**
- *
+ * Extensión de registro de avistamiento con metadatos de ave resueltos.
+ */
+interface ISightingRecordWithInfo {
+  /** Información taxonómica opcional de la especie */
+  birdInfo?: Record<string, string>;
+  /** Identificador de la especie */
+  bird_id: string;
+}
+
+/**
+ * Componente presentador que renderiza el mapa Leaflet interactivo con el recorrido y marcadores de aves.
  */
 @Component({
   selector: 'app-map-tracker',
   standalone: true,
   imports: [],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <div class="map-placeholder">
-      <div class="hud">
-        <div class="metric">📍 {{ path().length || 0 }} Puntos</div>
-        <div class="metric">🦅 {{ sightings().length || 0 }} Avistamientos</div>
-      </div>
-      <div class="map-canvas" #mapContainer></div>
-    </div>
-  `,
+  templateUrl: './map-tracker.component.html',
   styleUrls: ['./map-tracker.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapTrackerComponent implements AfterViewInit, OnDestroy {
-  /**
-   *
-   */
-  path = input<[number, number][]>([]);
-  /**
-   *
-   */
-  sightings = input<IRouteSighting[]>([]);
+  /** Trazo de coordenadas GPS [longitud, latitud] acumuladas en la ruta */
+  public readonly path = input<[number, number][]>([]);
 
-  /**
-   *
-   */
+  /** Lista de avistamientos registrados durante la ruta activa */
+  public readonly sightings = input<IRouteSighting[]>([]);
+
+  /** Contenedor DOM nativo para instanciar Leaflet */
   @ViewChild('mapContainer', { static: false }) mapContainer!: ElementRef;
-  /**
-   *
-   */
+
+  /** Instancia principal del mapa Leaflet */
   private map!: L.Map;
-  /**
-   *
-   */
+
+  /** Capa vectorial de polilínea para trazar la ruta */
   private polyline!: L.Polyline;
-  /**
-   *
-   */
+
+  /** Grupo de capas para los marcadores de avistamiento */
   private markerLayer = L.layerGroup();
 
-  /**
-   *
-   */
+  /** Marcador que indica la posición actual del usuario */
   private userMarker!: L.Marker;
-  /**
-   *
-   */
+
+  /** Bandera para evitar re-centrar el mapa constantemente tras el primer zoom */
   private firstPanDone = false;
 
-  /**
-   * Actualiza el mapa cuando los inputs del componente cambian.
-   */
-  ngAfterViewInit() {
-    this.initMap();
-  }
+  /** Referencia al temporizador de redimensionamiento */
+  private resizeTimer?: ReturnType<typeof setTimeout>;
+
+  /** Bandera que indica si el componente fue destruido */
+  private isDestroyed = false;
 
   /**
-   *
+   * Inicializa los efectos reactivos para redibujar polilínea y marcadores cuando cambian los inputs.
    */
   constructor() {
     effect(() => {
       const currentPath = this.path();
       const currentSightings = this.sightings();
 
-      if (this.map) {
+      if (!this.isDestroyed && this.map) {
         if (currentPath && currentPath.length > 0) {
-          // leaflet uses [lat, lng], path is [lng, lat]
+          // Leaflet usa [lat, lng], el path es [lng, lat]
           const latLngs = currentPath.map((p) => [p[1], p[0]] as [number, number]);
           const currentPos = latLngs[latLngs.length - 1];
 
@@ -101,7 +91,7 @@ export class MapTrackerComponent implements AfterViewInit, OnDestroy {
             this.map.panTo(currentPos);
           }
 
-          // Update User Marker
+          // Actualiza o crea el marcador de posición del usuario
           if (!this.userMarker) {
             const userIcon = L.divIcon({
               className: 'user-pulse-icon',
@@ -109,9 +99,10 @@ export class MapTrackerComponent implements AfterViewInit, OnDestroy {
               iconSize: [18, 18],
               iconAnchor: [9, 9],
             });
-            this.userMarker = L.marker(currentPos, { icon: userIcon, zIndexOffset: 1000 }).addTo(
-              this.map,
-            );
+            this.userMarker = L.marker(currentPos, {
+              icon: userIcon,
+              zIndexOffset: 1000,
+            }).addTo(this.map);
           } else {
             this.userMarker.setLatLng(currentPos);
           }
@@ -130,17 +121,11 @@ export class MapTrackerComponent implements AfterViewInit, OnDestroy {
           currentSightings.forEach((s) => {
             const dateObj = new Date(s.timestamp);
             const dateStr = dateObj.toLocaleDateString();
-            const timeStr = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const sRecord = s as unknown as {
-              /**
-               *
-               */
-              birdInfo?: Record<string, string>
-              /**
-               *
-               */;
-              bird_id: string;
-            };
+            const timeStr = dateObj.toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            });
+            const sRecord = s as unknown as ISightingRecordWithInfo;
             const scientificName =
               sRecord.birdInfo?.['scientific_name'] || `Ave ID: ${sRecord.bird_id}`;
             const englishName = sRecord.birdInfo?.['english_name'] || '';
@@ -167,10 +152,20 @@ export class MapTrackerComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
-   *
+   * Inicializa la instancia del mapa una vez cargada la vista en el DOM.
    */
-  private initMap() {
-    this.map = L.map(this.mapContainer.nativeElement).setView([4.5709, -74.2973], 5);
+  public ngAfterViewInit(): void {
+    this.initMap();
+  }
+
+  /**
+   * Instancia el mapa Leaflet, la capa base de OpenStreetMap y las capas vectoriales.
+   */
+  private initMap(): void {
+    this.map = L.map(this.mapContainer.nativeElement).setView(
+      [4.5709, -74.2973],
+      5,
+    );
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap FlockApp',
@@ -180,18 +175,33 @@ export class MapTrackerComponent implements AfterViewInit, OnDestroy {
     this.polyline = L.polyline([], { color: 'blue', weight: 4 }).addTo(this.map);
     this.markerLayer.addTo(this.map);
 
-    // Ionic layout delay fix: ensure leaflet recalculates dimensions
-    setTimeout(() => {
-      this.map.invalidateSize();
+    // Ajuste de dimensiones tras delay de renderizado Ionic
+    this.resizeTimer = setTimeout(() => {
+      if (!this.isDestroyed && this.map) {
+        try {
+          this.map.invalidateSize();
+        } catch {
+          // Mapa desmontado previamente de manera segura
+        }
+      }
     }, 400);
   }
 
   /**
-   *
+   * Limpia los recursos y destruye la instancia del mapa Leaflet al salir.
    */
-  ngOnDestroy() {
+  public ngOnDestroy(): void {
+    this.isDestroyed = true;
+    if (this.resizeTimer) {
+      clearTimeout(this.resizeTimer);
+      this.resizeTimer = undefined;
+    }
     if (this.map) {
-      this.map.remove();
+      try {
+        this.map.remove();
+      } catch {
+        // Safe teardown
+      }
     }
   }
 }

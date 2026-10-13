@@ -1,0 +1,84 @@
+<!--
+/**
+ * @sdd
+ * [Objetivo]: Modal view for listing and posting comments/replies to a feed post.
+ * [I/O - Reusabilidad]: Input: post (FeedPost); Outputs: modal dismiss, updates FeedStore replies.
+ * [Edge Cases - UI]: Loading spinner state, empty replies state, dark mode input/text colors, disabled submit button when empty.
+ */
+-->
+<ion-header class="ion-no-border flock-modal-header">
+  <ion-toolbar>
+    <ion-title>Respuestas</ion-title>
+    <ion-buttons slot="end">
+      <button type="button" (click)="close()" class="flock-header-pill-btn" aria-label="Cerrar modal">
+        <ion-icon [icon]="icons.closeOutline"></ion-icon>
+        <span>Cerrar</span>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  @if (isLoading()) {
+    <div class="flock-replies__center-content">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  } @else if (replies().length === 0) {
+    <div class="flock-replies__empty-state">
+      <ion-icon [icon]="icons.chatbubblesOutline" class="flock-replies__empty-icon"></ion-icon>
+      <h3 class="flock-replies__empty-title">Aún no hay respuestas</h3>
+      <p class="flock-replies__empty-text">Sé el primero en iniciar la conversación sobre este avistamiento.</p>
+    </div>
+  } @else {
+    <div class="flock-replies__list">
+      @for (reply of replies(); track reply.id) {
+        <ion-item lines="none" class="flock-replies__item">
+          <ion-avatar slot="start" class="flock-replies__avatar">
+            <img
+              [src]="
+                reply.authorAvatarUrl ||
+                'https://ui-avatars.com/api/?name=' +
+                  reply.authorName +
+                  '&background=random&color=fff'
+              "
+              [alt]="reply.authorName"
+            />
+          </ion-avatar>
+          <ion-label class="ion-text-wrap">
+            <div class="flock-replies__item-header">
+              <span class="flock-replies__author-name">{{ reply.authorName }}</span>
+              <span class="flock-replies__date">{{ reply.createdAt | date: 'short' }}</span>
+            </div>
+            <p class="flock-replies__content">{{ reply.content }}</p>
+          </ion-label>
+        </ion-item>
+      }
+    </div>
+  }
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="ion-padding-horizontal flock-replies__chat-toolbar">
+    <ion-avatar slot="start" class="flock-replies__chat-avatar">
+      <img src="https://ui-avatars.com/api/?name=Yo&background=random" alt="Mi avatar" />
+    </ion-avatar>
+    <ion-textarea
+      placeholder="Añadir una respuesta..."
+      [autoGrow]="true"
+      rows="1"
+      class="flock-replies__chat-input"
+      [(ngModel)]="newReplyContent"
+    ></ion-textarea>
+    <ion-button
+      slot="end"
+      fill="clear"
+      color="primary"
+      class="flock-replies__send-btn"
+      [disabled]="!newReplyContent.trim() || isSending()"
+      (click)="sendReply()"
+      aria-label="Enviar respuesta"
+    >
+      <ion-icon [icon]="icons.sendOutline" slot="icon-only"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

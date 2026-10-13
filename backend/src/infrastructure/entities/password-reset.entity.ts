@@ -67,6 +67,14 @@ export class PasswordResetEntity {
   isUsed: boolean;
 
   /**
+   * @property attempts
+   * @description Contador de intentos fallidos de validación de OTP para mitigar fuerza bruta.
+   * @default 0
+   */
+  @Column({ default: 0 })
+  attempts: number;
+
+  /**
    * @property createdAt
    * @description Registro automático del momento en que se generó la solicitud.
    */

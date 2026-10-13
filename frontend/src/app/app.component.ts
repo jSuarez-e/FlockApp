@@ -2,12 +2,12 @@ import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/cor
 import { Router } from '@angular/router';
 import { IonApp, IonRouterOutlet } from '@ionic/angular';
 
-import { SplashScreen } from '@capacitor/splash-screen';
 import { DbHelperService } from './core/services/db-helper.service';
 import { AuthService } from './core/services/auth.service';
 import { AuthStore } from './core/stores/auth.store';
 import { User } from './core/models/auth.models';
 import { SyncQueueStore } from './core/stores/sync-queue.store';
+import { NativeBridgeService } from './core/services/native-bridge.service';
 import { addIcons } from 'ionicons';
 import {
   optionsOutline,
@@ -37,7 +37,8 @@ import { logger } from './core/utils/logger';
  */
 @Component({
   selector: 'app-root',
-  template: '<ion-app><ion-router-outlet></ion-router-outlet></ion-app>',
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss',
   standalone: true,
   imports: [IonApp, IonRouterOutlet],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,6 +54,8 @@ export class AppComponent implements OnInit {
   private readonly router = inject(Router);
   /** Motor Híbrido de Sincronización Push/Pull */
   private readonly syncStore = inject(SyncQueueStore);
+  /** Servicio para puente nativo de Capacitor */
+  private readonly nativeBridge = inject(NativeBridgeService);
 
   /**
    * Constructor del componente, registra iconos.
@@ -86,6 +89,7 @@ export class AppComponent implements OnInit {
    * Verifica la sesión activa local en SQLite al arrancar la app.
    */
   async ngOnInit(): Promise<void> {
+    await this.nativeBridge.configureStatusBar();
     // La DB ya se inicializó en el bootstrap de main.ts
     await this.checkSessionAndNavigate();
   }
@@ -119,7 +123,7 @@ export class AppComponent implements OnInit {
     } catch {
       await this.router.navigate(['/auth/login'], { replaceUrl: true });
     } finally {
-      await SplashScreen.hide();
+      await this.nativeBridge.hideSplashScreen();
     }
   }
 }

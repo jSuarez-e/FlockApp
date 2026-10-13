@@ -1,11 +1,11 @@
 .route-date ion-icon {
   font-size: 0.95rem;
-  color: #94a3b8;
+  color: var(--flock-subtle-foreground);
 }
 
 .metric-icon-box ion-icon {
   font-size: 1.25rem;
-  color: #fff;
+  color: var(--flock-primary-foreground);
 }
 
 .routes-header-toolbar {
@@ -13,7 +13,7 @@
 
   background: transparent;
 
-  --color: var(--flock-primary-foreground, #fff);
+  --color: var(--flock-primary-foreground);
 
   padding: 10px 16px 12px;
 
@@ -31,7 +31,7 @@
   }
 
   .header-menu-btn {
-    --color: var(--flock-primary-foreground, #fff);
+    --color: var(--flock-primary-foreground);
     --padding-start: 4px;
     --padding-end: 4px;
 
@@ -49,7 +49,7 @@
       font-size: 1.35rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: var(--flock-primary-foreground, #fff);
+      color: var(--flock-primary-foreground);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -58,7 +58,7 @@
     .routes-header-subtitle {
       margin: 4px 0 0;
       font-size: 0.8rem;
-      color: #a7f3d0;
+      color: var(--flock-verified-border);
       font-weight: 500;
       line-height: 1.35;
     }
@@ -72,7 +72,7 @@
 }
 
 .routes-content {
-  --background: #f8fafc;
+  --background: var(--flock-background);
   --padding-top: 16px;
   --padding-bottom: 80px;
 }
@@ -85,7 +85,7 @@
 
 /* --- SEGMENT SWITCHER --- */
 .segment-wrapper {
-  background: #f1f5f9;
+  background: var(--flock-surface-subtle);
   border-radius: 14px;
   padding: 4px;
   margin-bottom: 12px;
@@ -95,10 +95,10 @@
   --background: transparent;
 
   ion-segment-button {
-    --indicator-color: #fff;
+    --indicator-color: var(--flock-primary-foreground);
     --indicator-box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
-    --color: #64748b;
-    --color-checked: #0f172a;
+    --color: var(--flock-muted-foreground);
+    --color-checked: var(--flock-foreground);
 
     font-weight: 700;
     font-size: 0.88rem;
@@ -111,7 +111,7 @@
 /* --- ROUTE CARDS --- */
 .route-card {
   position: relative;
-  background: #fff;
+  background: var(--flock-card);
   border-radius: 20px;
   border: 1px solid rgb(226 232 240 / 80%);
   box-shadow: 0 4px 20px -2px rgb(15 23 42 / 5%), 0 2px 6px -1px rgb(15 23 42 / 3%);
@@ -131,11 +131,11 @@
     width: 5px;
 
     &.draft-bar {
-      background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+      background: linear-gradient(180deg, var(--flock-accent-gold) 0%, var(--flock-accent-gold) 100%);
     }
 
     &.sent-bar {
-      background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+      background: linear-gradient(180deg, var(--flock-primary-tint) 0%, var(--ion-color-success) 100%);
     }
   }
 
@@ -161,7 +161,7 @@
       margin: 0 0 4px;
       font-size: 1.12rem;
       font-weight: 800;
-      color: #0f172a;
+      color: var(--flock-foreground);
       line-height: 1.25;
       letter-spacing: -0.02em;
     }
@@ -171,7 +171,7 @@
       align-items: center;
       gap: 6px;
       font-size: 0.8rem;
-      color: #64748b;
+      color: var(--flock-muted-foreground);
       font-weight: 500;
     }
   }
@@ -197,23 +197,23 @@
   }
 
   &--draft {
-    background: #fef3c7;
-    color: #b45309;
+    background: var(--flock-accent-gold-bg);
+    color: var(--flock-accent-gold-text);
     border: 1px solid rgb(245 158 11 / 25%);
 
     .status-dot {
-      background: #f59e0b;
+      background: var(--flock-accent-gold);
       box-shadow: 0 0 6px rgb(245 158 11 / 60%);
     }
   }
 
   &--sent {
-    background: #ecfdf5;
-    color: #047857;
+    background: var(--flock-verified-bg);
+    color: var(--flock-primary-light);
     border: 1px solid rgb(16 185 129 / 25%);
 
     .status-dot {
-      background: #10b981;
+      background: var(--flock-primary-tint);
       box-shadow: 0 0 6px rgb(16 185 129 / 60%);
     }
   }
@@ -266,16 +266,16 @@
       border: 1px solid rgb(16 185 129 / 20%);
 
       .metric-icon-box {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        background: linear-gradient(135deg, var(--flock-primary-tint) 0%, var(--ion-color-success) 100%);
         box-shadow: 0 3px 8px rgb(16 185 129 / 25%);
       }
 
       .metric-val {
-        color: #065f46;
+        color: var(--flock-primary-light);
       }
 
       .metric-lbl {
-        color: #047857;
+        color: var(--flock-primary-light);
       }
     }
 
@@ -284,16 +284,16 @@
       border: 1px solid rgb(14 165 233 / 20%);
 
       .metric-icon-box {
-        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+        background: linear-gradient(135deg, var(--ion-color-secondary) 0%, var(--ion-color-secondary) 100%);
         box-shadow: 0 3px 8px rgb(2 132 199 / 25%);
       }
 
       .metric-val {
-        color: #075985;
+        color: var(--ion-color-secondary);
       }
 
       .metric-lbl {
-        color: #0284c7;
+        color: var(--ion-color-secondary);
       }
     }
   }
@@ -310,16 +310,16 @@
     align-items: center;
     gap: 6px;
     padding: 5px 10px;
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
+    background: var(--flock-surface-subtle);
+    border: 1px solid var(--flock-border);
     border-radius: 8px;
     font-size: 0.78rem;
     font-weight: 600;
-    color: #475569;
+    color: var(--flock-muted-foreground);
 
     ion-icon {
       font-size: 0.9rem;
-      color: #64748b;
+      color: var(--flock-muted-foreground);
     }
 
     &--type {
@@ -327,7 +327,7 @@
         width: 6px;
         height: 6px;
         border-radius: 50%;
-        background: #0ea5e9;
+        background: var(--ion-color-secondary);
       }
     }
   }
@@ -344,13 +344,13 @@
   min-height: 44px;
 
   &--draft {
-    --color: #b45309;
-    --border-color: #f59e0b;
+    --color: var(--flock-accent-gold-text);
+    --border-color: var(--flock-accent-gold);
     --border-width: 1.5px;
   }
 
   &--sent {
-    --background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --background: linear-gradient(135deg, var(--flock-primary-tint) 0%, var(--ion-color-success) 100%);
     --box-shadow: 0 4px 14px rgb(16 185 129 / 25%);
   }
 }
@@ -363,16 +363,16 @@
   justify-content: center;
   text-align: center;
   padding: 40px 24px;
-  background: #fff;
+  background: var(--flock-card);
   border-radius: 20px;
-  border: 1px dashed #cbd5e1;
+  border: 1px dashed var(--flock-border-medium);
   margin-top: 16px;
 
   .empty-icon-circle {
     width: 72px;
     height: 72px;
     border-radius: 50%;
-    background: #ecfdf5;
+    background: var(--flock-verified-bg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -380,7 +380,7 @@
 
     ion-icon {
       font-size: 36px;
-      color: #10b981;
+      color: var(--flock-primary-tint);
     }
   }
 
@@ -388,13 +388,13 @@
     margin: 0 0 8px;
     font-size: 1.15rem;
     font-weight: 800;
-    color: #0f172a;
+    color: var(--flock-foreground);
   }
 
   p {
     margin: 0 0 20px;
     font-size: 0.88rem;
-    color: #64748b;
+    color: var(--flock-muted-foreground);
     line-height: 1.5;
     max-width: 280px;
   }
@@ -409,9 +409,9 @@
 /* --- FLOATING ACTION BUTTON --- */
 .custom-fab {
   ion-fab-button {
-    --background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --background: linear-gradient(135deg, var(--flock-primary-tint) 0%, var(--ion-color-success) 100%);
     --box-shadow: 0 6px 20px rgb(16 185 129 / 40%);
-    --color: #fff;
+    --color: var(--flock-primary-foreground);
 
     font-size: 24px;
   }

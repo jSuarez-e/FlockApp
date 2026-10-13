@@ -1,0 +1,133 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos modulares para la grilla interactiva de calendario de proveedor.
+ * [I/O - Reusabilidad]: Clases BEM: .calendar-panel, .calendar-header-nav, .calendar-day-cell, .calendar-legend.
+ * [Edge Cases - UI]: Grilla responsiva de 7 columnas, estados visuales bloqueado/libre/hoy/pasado.
+ */
+
+.calendar-panel {
+  padding: 8px 0;
+
+  .calendar-header-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+
+    .calendar-month-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: capitalize;
+      color: var(--flock-surface-dark);
+    }
+  }
+
+  .calendar-instructions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--flock-surface-subtle);
+    padding: 8px 12px;
+    border-radius: 10px;
+
+    p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--ion-color-secondary);
+    }
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+  }
+
+  .calendar-day-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 2px;
+    border-radius: 10px;
+    border: 1.5px solid var(--flock-border);
+    background: var(--flock-card);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 56px;
+
+    .day-number {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--flock-surface-dark);
+    }
+
+    &--blocked {
+      background: var(--flock-accent-gold-bg);
+      border-color: var(--ion-color-danger);
+    }
+
+    .day-status-pill {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 6px;
+      margin-top: 4px;
+
+      &--free {
+        background: var(--flock-verified-bg);
+        color: var(--flock-primary-light);
+      }
+
+      &--blocked {
+        background: var(--flock-accent-gold-bg);
+        color: var(--ion-color-danger);
+      }
+    }
+
+    &--today {
+      border: 2px solid var(--avitour-primary);
+      box-shadow: 0 0 0 2px rgb(136 220 204 / 30%);
+    }
+
+    &--past {
+      opacity: 0.4;
+      cursor: not-allowed;
+      background: var(--flock-surface-subtle);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+  }
+
+  .calendar-legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--flock-muted-foreground);
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+
+      &--free {
+        background: var(--ion-color-success);
+      }
+
+      &--blocked {
+        background: var(--ion-color-danger);
+      }
+    }
+  }
+}

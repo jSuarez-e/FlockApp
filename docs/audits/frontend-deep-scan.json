@@ -1,0 +1,221 @@
+{
+  "stats": {
+    "totalFiles": 290,
+    "tsFiles": 100,
+    "htmlFiles": 52,
+    "scssFiles": 53,
+    "componentsCount": 51
+  },
+  "separationIssues": [],
+  "inlineStyleIssues": [],
+  "subscribeIssues": [],
+  "legacyControlFlowIssues": [],
+  "hardcodedColorIssues": [],
+  "largeFileIssues": [
+    {
+      "file": "frontend/src/app/core/db/init-queries.ts",
+      "lineCount": 288
+    },
+    {
+      "file": "frontend/src/app/core/models/birds.interfaces.ts",
+      "lineCount": 366
+    },
+    {
+      "file": "frontend/src/app/core/services/db-helper.service.ts",
+      "lineCount": 490
+    },
+    {
+      "file": "frontend/src/app/core/services/geography.service.ts",
+      "lineCount": 297
+    },
+    {
+      "file": "frontend/src/app/core/services/sightings.service.ts",
+      "lineCount": 297
+    },
+    {
+      "file": "frontend/src/app/core/services/site-provider.service.ts",
+      "lineCount": 302
+    },
+    {
+      "file": "frontend/src/app/core/stores/active-route.store.ts",
+      "lineCount": 535
+    },
+    {
+      "file": "frontend/src/app/core/stores/bird-search.store.ts",
+      "lineCount": 320
+    },
+    {
+      "file": "frontend/src/app/core/stores/feed.store.ts",
+      "lineCount": 266
+    },
+    {
+      "file": "frontend/src/app/core/stores/sync-queue.store.ts",
+      "lineCount": 371
+    },
+    {
+      "file": "frontend/src/app/pages/birds/bird-search/components/categorical-filter/categorical-filter.component.ts",
+      "lineCount": 276
+    },
+    {
+      "file": "frontend/src/app/pages/birds/bird-search/components/general-filter/general-filter.component.ts",
+      "lineCount": 272
+    },
+    {
+      "file": "frontend/src/app/pages/birds/components/bird-encyclopedia-view/bird-encyclopedia-view.component.ts",
+      "lineCount": 317
+    },
+    {
+      "file": "frontend/src/app/pages/birds/sightings-map/sightings-map.page.ts",
+      "lineCount": 336
+    },
+    {
+      "file": "frontend/src/app/pages/business-profile/business-profile.page.ts",
+      "lineCount": 268
+    },
+    {
+      "file": "frontend/src/app/pages/business-profile/business-profile.store.ts",
+      "lineCount": 363
+    },
+    {
+      "file": "frontend/src/app/pages/dashboard/components/feed-pajarero/components/sighting-card/sighting-card.component.ts",
+      "lineCount": 344
+    },
+    {
+      "file": "frontend/src/app/pages/guides/guide-detail/guide-detail.page.ts",
+      "lineCount": 518
+    },
+    {
+      "file": "frontend/src/app/pages/guides/guide-list/guide-list.page.ts",
+      "lineCount": 347
+    },
+    {
+      "file": "frontend/src/app/pages/main-layout/main-layout.page.ts",
+      "lineCount": 252
+    },
+    {
+      "file": "frontend/src/app/pages/profile/profile.page.ts",
+      "lineCount": 503
+    },
+    {
+      "file": "frontend/src/app/pages/provider-site/provider-site.page.ts",
+      "lineCount": 955
+    },
+    {
+      "file": "frontend/src/app/pages/routes/route-workspace/route-workspace.page.ts",
+      "lineCount": 728
+    },
+    {
+      "file": "frontend/src/app/pages/routes/routes-landing/routes-landing.page.ts",
+      "lineCount": 324
+    },
+    {
+      "file": "frontend/src/app/pages/sites/site-detail/site-detail.page.ts",
+      "lineCount": 514
+    },
+    {
+      "file": "frontend/src/app/shared/components/geo-selector/geo-selector.component.ts",
+      "lineCount": 298
+    },
+    {
+      "file": "frontend/src/app/pages/birds/components/bird-encyclopedia-view/bird-encyclopedia-view.component.html",
+      "lineCount": 344
+    },
+    {
+      "file": "frontend/src/app/pages/guides/guide-detail/guide-detail.page.html",
+      "lineCount": 424
+    },
+    {
+      "file": "frontend/src/app/pages/guides/guide-list/guide-list.page.html",
+      "lineCount": 318
+    },
+    {
+      "file": "frontend/src/app/pages/main-layout/main-layout.page.html",
+      "lineCount": 295
+    },
+    {
+      "file": "frontend/src/app/pages/provider-site/provider-site.page.html",
+      "lineCount": 746
+    },
+    {
+      "file": "frontend/src/app/pages/routes/route-workspace/route-workspace.page.html",
+      "lineCount": 310
+    },
+    {
+      "file": "frontend/src/app/pages/settings/settings.page.html",
+      "lineCount": 278
+    },
+    {
+      "file": "frontend/src/app/pages/sites/site-detail/site-detail.page.html",
+      "lineCount": 303
+    },
+    {
+      "file": "frontend/src/app/pages/birds/bird-search/bird-search.page.scss",
+      "lineCount": 292
+    },
+    {
+      "file": "frontend/src/app/pages/birds/components/bird-encyclopedia-view/bird-encyclopedia-view.component.scss",
+      "lineCount": 400
+    },
+    {
+      "file": "frontend/src/app/pages/birds/sightings-map/sightings-map.page.scss",
+      "lineCount": 465
+    },
+    {
+      "file": "frontend/src/app/pages/dashboard/components/feed-pajarero/components/create-feed-post/create-feed-post.component.scss",
+      "lineCount": 392
+    },
+    {
+      "file": "frontend/src/app/pages/dashboard/components/feed-pajarero/components/sighting-card/sighting-card.component.scss",
+      "lineCount": 320
+    },
+    {
+      "file": "frontend/src/app/pages/dashboard/components/role-selector/role-selector.component.scss",
+      "lineCount": 276
+    },
+    {
+      "file": "frontend/src/app/pages/guides/guide-detail/guide-detail.page.scss",
+      "lineCount": 512
+    },
+    {
+      "file": "frontend/src/app/pages/guides/guide-list/guide-list.page.scss",
+      "lineCount": 615
+    },
+    {
+      "file": "frontend/src/app/pages/profile/profile.page.scss",
+      "lineCount": 445
+    },
+    {
+      "file": "frontend/src/app/pages/profile/public-profile/public-profile.page.scss",
+      "lineCount": 269
+    },
+    {
+      "file": "frontend/src/app/pages/provider-site/provider-site.page.scss",
+      "lineCount": 676
+    },
+    {
+      "file": "frontend/src/app/pages/routes/route-workspace/route-workspace.page.scss",
+      "lineCount": 388
+    },
+    {
+      "file": "frontend/src/app/pages/routes/routes-landing/routes-landing.page.scss",
+      "lineCount": 419
+    },
+    {
+      "file": "frontend/src/app/pages/settings/settings.page.scss",
+      "lineCount": 415
+    },
+    {
+      "file": "frontend/src/app/pages/sites/site-detail/site-detail.page.scss",
+      "lineCount": 271
+    },
+    {
+      "file": "frontend/src/app/shared/components/geo-selector/geo-selector.component.scss",
+      "lineCount": 263
+    },
+    {
+      "file": "frontend/src/global.scss",
+      "lineCount": 1026
+    }
+  ],
+  "scssNonBemIssues": []
+}

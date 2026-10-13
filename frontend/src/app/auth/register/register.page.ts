@@ -2,7 +2,7 @@ import { Component, inject, signal, computed, ChangeDetectionStrategy } from '@a
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { ModalController, IonContent, IonSelect, IonSelectOption, IonButton } from '@ionic/angular';
+import { ModalController, IonContent, IonSelect, IonSelectOption, IonButton, IonIcon } from '@ionic/angular';
 import { Router, RouterLink } from '@angular/router';
 import { UserRole } from '../../core/models/auth.models';
 
@@ -26,6 +26,7 @@ import {
   eyeOutline,
   eyeOffOutline,
   arrowBackOutline,
+  peopleOutline,
 } from 'ionicons/icons';
 
 /**
@@ -46,6 +47,7 @@ import {
     IonSelect,
     IonSelectOption,
     IonButton,
+    IonIcon,
     BrandHeaderComponent,
     AuthInputComponent,
     PasswordInputComponent,
@@ -112,6 +114,7 @@ export class RegisterPage {
       eyeOutline,
       eyeOffOutline,
       arrowBackOutline,
+      peopleOutline,
     });
   }
 

@@ -42,7 +42,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  findOne(@Param('id') id: string, @CurrentUser() user: ActiveUserInterface) {
+    return this.usersService.findOne(id, user.id);
   }
 }

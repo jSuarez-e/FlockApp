@@ -27,8 +27,8 @@ export class UsersService {
     private readonly medalsService: MedalsService,
   ) {}
 
-  /** @method findOne - Obtiene perfil por ID */
-  async findOne(id: string): Promise<UserEntity> {
+  /** @method findOne - Obtiene perfil por ID protegiendo datos sensibles si es un perfil público */
+  async findOne(id: string, requestingUserId?: string): Promise<UserEntity> {
     if (!id) throw new BadRequestException('ID no proporcionado');
 
     const user = await this.userRepository.findOne({
@@ -55,6 +55,13 @@ export class UsersService {
 
     user.stats = await this.getUserStats(id);
     user.medals = await this.medalsService.getUserMedalsWithStatus(id);
+
+    // Protección PII: Ocultar email y RNT si el solicitante no es el dueño de la cuenta
+    if (requestingUserId && requestingUserId !== id) {
+      user.email = '';
+      user.rnt = '';
+    }
+
     return user;
   }
 

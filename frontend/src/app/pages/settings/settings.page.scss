@@ -9,7 +9,7 @@
 
   background: transparent;
 
-  --color: var(--flock-primary-foreground, #fff);
+  --color: var(--flock-primary-foreground);
 
   padding: 10px 16px 12px;
 
@@ -26,7 +26,7 @@
   }
 
   .header-menu-btn {
-    --color: var(--flock-primary-foreground, #fff);
+    --color: var(--flock-primary-foreground);
     --padding-start: 4px;
     --padding-end: 4px;
 
@@ -44,7 +44,7 @@
       font-size: 1.35rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: var(--flock-primary-foreground, #fff);
+      color: var(--flock-primary-foreground);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -53,7 +53,7 @@
     .settings-header-subtitle {
       margin: 4px 0 0;
       font-size: 0.8rem;
-      color: #a7f3d0;
+      color: var(--flock-verified-border);
       font-weight: 500;
       line-height: 1.35;
     }
@@ -61,7 +61,7 @@
 }
 
 .settings-content {
-  --background: var(--avitour-background, #f8fafc);
+  --background: var(--avitour-background, var(--flock-background));
 }
 
 .settings-container {
@@ -88,8 +88,8 @@
     width: 48px;
     height: 48px;
     border-radius: 12px;
-    background: var(--avitour-primary, #108346);
-    color: #fff;
+    background: var(--avitour-primary, var(--flock-primary-light));
+    color: var(--flock-primary-foreground);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -104,14 +104,14 @@
   &__title {
     font-size: 1.15rem;
     font-weight: 800;
-    color: var(--avitour-foreground, #1e293b);
+    color: var(--avitour-foreground, var(--flock-surface-dark));
     margin: 0 0 0.25rem;
   }
 
   &__subtitle {
     font-size: 0.85rem;
     line-height: 1.4;
-    color: var(--avitour-muted-foreground, #64748b);
+    color: var(--avitour-muted-foreground, var(--flock-muted-foreground));
     margin: 0;
   }
 }
@@ -127,18 +127,18 @@
     gap: 0.5rem;
     font-size: 1rem;
     font-weight: 700;
-    color: var(--avitour-foreground, #1e293b);
+    color: var(--avitour-foreground, var(--flock-surface-dark));
     margin: 0 0 0.25rem;
   }
 
   &__heading-icon {
     font-size: 1.2rem;
-    color: var(--avitour-primary, #108346);
+    color: var(--avitour-primary, var(--flock-primary-light));
   }
 
   &__subheading {
     font-size: 0.82rem;
-    color: var(--avitour-muted-foreground, #64748b);
+    color: var(--avitour-muted-foreground, var(--flock-muted-foreground));
     margin: 0 0 0.85rem;
   }
 }
@@ -151,7 +151,7 @@
 }
 
 .permission-card {
-  background: var(--flock-card, #fff);
+  background: var(--flock-card);
   border: 1px solid var(--flock-border-subtle, rgb(226 232 240 / 80%));
   border-radius: 16px;
   padding: 1.15rem;
@@ -178,17 +178,17 @@
 
     &--camera {
       background: rgb(16 131 70 / 12%);
-      color: var(--avitour-primary, #108346);
+      color: var(--avitour-primary, var(--flock-primary-light));
     }
 
     &--location {
       background: rgb(76 103 147 / 12%);
-      color: #4c6793;
+      color: var(--ion-color-secondary);
     }
 
     &--photos {
       background: rgb(92 46 126 / 12%);
-      color: #5c2e7e;
+      color: var(--ion-color-tertiary);
     }
   }
 
@@ -209,14 +209,14 @@
   &__title {
     font-size: 0.95rem;
     font-weight: 700;
-    color: var(--avitour-foreground, #1e293b);
+    color: var(--avitour-foreground, var(--flock-surface-dark));
     margin: 0;
   }
 
   &__desc {
     font-size: 0.82rem;
     line-height: 1.4;
-    color: var(--avitour-muted-foreground, #64748b);
+    color: var(--avitour-muted-foreground, var(--flock-muted-foreground));
     margin: 0;
   }
 
@@ -226,7 +226,7 @@
   }
 
   &__btn-request {
-    --background: var(--avitour-primary, #108346);
+    --background: var(--avitour-primary, var(--flock-primary-light));
     --border-radius: 8px;
 
     font-weight: 700;
@@ -235,8 +235,8 @@
   }
 
   &__btn-active {
-    --color: var(--avitour-primary, #108346);
-    --border-color: var(--avitour-primary, #108346);
+    --color: var(--avitour-primary, var(--flock-primary-light));
+    --border-color: var(--avitour-primary, var(--flock-primary-light));
     --border-radius: 8px;
 
     font-size: 0.8rem;
@@ -255,17 +255,17 @@
 
   &--granted {
     --background: rgb(16 131 70 / 12%);
-    --color: var(--avitour-primary, #108346);
+    --color: var(--avitour-primary, var(--flock-primary-light));
   }
 
   &--denied {
     --background: rgb(235 68 90 / 12%);
-    --color: #eb445a;
+    --color: var(--ion-color-danger);
   }
 
   &--prompt {
     --background: rgb(245 158 11 / 12%);
-    --color: #d97706;
+    --color: var(--flock-accent-gold);
   }
 
   ion-icon {
@@ -276,8 +276,8 @@
 
 /* Tarjeta Guía Android */
 .settings-guide-card {
-  background: var(--flock-card, #fff);
-  border: 1px dashed var(--flock-border-subtle, #cbd5e1);
+  background: var(--flock-card);
+  border: 1px dashed var(--flock-border-subtle, var(--flock-border-medium));
   border-radius: 16px;
   box-shadow: var(--flock-shadow-card, 0 4px 18px -2px rgb(15 23 42 / 5%));
   padding: 1rem;
@@ -293,8 +293,8 @@
     width: 38px;
     height: 38px;
     border-radius: 8px;
-    background: #f1f5f9;
-    color: #475569;
+    background: var(--flock-surface-subtle);
+    color: var(--flock-muted-foreground);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -309,20 +309,20 @@
   &__title {
     font-size: 0.92rem;
     font-weight: 700;
-    color: var(--avitour-foreground, #1e293b);
+    color: var(--avitour-foreground, var(--flock-surface-dark));
     margin: 0 0 0.25rem;
   }
 
   &__desc {
     font-size: 0.8rem;
     line-height: 1.35;
-    color: var(--avitour-muted-foreground, #64748b);
+    color: var(--avitour-muted-foreground, var(--flock-muted-foreground));
     margin: 0;
   }
 
   &__btn {
-    --color: var(--avitour-foreground, #334155);
-    --border-color: var(--avitour-border, #cbd5e1);
+    --color: var(--avitour-foreground, var(--flock-foreground));
+    --border-color: var(--avitour-border, var(--flock-border-medium));
     --border-radius: 8px;
 
     font-weight: 600;
@@ -333,8 +333,8 @@
 
 /* Tarjeta Políticas Google Play */
 .settings-policy-card {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
+  background: var(--flock-verified-bg);
+  border: 1px solid var(--flock-verified-bg);
   border-radius: 16px;
   box-shadow: var(--flock-shadow-card, 0 4px 18px -2px rgb(15 23 42 / 5%));
   padding: 1rem 1.15rem;
@@ -348,20 +348,20 @@
 
   &__icon {
     font-size: 1.2rem;
-    color: var(--avitour-primary, #108346);
+    color: var(--avitour-primary, var(--flock-primary-light));
   }
 
   &__title {
     font-size: 0.88rem;
     font-weight: 700;
-    color: var(--avitour-primary, #108346);
+    color: var(--avitour-primary, var(--flock-primary-light));
     margin: 0;
   }
 
   &__text {
     font-size: 0.8rem;
     line-height: 1.4;
-    color: #166534;
+    color: var(--flock-primary);
     margin: 0 0 0.65rem;
   }
 
@@ -376,15 +376,15 @@
 
   &__item {
     font-size: 0.78rem;
-    color: #15803d;
+    color: var(--flock-primary-light);
     font-weight: 500;
   }
 }
 
 /* Info App */
 .app-info-card {
-  background: var(--flock-card, #fff);
-  border: 1px solid var(--flock-border-subtle, #e2e8f0);
+  background: var(--flock-card);
+  border: 1px solid var(--flock-border-subtle, var(--flock-border));
   border-radius: 16px;
   box-shadow: var(--flock-shadow-card, 0 4px 18px -2px rgb(15 23 42 / 5%));
   padding: 0.85rem 1rem;
@@ -400,12 +400,12 @@
   }
 
   &__label {
-    color: var(--avitour-muted-foreground, #64748b);
+    color: var(--avitour-muted-foreground, var(--flock-muted-foreground));
     font-weight: 500;
   }
 
   &__value {
-    color: var(--avitour-foreground, #1e293b);
+    color: var(--avitour-foreground, var(--flock-surface-dark));
     font-weight: 600;
     display: flex;
     align-items: center;

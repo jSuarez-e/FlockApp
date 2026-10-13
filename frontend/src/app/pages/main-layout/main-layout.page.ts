@@ -2,10 +2,11 @@ import {
   Component,
   inject,
   computed,
+  effect,
   ChangeDetectionStrategy,
   OnInit,
-  OnDestroy,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import {
   MenuController,
@@ -29,8 +30,8 @@ import { ProfileStore } from '../../core/stores/profile.store';
 import { DashboardStore } from '../../core/stores/dashboard.store';
 import { UserRole, ViewMode } from '../../core/models/auth.models';
 import { environment } from '../../../environments/environment';
+import { of } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
 
 import { addIcons } from 'ionicons';
 import {
@@ -87,11 +88,7 @@ import { logger } from '../../core/utils/logger';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainLayoutPage implements OnInit, OnDestroy {
-  /**
-   *
-   */
-  private routerSub!: Subscription;
+export class MainLayoutPage implements OnInit {
   /**
    *
    */
@@ -100,6 +97,11 @@ export class MainLayoutPage implements OnInit, OnDestroy {
    *
    */
   private readonly menuCtrl = inject(MenuController);
+
+  /** Signal reactiva que rastrea la finalización de navegación. */
+  private readonly navEnd = toSignal(
+    (this.router?.events ?? of()).pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd)),
+  );
   /**
    *
    */
@@ -163,18 +165,18 @@ export class MainLayoutPage implements OnInit, OnDestroy {
       leafOutline,
       settingsOutline,
     });
+
+    effect(() => {
+      if (this.navEnd()) {
+        this.menuCtrl.close();
+      }
+    });
   }
 
   /**
    * Inicializa suscripciones de navegación y sincronización proactiva (R2).
    */
   async ngOnInit(): Promise<void> {
-    this.routerSub = this.router.events
-      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.menuCtrl.close();
-      });
-
     await this.syncUserProfile();
   }
 
@@ -193,12 +195,6 @@ export class MainLayoutPage implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Limpieza de recursos para prevenir fugas de memoria.
-   */
-  ngOnDestroy(): void {
-    if (this.routerSub) this.routerSub.unsubscribe();
-  }
 
   /**
    * Resuelve la URL de la imagen del avatar con fallback dinámico.

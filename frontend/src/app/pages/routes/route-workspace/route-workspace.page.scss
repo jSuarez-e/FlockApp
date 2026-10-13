@@ -11,7 +11,7 @@
 .route-workspace-toolbar {
   --background: transparent !important;
   background: transparent !important;
-  --color: var(--flock-primary-foreground, #fff);
+  --color: var(--flock-primary-foreground);
   --min-height: auto;
   min-height: auto;
   padding: 10px 16px 2px;
@@ -27,7 +27,7 @@
 
   .header-back-btn,
   .header-menu-btn {
-    --color: var(--flock-primary-foreground, #fff);
+    --color: var(--flock-primary-foreground);
     --padding-start: 4px;
     --padding-end: 4px;
     margin: 0;
@@ -44,7 +44,7 @@
       font-size: 1.35rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: var(--flock-primary-foreground, #fff);
+      color: var(--flock-primary-foreground);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -53,7 +53,7 @@
     .flock-header-subtitle {
       margin: 4px 0 0;
       font-size: 0.8rem;
-      color: #a7f3d0;
+      color: var(--flock-verified-border);
       font-weight: 500;
       line-height: 1.35;
     }
@@ -69,7 +69,7 @@
     position: relative;
     width: 100%;
     flex: 0 0 55%;
-    background: #e2e8f0;
+    background: var(--flock-border);
     overflow: hidden;
   }
   
@@ -80,7 +80,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    background: #fff;
+    background: var(--flock-card);
     box-shadow: 0 -8px 24px rgb(0 0 0 / 8%);
     border-top-left-radius: 24px;
     border-top-right-radius: 24px;
@@ -98,7 +98,7 @@
       width: 40px;
       height: 4px;
       border-radius: 4px;
-      background: #cbd5e1;
+      background: var(--flock-border-medium);
     }
   }
 }
@@ -136,7 +136,7 @@
 /* stylelint-disable selector-pseudo-element-no-unknown, no-descending-specificity */
 ::ng-deep {
   .modal-content {
-    --background: #f8fafc;
+    --background: var(--flock-background);
   }
 
   .stats-grid {
@@ -146,7 +146,7 @@
     margin-bottom: 24px;
     
     .stat-card {
-      background: #fff;
+      background: var(--flock-card);
       border-radius: 16px;
       padding: 16px;
       display: flex;
@@ -172,13 +172,13 @@
           margin: 0;
           font-size: 18px;
           font-weight: 800;
-          color: #1e293b;
+          color: var(--flock-surface-dark);
         }
 
         p {
           margin: 4px 0 0;
           font-size: 12px;
-          color: #64748b;
+          color: var(--flock-muted-foreground);
           font-weight: 500;
         }
       }
@@ -186,7 +186,7 @@
   }
 
   .form-section {
-    background: #fff;
+    background: var(--flock-card);
     border-radius: 16px;
     padding: 20px;
     margin-bottom: 20px;
@@ -197,7 +197,7 @@
       margin: 0 0 16px;
       font-size: 16px;
       font-weight: 700;
-      color: #334155;
+      color: var(--flock-foreground);
     }
 
     
@@ -208,7 +208,7 @@
       ion-label {
         font-size: 14px;
         font-weight: 500;
-        color: #475569;
+        color: var(--flock-muted-foreground);
       }
 
       ion-checkbox {
@@ -221,12 +221,12 @@
     .share-users-box {
       margin-top: 16px;
       padding-top: 16px;
-      border-top: 1px solid #e2e8f0;
+      border-top: 1px solid var(--flock-border);
 
       .sub-label {
         font-size: 13px;
         font-weight: 600;
-        color: #64748b;
+        color: var(--flock-muted-foreground);
         margin-bottom: 8px;
         display: block;
       }
@@ -235,7 +235,7 @@
         padding: 0;
 
         --box-shadow: none;
-        --background: #f1f5f9;
+        --background: var(--flock-surface-subtle);
         --border-radius: 12px;
 
         margin-bottom: 12px;
@@ -245,10 +245,10 @@
         border-radius: 12px;
         overflow: hidden;
         margin-bottom: 12px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid var(--flock-border);
 
         ion-item {
-          --background: #fff;
+          --background: var(--flock-card);
 
           h2 {
             font-size: 14px;
@@ -257,7 +257,7 @@
 
           p {
             font-size: 12px;
-            color: #94a3b8;
+            color: var(--flock-subtle-foreground);
           }
         }
       }
@@ -290,7 +290,7 @@
       top: 10px;
       bottom: 10px;
       width: 2px;
-      background: #e2e8f0;
+      background: var(--flock-border);
     }
 
     .timeline-item {
@@ -312,13 +312,13 @@
           display: block;
           font-size: 14px;
           font-weight: 700;
-          color: #334155;
+          color: var(--flock-foreground);
         }
 
         .date {
           display: block;
           font-size: 11px;
-          color: #94a3b8;
+          color: var(--flock-subtle-foreground);
         }
       }
 
@@ -327,7 +327,7 @@
         height: 12px;
         border-radius: 50%;
         background: var(--ion-color-primary);
-        border: 2px solid #fff;
+        border: 2px solid var(--flock-card);
         position: absolute;
         left: 64px;
         top: 6px;
@@ -337,28 +337,28 @@
 
       .timeline-content {
         flex: 1;
-        background: #f8fafc;
+        background: var(--flock-background);
         padding: 12px 16px;
         border-radius: 12px;
-        border: 1px solid #f1f5f9;
+        border: 1px solid var(--flock-surface-subtle);
         
         h4 {
           margin: 0 0 4px;
           font-size: 15px;
           font-weight: 700;
-          color: #0f172a;
+          color: var(--flock-foreground);
         }
 
         .qty {
           margin: 0 0 4px;
           font-size: 13px;
-          color: #64748b;
+          color: var(--flock-muted-foreground);
         }
 
         .desc {
           margin: 0;
           font-size: 13px;
-          color: #475569;
+          color: var(--flock-muted-foreground);
           font-style: italic;
         }
       }
@@ -367,7 +367,7 @@
 
   .empty-msg {
     text-align: center;
-    color: #94a3b8;
+    color: var(--flock-subtle-foreground);
     font-size: 14px;
     font-style: italic;
     padding: 20px 0;
@@ -379,7 +379,7 @@
     font-weight: 700;
     letter-spacing: 0.05em;
 
-    --background: linear-gradient(135deg, var(--ion-color-primary), #2a9d8f);
+    --background: linear-gradient(135deg, var(--ion-color-primary), var(--flock-primary-light));
     --box-shadow: 0 8px 16px rgb(var(--ion-color-primary-rgb), 0.3);
     --border-radius: 14px;
   }

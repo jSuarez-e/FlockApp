@@ -1,0 +1,30 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos BEM para estado de carga con spinner Ionic.
+ * [I/O - Reusabilidad]: Bloque .loading con modificador --full-height y elemento __message.
+ * [Edge Cases - UI]: Centrado vertical flexible con variables de color semánticas.
+ */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+
+  &--full-height {
+    min-height: 50vh;
+    height: 100%;
+  }
+
+  &__spinner {
+    --color: var(--flock-primary, var(--ion-color-primary, var(--flock-primary)));
+  }
+
+  &__message {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: var(--flock-muted-foreground, var(--ion-color-medium, var(--flock-muted-foreground)));
+    font-weight: 500;
+  }
+}

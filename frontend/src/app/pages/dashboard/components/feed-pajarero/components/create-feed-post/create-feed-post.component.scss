@@ -1,0 +1,391 @@
+/**
+ * @sdd
+ * [Objetivo]: Estilos BEM para el compositor de publicaciones en el feed.
+ * [I/O - Reusabilidad]: Bloque .composer-container con tarjetas y barras de acción.
+ * [Edge Cases - UI]: Soporte completo para modo oscuro con :host-context(body.dark).
+ */
+.flock-composer-content {
+  --background: var(--flock-background, var(--flock-background));
+}
+
+:host-context(body.dark) .flock-composer-content {
+  --background: var(--flock-foreground);
+}
+
+.composer-container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.author-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 2px 4px;
+}
+
+.author-avatar-wrap {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.author-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--ion-color-primary, var(--flock-primary-light));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.author-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--flock-primary, var(--flock-primary));
+  color: var(--flock-primary-foreground);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.author-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.author-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--flock-foreground, var(--flock-surface-dark));
+  letter-spacing: -0.01em;
+}
+
+:host-context(body.dark) .author-name {
+  color: var(--flock-surface-subtle);
+}
+
+.author-visibility-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--flock-primary, var(--flock-primary-light));
+  background: rgba(4, 120, 87, 0.1);
+  padding: 2px 8px;
+  border-radius: 999px;
+  width: fit-content;
+
+  ion-icon {
+    font-size: 12px;
+  }
+}
+
+:host-context(body.dark) .author-visibility-pill {
+  color: var(--flock-primary-tint);
+  background: rgba(52, 211, 153, 0.15);
+}
+
+.composer-editor-card {
+  background: var(--flock-card);
+  border-radius: 16px;
+  border: 1px solid var(--flock-border, var(--flock-border));
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  padding: 14px 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+:host-context(body.dark) .composer-editor-card {
+  background: var(--flock-surface-dark);
+  border-color: var(--flock-foreground);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.composer-textarea {
+  --background: transparent;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--flock-foreground, var(--flock-surface-dark));
+  --padding-top: 2px;
+  --padding-bottom: 2px;
+  --padding-start: 0;
+  --padding-end: 0;
+  margin: 0;
+  min-height: 85px;
+}
+
+:host-context(body.dark) .composer-textarea {
+  color: var(--flock-background);
+}
+
+.media-preview-container {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  max-height: 220px;
+  background: var(--flock-foreground);
+}
+
+.media-preview-img {
+  width: 100%;
+  height: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+.remove-preview-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  color: var(--flock-primary-foreground);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+
+  &:active {
+    transform: scale(0.9);
+  }
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
+.location-chip-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(4, 120, 87, 0.08);
+  border: 1px solid rgba(4, 120, 87, 0.2);
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+
+.location-chip-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--flock-primary, var(--flock-primary-light));
+
+  ion-icon {
+    font-size: 16px;
+  }
+}
+
+:host-context(body.dark) .location-chip-info {
+  color: var(--flock-primary-tint);
+}
+
+.location-chip-remove {
+  background: transparent;
+  border: none;
+  color: var(--ion-color-danger, var(--ion-color-danger));
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 2px;
+
+  ion-icon {
+    font-size: 16px;
+  }
+}
+
+.composer-actions-bar {
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid var(--flock-border-subtle, var(--flock-surface-subtle));
+}
+
+:host-context(body.dark) .composer-actions-bar {
+  border-top-color: var(--flock-foreground);
+}
+
+.actions-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--flock-background, var(--flock-background));
+  border: 1px solid var(--flock-border, var(--flock-border));
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--flock-foreground);
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  ion-icon {
+    font-size: 16px;
+    color: var(--flock-primary, var(--flock-primary-light));
+  }
+
+  &--active {
+    background: var(--flock-verified-bg);
+    border-color: var(--flock-primary, var(--flock-primary-light));
+    color: var(--flock-primary, var(--flock-primary-light));
+  }
+}
+
+:host-context(body.dark) .tool-btn {
+  background: var(--flock-foreground);
+  border-color: var(--flock-foreground);
+  color: var(--flock-border-medium);
+
+  ion-icon {
+    color: var(--flock-primary-tint);
+  }
+}
+
+.composer-subcard {
+  background: var(--flock-card);
+  border-radius: 16px;
+  border: 1px solid var(--flock-border, var(--flock-border));
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+:host-context(body.dark) .composer-subcard {
+  background: var(--flock-surface-dark);
+  border-color: var(--flock-foreground);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.subcard-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.subcard-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--flock-accent-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 20px;
+  }
+}
+
+.subcard-texts {
+  min-width: 0;
+}
+
+.subcard-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--flock-foreground, var(--flock-surface-dark));
+}
+
+:host-context(body.dark) .subcard-title {
+  color: var(--flock-surface-subtle);
+}
+
+.subcard-desc {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--flock-muted-foreground, var(--flock-muted-foreground));
+}
+
+:host-context(body.dark) .subcard-desc {
+  color: var(--flock-subtle-foreground);
+}
+
+.flock-toggle {
+  --track-background-checked: var(--flock-primary, var(--flock-primary-light));
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.flock-composer-footer {
+  background: var(--flock-card);
+  border-top: 1px solid var(--flock-border, var(--flock-border));
+  padding: 8px 16px calc(var(--ion-safe-area-bottom, 0px) + 8px);
+
+  ion-toolbar {
+    --background: transparent;
+    padding: 0;
+  }
+}
+
+:host-context(body.dark) .flock-composer-footer {
+  background: var(--flock-surface-dark);
+  border-top-color: var(--flock-foreground);
+}
+
+.flock-publish-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--flock-gradient-header);
+  color: var(--flock-primary-foreground);
+  border: none;
+  border-radius: 24px;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 4px 14px rgba(4, 120, 87, 0.35);
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  ion-icon {
+    font-size: 18px;
+  }
+}

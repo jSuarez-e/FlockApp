@@ -8,6 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 import { JwtService } from '@nestjs/jwt';
 import { MailerService } from '@nestjs-modules/mailer';
 
@@ -115,11 +116,9 @@ export class AuthService {
       ],
     });
 
-    this.logger.debug(`Login attempt for identifier: ${identifier}`);
-    this.logger.debug(`User found: ${user ? user.email : 'NOT FOUND'}`);
+    this.logger.debug('Procesando solicitud de inicio de sesión');
     if (user) {
       const isMatch = await bcrypt.compare(pass, user.password);
-      this.logger.debug(`Bcrypt match result: ${isMatch}`);
       if (!isMatch) {
         throw new UnauthorizedException('Credenciales inválidas.');
       }
@@ -156,15 +155,17 @@ export class AuthService {
     const user = await this.userRepository.findOne({ where: { email } });
     if (!user) return { success: true };
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = crypto.randomInt(100000, 1000000).toString();
+    const hashedOtp = await bcrypt.hash(otp, 10);
     const expiresAt = new Date();
     expiresAt.setMinutes(expiresAt.getMinutes() + 15);
 
     await this.passwordResetRepository.delete({ email });
     const resetRequest = this.passwordResetRepository.create({
       email,
-      otp,
+      otp: hashedOtp,
       expiresAt,
+      attempts: 0,
     });
     await this.passwordResetRepository.save(resetRequest);
 
@@ -174,21 +175,39 @@ export class AuthService {
 
   /**
    * @method verifyOtp
-   * @description Fase 2: Valida la integridad del código OTP y emite un token de recuperación temporal.
+   * @description Fase 2: Valida la integridad del código OTP con rate limiting por intentos y emite token temporal.
    * @param {string} email Correo del solicitante.
    * @param {string} otp Código de 6 dígitos ingresado por el usuario.
    * @returns {Promise<{ recoveryToken: string }>} Token firmado que autoriza el cambio de clave.
-   * @throws {UnauthorizedException} Si el código es incorrecto o ya ha expirado.
+   * @throws {UnauthorizedException} Si el código es incorrecto, expirado o bloqueado por intentos.
    */
   async verifyOtp(
     email: string,
     otp: string,
   ): Promise<{ recoveryToken: string }> {
     const resetEntry = await this.passwordResetRepository.findOne({
-      where: { email, otp, isUsed: false },
+      where: { email, isUsed: false },
     });
 
     if (!resetEntry || new Date() > resetEntry.expiresAt) {
+      throw new UnauthorizedException('Código inválido o expirado.');
+    }
+
+    if (resetEntry.attempts >= 5) {
+      await this.passwordResetRepository.delete({ id: resetEntry.id });
+      throw new UnauthorizedException(
+        'Demasiados intentos fallidos. Solicita un nuevo código.',
+      );
+    }
+
+    const isBcrypt = resetEntry.otp.startsWith('$2');
+    const isMatch = isBcrypt
+      ? await bcrypt.compare(otp, resetEntry.otp)
+      : resetEntry.otp === otp;
+
+    if (!isMatch) {
+      resetEntry.attempts = (resetEntry.attempts || 0) + 1;
+      await this.passwordResetRepository.save(resetEntry);
       throw new UnauthorizedException('Código inválido o expirado.');
     }
 

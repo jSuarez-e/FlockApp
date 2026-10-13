@@ -20,7 +20,7 @@ import {
   ActionSheetButton,
   IonHeader, IonToolbar, IonButtons,
   IonContent, IonIcon,
-  IonButton, IonMenuButton, IonSelect, IonSelectOption,
+  IonButton, IonMenuButton,
   IonChip, IonLabel
 } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
@@ -77,7 +77,7 @@ import { logger } from '../../core/utils/logger';
   imports: [
     IonHeader, IonToolbar, IonButtons,
     IonContent, IonIcon,
-    IonButton, IonMenuButton, IonSelect, IonSelectOption,
+    IonButton, IonMenuButton,
     IonChip, IonLabel,
     CommonModule,
     FormsModule,
